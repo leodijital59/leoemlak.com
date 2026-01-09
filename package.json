@@ -1,24 +1,30 @@
 {
-  "name": "homez-nextjs",
-  "version": "2.1.0",
+  "name": "leoemlak",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite dev",
+    "dev:open": "vite dev --open",
+    "build": "vite build && tsc --noEmit",
+    "preview": "vite preview",
+    "start": "node .output/server/index.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext ts,tsx"
   },
   "dependencies": {
     "@babel/core": "7.27.1",
     "@popperjs/core": "^2.11.8",
     "@react-google-maps/api": "^2.20.6",
+    "@tanstack/react-router": "1.145.11",
+    "@tanstack/react-start": "1.145.11",
+    "@unpic/react": "^1.0.2",
     "aos": "^2.3.4",
     "bootstrap": "5.3.6",
     "eslint": "9.27.0",
-    "next": "15.1.8",
     "photoswipe": "^5.4.4",
     "prop-types": "15.8.1",
-    "rc-slider": "^11.1.8",
+    "rc-slider": "^11.1.9",
     "react": "19.1.0",
     "react-countup": "^6.5.3",
     "react-dom": "19.1.0",
@@ -28,7 +34,21 @@
     "react-select": "^5.10.1",
     "react-tooltip": "^5.28.1",
     "recharts": "2.15.3",
-    "sass": "^1.89.0",
     "swiper": "^11.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/eslint-config": "^0.3.4",
+    "@types/aos": "^3.0.7",
+    "@types/bootstrap": "^5.2.10",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "sass": "^1.89.0",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-tsconfig-paths": "^6.0.3"
   }
 }

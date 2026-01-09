@@ -1,0 +1,51 @@
+import { useEffect, useState } from "react";
+import Select from "react-select";
+
+const LookingFor = () => {
+  const inqueryType = [
+    { value: "Apartments", label: "Apartments" },
+    { value: "Bungalow", label: "Bungalow" },
+    { value: "Houses", label: "Houses" },
+    { value: "Office", label: "Office" },
+    { value: "TownHome", label: "TownHome" },
+    { value: "Villa", label: "Villa" },
+  ];
+  const [showSelect, setShowSelect] = useState(false);
+  useEffect(() => {
+    setShowSelect(true);
+  }, []);
+  const customStyles = {
+    control: (provided: any) => ({
+      ...provided,
+      background: "none",
+    }),
+    option: (styles: any, {isFocused, isSelected}: any) => {
+      return {
+        ...styles,
+        backgroundColor: isSelected
+          ? "#eb6753"
+          : isFocused
+          ? "#eb675312"
+          : undefined,
+      };
+    },
+  };
+  return (
+    <>
+      {showSelect && (
+        <Select
+          defaultValue={[inqueryType[0]]}
+          name="colors"
+          options={inqueryType}
+          styles={customStyles}
+          className="text-start select-borderless"
+          classNamePrefix="select"
+          required
+          isClearable={false}
+        />
+      )}
+    </>
+  );
+};
+
+export default LookingFor;

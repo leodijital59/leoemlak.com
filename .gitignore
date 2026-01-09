@@ -12,6 +12,14 @@
 /.next/
 /out/
 
+# TanStack Start / Vite
+.vinxi
+.output
+*.local
+
+# Generated route tree
+src/routeTree.gen.ts
+
 # production
 /build
 
