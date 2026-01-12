@@ -1,18 +1,7 @@
 export default [
   {
     label: "Home",
-    subMenu: [
-      { path: "/home-v1", label: "Home v1" },
-      { path: "/home-v2", label: "Home v2" },
-      { path: "/home-v3", label: "Home v3" },
-      { path: "/home-v4", label: "Home v4" },
-      { path: "/home-v5", label: "Home v5" },
-      { path: "/home-v6", label: "Home v6" },
-      { path: "/home-v7", label: "Home v7" },
-      { path: "/home-v8", label: "Home v8" },
-      { path: "/home-v9", label: "Home v9" },
-      { path: "/home-v10", label: "Home v10" },
-    ],
+    path: "/",
   },
   {
     label: "Listings",
@@ -86,29 +75,6 @@ export default [
           { label: "Single V10", path: "/single-v10/1" },
         ],
       },
-    ],
-  },
-  {
-    label: "Dashboard",
-    subMenu: [
-      { label: "Dashboard Home", path: "/dashboard-home" },
-      { label: "Message", path: "/dashboard-message" },
-      { label: "New Property", path: "/dashboard-add-property" },
-      { label: "My Properties", path: "/dashboard-my-properties" },
-      { label: "My Favorites", path: "/dashboard-my-favourites" },
-      { label: "Saved Search", path: "/dashboard-saved-search" },
-      { label: "Reviews", path: "/dashboard-reviews" },
-      { label: "My Package", path: "/dashboard-my-package" },
-      { label: "My Profile", path: "/dashboard-my-profile" },
-    ],
-  },
-  {
-    label: "Blog",
-    subMenu: [
-      { path: "/blog-list-v1", label: "Blog List V1" },
-      { path: "/blog-list-v2", label: "Blog List V2" },
-      { path: "/blog-list-v3", label: "Blog List V3" },
-      { path: "/blogs/2", label: "Blog Single" },
     ],
   },
 

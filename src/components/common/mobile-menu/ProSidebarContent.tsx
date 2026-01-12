@@ -2,7 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
 import { isParentActive } from "@/utilis/isMenuActive";
-import mobileMenuItems from "@/data/mobileMenuItems";
+import menu from "@/data/menu";
 
 const ProSidebarContent = () => {
   const path = useLocation({
@@ -12,7 +12,8 @@ const ProSidebarContent = () => {
   return (
     <Sidebar width="100%" backgroundColor="#fff" className="my-custom-class">
       <Menu>
-        {mobileMenuItems.map((item, index) => (
+        {menu.map((item, index) =>
+        item.subMenu ? (
           <SubMenu
             key={index}
             className={isParentActive(item.subMenu, path) ? "active" : ""}
@@ -56,7 +57,20 @@ const ProSidebarContent = () => {
               )
             )}
           </SubMenu>
-        ))}
+        ) : (
+            <MenuItem
+                key={index}
+                component={
+                    <Link
+                        className={item.path == path ? "active" : ""}
+                        to={item.path}
+                    />
+                }
+            >
+                {item.label}
+            </MenuItem>
+        )
+        )}
       </Menu>
     </Sidebar>
   );
