@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react";
 
 const OtherFeatures = ({filterFunctions}) => {
   const featuresLeftColumn = [

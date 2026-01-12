@@ -1,9 +1,8 @@
 
 import listings from "@/data/listings";
-import React from "react";
 
 const PropertyHeader = ({ id }) => {
-  const data = listings.filter((elm) => elm.id == id)[0] || listings[0];
+  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
   return (
     <>
       <div className="col-lg-8">

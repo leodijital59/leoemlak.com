@@ -1,5 +1,12 @@
 
-const ModalVideo = ({ videoId, isOpen, setIsOpen, src }) => {
+interface ModalVideoProps {
+  videoId?: string
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
+  src?: string
+}
+
+const ModalVideo = ({ videoId, isOpen, setIsOpen, src }: ModalVideoProps) => {
   const closeModal = () => setIsOpen(false);
 
   return (

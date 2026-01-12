@@ -1,5 +1,5 @@
 import Image from "@/components/common/Image";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Pricing = () => {
   const pricingPackages = [

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
 
@@ -69,7 +69,7 @@ const Funfact2 = () => {
   );
 };
 
-const CounterWithAnimation = ({ end }) => {
+const CounterWithAnimation = ({ end }: { end: number }) => {
   const countRef = useRef(null);
   const [inView, setInView] = useState(false);
 

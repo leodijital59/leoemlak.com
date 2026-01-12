@@ -2,7 +2,7 @@
 'use client'
 
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ListingItems from '../ListingItems'
 import listings from '@/data/listings'
 import Link from 'next/link'

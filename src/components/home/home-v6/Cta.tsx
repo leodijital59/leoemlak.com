@@ -1,4 +1,3 @@
-import React from "react";
 import AppWidget from "./AppWidget";
 import Image from "@/components/common/Image";
 

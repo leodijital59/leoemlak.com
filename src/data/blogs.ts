@@ -1,4 +1,6 @@
-export const blogs = [
+import type { Blog } from '@/types'
+
+export const blogs: Blog[] = [
   {
     id: 1,
     image: "/images/blog/blog-1.jpg",
@@ -32,7 +34,7 @@ export const blogs = [
   },
 ];
 
-export const blogData = [
+export const blogData: Blog[] = [
   {
     id: 4,
     image: "/images/blog/blog-16.jpg",

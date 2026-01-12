@@ -1,8 +1,7 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper/modules";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const listingsData = [
   {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const Pagination = () => {
   const totalPages = 6; // Total number of pages

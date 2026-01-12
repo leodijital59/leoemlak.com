@@ -3,7 +3,7 @@
 import listings from "@/data/listings";
 import Link from 'next/link';
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import PopularListings from './PopularListings';
 
 export default function PropertyListing() {

@@ -14,13 +14,11 @@ const ReviewBoxForm = () => {
     setShowSelect(true);
   }, []);
   const customStyles = {
-    option: (styles, { isFocused, isSelected, isHovered }) => {
+    option: (styles: any, { isFocused, isSelected }: { isFocused: boolean; isSelected: boolean }) => {
       return {
         ...styles,
         backgroundColor: isSelected
           ? "#eb6753"
-          : isHovered
-          ? "#eb675312"
           : isFocused
           ? "#eb675312"
           : undefined,
@@ -28,7 +26,7 @@ const ReviewBoxForm = () => {
     },
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault(); // Prevents the default form submission behavior
     // Additional logic or API calls can be added here
   };

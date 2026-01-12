@@ -27,7 +27,7 @@ const ProSidebarContent = () => {
                     isParentActive(subItem.subMenu, path) ? "active" : ""
                   }
                 >
-                  {subItem.subMenu.map((nestedItem, nestedIndex) => (
+                  {subItem.subMenu.map((nestedItem: any, nestedIndex: number) => (
                     <MenuItem
                       key={nestedIndex}
                       component={

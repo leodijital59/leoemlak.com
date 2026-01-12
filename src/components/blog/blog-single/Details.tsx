@@ -1,9 +1,8 @@
 import { allblogs } from '@/data/blogs';
-import Image from 'next/image';
-import React from 'react'
+import Image from '@/components/common/Image';
 
-export default function Details({id}) {
-    const data = allblogs.filter((elm) => elm.id == id)[0] || allblogs[0];
+export default function Details({ id }: { id: string | number }) {
+    const data = allblogs.filter((elm: any) => elm.id == id)[0] || allblogs[0];
   return (
     <>
      <div className="container">

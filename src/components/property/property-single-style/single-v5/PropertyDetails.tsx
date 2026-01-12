@@ -1,8 +1,7 @@
 import listings from "@/data/listings";
-import React from "react";
 
 const PropertyDetails = ({id}) => {
-  const data = listings.filter((elm) => elm.id == id)[0] || listings[0];
+  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
   const columns = [
     [
       {

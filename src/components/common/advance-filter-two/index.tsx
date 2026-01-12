@@ -1,11 +1,27 @@
 import Select from "react-select";
+import { useEffect, useState } from "react";
 import PriceRange from "./PriceRange";
 import Bedroom from "./Bedroom";
 import Bathroom from "./Bathroom";
 import Amenities from "./Amenities";
-import { useEffect, useState } from "react";
 
-const AdvanceFilterModal = ({ filterFunctions }) => {
+interface FilterFunctions {
+  setPropertyTypes?: (types: string[]) => void
+  location?: string
+  handlelocation?: (location: string) => void
+  handlesquirefeet?: (feet: [number, number]) => void
+  resetFilter?: () => void
+  priceRange?: number[]
+  setPriceRange?: (range: number[]) => void
+  bedroomRanges?: string[]
+  handleBedroom?: (value: string) => void
+  bathroomRanges?: string[]
+  handleBathroom?: (value: string) => void
+  amenities?: string[]
+  handleAmenities?: (amenity: string) => void
+}
+
+const AdvanceFilterModal = ({ filterFunctions }: { filterFunctions: FilterFunctions }) => {
   const [showSelect, setShowSelect] = useState(false);
   useEffect(() => {
     setShowSelect(true);
@@ -29,13 +45,11 @@ const AdvanceFilterModal = ({ filterFunctions }) => {
   ];
 
   const customStyles = {
-    option: (styles, { isFocused, isSelected, isHovered }) => {
+    option: (styles: any, { isFocused, isSelected }: { isFocused: boolean; isSelected: boolean }) => {
       return {
         ...styles,
         backgroundColor: isSelected
           ? "#eb6753"
-          : isHovered
-          ? "#eb675312"
           : isFocused
           ? "#eb675312"
           : undefined,

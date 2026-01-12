@@ -1,22 +1,25 @@
-import React, { useState } from "react";
-
 const PaginationTwo = (
     {
         pageNumber,
         setPageNumber,
         data,
         pageCapacity,
+      }: {
+        pageNumber: number
+        setPageNumber: (value: number | ((prev: number) => number)) => void
+        data: any[]
+        pageCapacity: number
       }
 ) => {
     const handlePrevious = () => {
         if (pageNumber == 1) {
         } else {
-          setPageNumber((pre) => pre - 1);
+          setPageNumber((pre: number) => pre - 1);
         }
       };
       const handleNext = () => {
         if (Math.ceil(data.length / pageCapacity) > pageNumber) {
-          setPageNumber((pre) => pre + 1);
+          setPageNumber((pre: number) => pre + 1);
         }
       };
 
@@ -40,7 +43,7 @@ const PaginationTwo = (
         >
             <span
         className="page-link pointer">1</span>
-          
+
         </li>
         {data.length > pageCapacity ? (
           <li
@@ -50,7 +53,7 @@ const PaginationTwo = (
           >
             <span
         className="page-link pointer">2</span>
-            
+
           </li>
         ) : (
           ""
@@ -63,7 +66,7 @@ const PaginationTwo = (
           >
             <span
         className="page-link pointer">3</span>
-            
+
           </li>
         ) : (
           ""
@@ -73,9 +76,9 @@ const PaginationTwo = (
         {pageNumber >  3 && (Math.ceil(data.length / pageCapacity)) != pageNumber ? (
           <li
             className={
-             
+
                "active page-item"
-               
+
             }
             onClick={() => setPageNumber(Math.ceil(data.length / pageCapacity))}
           >
@@ -105,7 +108,7 @@ const PaginationTwo = (
 
 
 
-     
+
 
 
 

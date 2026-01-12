@@ -25,7 +25,7 @@ const PopularListings = ({ data = listings }) => {
           },
         }}
       >
-        {data.slice(0, 8).map((listing) => (
+        {data.slice(0, 8).map((listing: any) => (
           <SwiperSlide key={listing.id}>
             <div className="item">
               <div className="listing-style1">

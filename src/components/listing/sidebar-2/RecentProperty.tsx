@@ -1,4 +1,3 @@
-import React from "react";
 import listings from "@/data/listings";
 import Image from "@/components/common/Image";
 

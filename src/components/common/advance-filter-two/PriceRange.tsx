@@ -1,11 +1,16 @@
 import { useState } from "react";
 import Slider from "rc-slider";
 
-const PriceRange = ({ filterFunctions }) => {
+interface FilterFunctions {
+  priceRange?: number[]
+  handlepriceRange?: (range: number | number[]) => void
+}
+
+const PriceRange = ({ filterFunctions }: { filterFunctions: FilterFunctions }) => {
   const [price, setPrice] = useState([20, 70987]);
 
   // price range handler
-  const handleOnChange = (value) => {
+  const handleOnChange = (value: number | number[]) => {
     setPrice(value);
     filterFunctions?.handlepriceRange(value);
   };

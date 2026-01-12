@@ -1,6 +1,6 @@
 import apartmentTypes from "@/data/apartmentTypes2";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -34,7 +34,7 @@ const ApartmentTypes = () => {
           },
         }}
       >
-        {apartmentTypes.slice(0, 7).map((apartment, index) => (
+        {apartmentTypes.slice(0, 7).map((apartment: any, index: number) => (
           <SwiperSlide key={index}>
             <div className="item">
               <Link href="/map-v1">

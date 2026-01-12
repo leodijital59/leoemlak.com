@@ -1,6 +1,6 @@
 import cities from "@/data/propertyByCities";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const PropertyByCities = () => {
   return (

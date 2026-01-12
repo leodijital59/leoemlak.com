@@ -3,8 +3,8 @@ import MainMenu from "@/components/common/MainMenu";
 import SidebarPanel from "@/components/common/sidebar-panel";
 import LoginSignupModal from "@/components/common/login-signup-modal";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
-import React, { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false);

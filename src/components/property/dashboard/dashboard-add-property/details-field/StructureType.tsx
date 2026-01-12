@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 
 const structureTypeOptions = [
@@ -9,12 +9,10 @@ const structureTypeOptions = [
 ];
 
 const customStyles = {
-  option: (styles, { isFocused, isSelected, isHovered }) => ({
+  option: (styles: any, { isFocused, isSelected }: { isFocused: boolean; isSelected: boolean }) => ({
     ...styles,
     backgroundColor: isSelected
       ? "#eb6753"
-      : isHovered
-      ? "#eb675312"
       : isFocused
       ? "#eb675312"
       : undefined,

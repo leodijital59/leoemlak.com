@@ -1,4 +1,3 @@
-import React from "react";
 import TrendingProperty from "./TrendingProperty";
 import RecentProperty from "./RecentProperty";
 

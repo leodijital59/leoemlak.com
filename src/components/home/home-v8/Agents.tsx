@@ -1,6 +1,6 @@
 import agents from "@/data/agents";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const Agents = () => {

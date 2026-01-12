@@ -1,7 +1,6 @@
-import React from "react";
 
 const Contact = () => {
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // Handle form submission
   };

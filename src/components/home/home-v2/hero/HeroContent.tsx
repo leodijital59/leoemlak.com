@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import SelectDropdown from "./SelectDropdown";
-import { useRouter } from "next/navigation";
 
 const HeroContent = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
@@ -77,7 +77,7 @@ const HeroContent = () => {
                     <button
                       className="advance-search-icon ud-btn btn-thm ms-4"
                       type="button"
-                      onClick={() => router.push("/grid-default")}
+                      onClick={() => navigate({ to: "/grid-default" })}
                     >
                       <span className="flaticon-search" />
                     </button>

@@ -1,5 +1,4 @@
 import Image from "@/components/common/Image";
-import React from "react";
 
 const Office = () => {
   const offices = [

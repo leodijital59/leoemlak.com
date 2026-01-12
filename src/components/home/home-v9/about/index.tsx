@@ -1,6 +1,5 @@
-import React from "react";
 import SellingList from "./SellingList";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import ExclusiveAgnts from "./ExclusiveAgnts";
 import SingleAgent from "./SingleAgent";
 import Image from "@/components/common/Image";

@@ -1,6 +1,6 @@
 import listings from "@/data/listings";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -34,7 +34,7 @@ const FeaturedListings = () => {
           },
         }}
       >
-        {listings.slice(0, 4).map((listing) => (
+        {listings.slice(0, 4).map((listing: any) => (
           <SwiperSlide key={listing.id}>
             <div className="item">
               <div className="listing-style1 mb-0">

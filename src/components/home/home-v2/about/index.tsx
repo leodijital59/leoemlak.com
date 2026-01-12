@@ -1,4 +1,3 @@
-import React from "react";
 import Funfact from "./Funfact";
 import ProductSingle from "./ProductSingle";
 import Image from "@/components/common/Image";

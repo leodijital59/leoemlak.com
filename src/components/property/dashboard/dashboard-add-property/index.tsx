@@ -1,4 +1,3 @@
-import React from "react";
 import PropertyDescription from "./property-description";
 import UploadMedia from "./upload-media";
 import LocationField from "./LocationField";

@@ -1,4 +1,3 @@
-import React from "react";
 import HoursBarChart from "./HoursBarChart";
 import WeeklyLineChart from "./WeeklyLineChart";
 import MonthlyPieChart from "./MonthlyPieChart";

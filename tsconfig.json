@@ -14,14 +14,40 @@
     "noEmit": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
+
+    // Strict Type Checking
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+
+    // Incremental compilation for faster type checking
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+
+    // Path aliases
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+
+  // Only include active directories
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "routes/**/*.ts",
+    "routes/**/*.tsx",
+    "*.ts",
+    "*.tsx"
+  ],
+
+  // Exclude old Next.js app directory and build outputs
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".output",
+    ".vinxi",
+    "src/app/**/*"
+  ]
 }

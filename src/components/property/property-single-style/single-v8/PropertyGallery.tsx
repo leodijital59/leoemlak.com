@@ -16,7 +16,7 @@ const images = [
 
 const PropertyGallery = ({ id }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const data = listings.filter((elm) => elm.id == id)[0] || listings[0];
+  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
   return (
     <>
       <div className="ps-v6-slider nav_none mt30">

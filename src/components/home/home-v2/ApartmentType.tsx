@@ -1,9 +1,8 @@
 import apartmentType from "@/data/apartmentType";
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const ApartmentType = () => {
   return (

@@ -1,7 +1,6 @@
 
 'use client'
 
-import React from "react";
 import ListingStatus from "../../sidebar/ListingStatus";
 import PropertyType from "../../sidebar/PropertyType";
 import PriceRange from "../../sidebar/PriceRange";

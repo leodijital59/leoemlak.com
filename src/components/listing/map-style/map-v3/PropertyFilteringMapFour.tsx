@@ -2,7 +2,7 @@
 
 
 import listings from "@/data/listings";
-import React, { useState,useEffect } from 'react'
+import { useState,useEffect } from 'react'
 import ListingSidebar from "../../sidebar";
 import TopFilterBar from "./TopFilterBar";
 import FeaturedListings from "./FeatuerdListings";
@@ -61,7 +61,7 @@ export default function PropertyFilteringMapFour() {
     }
     const [searchQuery, setSearchQuery] = useState('')
 
-    const handlelistingStatus =(elm)=>{
+    const handlelistingStatus =(elm: any)=>{
       setListingStatus(pre => pre == elm ? 'All':elm)
 
 
@@ -69,7 +69,7 @@ export default function PropertyFilteringMapFour() {
 
 
 
-    const handlepropertyTypes =(elm)=>{
+    const handlepropertyTypes =(elm: any)=>{
 
 
       if (elm == 'All') {
@@ -81,27 +81,27 @@ export default function PropertyFilteringMapFour() {
 
 
     }
-    const handlepriceRange =(elm)=>{
+    const handlepriceRange =(elm: any)=>{
       setPriceRange(elm)
 
     }
-    const handlebedrooms =(elm)=>{
+    const handlebedrooms =(elm: any)=>{
       setBedrooms(elm)
     }
-    const handlebathroms =(elm)=>{
+    const handlebathroms =(elm: any)=>{
       setBathroms(elm)
     }
-    const handlelocation =(elm)=>{
+    const handlelocation =(elm: any)=>{
       console.log(elm)
       setLocation(elm)
     }
-    const handlesquirefeet =(elm)=>{
+    const handlesquirefeet =(elm: any)=>{
       setSquirefeet(elm)
     }
-    const handleyearBuild =(elm)=>{
+    const handleyearBuild =(elm: any)=>{
       setyearBuild(elm)
     }
-    const handlecategories =(elm)=>{
+    const handlecategories =(elm: any)=>{
       if (elm == 'All') {
         setCategories([])
 
@@ -139,7 +139,7 @@ export default function PropertyFilteringMapFour() {
 
     useEffect(() => {
 
-        const refItems = listings.filter((elm) => {
+        const refItems = listings.filter((elm: any) => {
             if (listingStatus == "All") {
               return true;
             } else if (listingStatus == "Buy") {
@@ -154,7 +154,7 @@ export default function PropertyFilteringMapFour() {
 
 
           if (propertyTypes.length > 0) {
-            const filtered = refItems.filter((elm) =>
+            const filtered = refItems.filter((elm: any) =>
             propertyTypes.includes(elm.propertyType)
             );
             filteredArrays = [...filteredArrays, filtered];
@@ -164,7 +164,7 @@ export default function PropertyFilteringMapFour() {
           filteredArrays = [...filteredArrays,refItems.filter((el=>el.city.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()) ||  el.location.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()) ||  el.title.toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase())  ||  el.features.join(' ').toLocaleLowerCase().includes(searchQuery.toLocaleLowerCase()))) ];
 
 
-          filteredArrays = [...filteredArrays,!categories.length ? [...refItems] : refItems.filter((elm)=>categories.every(elem=>elm.features.includes(elem))) ];
+          filteredArrays = [...filteredArrays,!categories.length ? [...refItems] : refItems.filter((elm: any)=>categories.every(elem=>elm.features.includes(elem))) ];
 
           if (location != 'All Cities') {
 

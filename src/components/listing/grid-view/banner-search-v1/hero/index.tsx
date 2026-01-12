@@ -4,7 +4,7 @@
 import AdvanceFilterModal from "@/components/common/advance-filter-two";
 import HeroContent from "./HeroContent";
 
-const Hero = ({filterFunctions}) => {
+const Hero = ({filterFunctions}: {filterFunctions: any}) => {
   return (
     <>
       <div className="inner-banner-style1 text-center">

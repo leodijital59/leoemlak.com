@@ -9,7 +9,7 @@ const FilterContent = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
@@ -22,7 +22,7 @@ const FilterContent = () => {
   const [price, setPrice] = useState([2000, 45000]);
 
   // price range handler
-  const handleOnChange = (value) => {
+  const handleOnChange = (value: number) => {
     setPrice(value);
   };
   return (

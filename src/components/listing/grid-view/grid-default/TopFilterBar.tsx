@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react";
 
 const TopFilterBar = ({setCurrentSortingOption,setColstyle,colstyle,pageContentTrac}) => {
   return (

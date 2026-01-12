@@ -1,6 +1,9 @@
-'use client'
+interface FilterFunctions {
+  amenities?: string[]
+  handleAmenities?: (amenity: string) => void
+}
 
-const Amenities = ({filterFunctions}) => {
+const Amenities = ({ filterFunctions }: { filterFunctions: FilterFunctions }) => {
   const amenities = [
     [
       { label: "Attic" },

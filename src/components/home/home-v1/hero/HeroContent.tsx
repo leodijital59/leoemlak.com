@@ -5,7 +5,7 @@ const HeroContent = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 

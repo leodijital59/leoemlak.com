@@ -1,6 +1,9 @@
-'use client'
+interface FilterFunctions {
+  bedroomRanges?: string[]
+  handleBedroom?: (value: string) => void
+}
 
-const Bedroom = ({filterFunctions}) => {
+const Bedroom = ({ filterFunctions }: { filterFunctions: FilterFunctions }) => {
   const bedOptions = [
     { id: "xany", label: "any",value:0 },
     { id: "xoneplus", label: "1+",value:1 },
@@ -16,11 +19,11 @@ const Bedroom = ({filterFunctions}) => {
         <div className="selection" key={option.id}>
           <input
             id={option.id}
-           
+
             type="radio"
             onChange={(e)=>filterFunctions?.handlebedrooms(option.value)}
             checked={filterFunctions?.bedrooms == option.value}
-            
+
           />
           <label htmlFor={option.id}>{option.label}</label>
         </div>

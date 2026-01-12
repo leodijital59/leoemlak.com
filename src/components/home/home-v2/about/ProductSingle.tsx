@@ -1,5 +1,5 @@
 import products from "@/data/listings";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const ProductSingle = () => {
   return (

@@ -1,9 +1,8 @@
-import React from "react";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import listings from "@/data/listings";
 import Image from "@/components/common/Image";
 import { useState } from "react";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const ListingsFavourites = () => {
   const [favoriteListings, setFavoriteListings] = useState(

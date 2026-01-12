@@ -1,7 +1,6 @@
 
 'use client'
 
-import React from 'react'
 import BlogFilter from './BlogFilter'
 import Pagination from '../Pagination'
 

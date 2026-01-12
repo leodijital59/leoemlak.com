@@ -1,11 +1,11 @@
 
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const FeaturedListings = ({ data, colstyle }) => {
   return (
     <>
-      {data.map((listing) => (
+      {data.map((listing: any) => (
         <div
           className={` ${colstyle ? "col-sm-6 col-lg-6" : "col-sm-12"}  `}
           key={listing.id}

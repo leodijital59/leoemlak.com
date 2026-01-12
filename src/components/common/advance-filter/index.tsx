@@ -33,7 +33,7 @@ const AdvanceFilterModal = () => {
   ];
 
   const customStyles = {
-    option: (baseStyles: any, state: { isSelected: boolean; isFocused: any; }) => {
+    option: (baseStyles: any, state: { isSelected: boolean; isFocused: boolean; }) => {
       return {
         ...baseStyles,
         backgroundColor: state.isSelected

@@ -1,4 +1,3 @@
-import React from "react";
 
 const professionalInfoData = [
   { label: "Broker address", content: "House on the Northridge" },

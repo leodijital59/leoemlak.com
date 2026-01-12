@@ -1,7 +1,7 @@
 import { blogsThree } from "@/data/blogs";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
-import React, { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 const BlogFilter = () => {
   
@@ -9,7 +9,7 @@ const BlogFilter = () => {
   const [filteredBlogs, setFilteredBlogs] = useState(blogsThree);
   const [activeCategory, setActiveCategory] = useState("All");
 
-  const handleFilter = (category) => {
+  const handleFilter = (category: string) => {
     if (category === "All") {
       setFilteredBlogs(blogsThree);
     } else {

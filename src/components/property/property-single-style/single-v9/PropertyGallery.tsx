@@ -7,7 +7,7 @@ import ContactWithAgent from "./ContactWithAgent";
 import ScheduleForm from "../single-v2/ScheduleForm";
 
 const PropertyGallery = ({ id }) => {
-  const data = listings.filter((elm) => elm.id == id)[0] || listings[0];
+  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
   return (
     <>
       <div className="ps-widget bdrs12  mb30 overflow-hidden mb30 mt30 position-relative">

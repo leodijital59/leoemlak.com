@@ -1,5 +1,5 @@
 import ModalVideo from "@/components/common/ModalVideo";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const PropertyVideo = () => {
   const [isOpen, setOpen] = useState(false);

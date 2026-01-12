@@ -1,5 +1,5 @@
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import Image from "@/components/common/Image";
 
 const UploadPhotoGallery = () => {

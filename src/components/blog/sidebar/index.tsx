@@ -1,4 +1,3 @@
-import React from "react";
 import SearchBox from "./SearchBox";
 import Categrory from "./Categrory";
 import LatestPost from "./LatestPost";

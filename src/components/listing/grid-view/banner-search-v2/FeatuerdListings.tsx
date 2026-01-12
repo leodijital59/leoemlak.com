@@ -1,11 +1,11 @@
 
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
-const FeaturedListings = ({data,colstyle}) => {
+const FeaturedListings = ({data,colstyle}: {data: any[], colstyle?: boolean}) => {
   return (
     <>
-      {data.map((listing) => (
+      {data.map((listing: any) => (
         <div   className={` ${colstyle ? 'col-sm-12':'col-sm-6 col-lg-4'}  `}  key={listing.id}>
           <div className={colstyle ? "listing-style7 listCustom listing-type" : "listing-style7"}   >
             <div className="list-thumb">

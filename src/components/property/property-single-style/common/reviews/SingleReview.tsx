@@ -1,7 +1,6 @@
 import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import Image from "@/components/common/Image";
-import React from "react";
 
 const reviews = [
   {

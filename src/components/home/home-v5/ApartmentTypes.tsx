@@ -1,6 +1,5 @@
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
-import React from "react";
+import { Link } from "@tanstack/react-router";
 
 const ApartmentTypes = () => {
   const apartmentData = [

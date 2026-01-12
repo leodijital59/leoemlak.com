@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react";
 
 const ListingStatus = ({filterFunctions}) => {
   const options = [

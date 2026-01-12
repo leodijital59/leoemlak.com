@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 const HeroContent = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
   const [searchValues, setSearchValues] = useState({
     buy: "",
@@ -10,7 +10,7 @@ const HeroContent = () => {
     sold: "",
   });
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
@@ -121,7 +121,7 @@ const HeroContent = () => {
                     <button
                       className="advance-search-icon ud-btn btn-dark"
                       type="button"
-                      onClick={() => router.push("/map-v4")}
+                      onClick={() => navigate({ to: "/map-v4" })}
                     >
                       <span className="flaticon-search" />
                     </button>

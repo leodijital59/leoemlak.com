@@ -9,7 +9,7 @@ const FilterItems = () => {
     setShowSelect(true);
   }, []);
   // price range handler
-  const handleOnChange = (value) => {
+  const handleOnChange = (value: number) => {
     setPrice(value);
   };
 

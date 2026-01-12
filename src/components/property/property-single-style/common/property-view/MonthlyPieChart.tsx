@@ -1,4 +1,3 @@
-import React from "react";
 import { PieChart, Pie, ResponsiveContainer } from "recharts";
 
 const data01 = [

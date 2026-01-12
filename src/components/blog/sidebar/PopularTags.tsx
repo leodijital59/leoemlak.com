@@ -1,4 +1,3 @@
-import React from "react";
 
 const PopularTags = () => {
   const tags = ["For Sale", "House", "Realton", "Apartments", "Villa"];

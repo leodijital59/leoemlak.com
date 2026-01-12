@@ -123,7 +123,7 @@ export default function PropertyFiltering() {
   };
 
   useEffect(() => {
-    const refItems = listings.filter((elm) => {
+    const refItems = listings.filter((elm: any) => {
       if (listingStatus == "All") {
         return true;
       } else if (listingStatus == "Buy") {
@@ -136,7 +136,7 @@ export default function PropertyFiltering() {
     let filteredArrays = [];
 
     if (propertyTypes.length > 0) {
-      const filtered = refItems.filter((elm) =>
+      const filtered = refItems.filter((elm: any) =>
         propertyTypes.includes(elm.propertyType)
       );
       filteredArrays = [...filteredArrays, filtered];
@@ -173,7 +173,7 @@ export default function PropertyFiltering() {
       ...filteredArrays,
       !categories.length
         ? [...refItems]
-        : refItems.filter((elm) =>
+        : refItems.filter((elm: any) =>
             categories.every((elem) => elm.features.includes(elem))
           ),
     ];

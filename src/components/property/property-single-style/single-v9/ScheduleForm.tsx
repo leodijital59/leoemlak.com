@@ -12,13 +12,11 @@ const ScheduleForm = () => {
   ];
 
   const customStyles = {
-    option: (styles, { isFocused, isSelected, isHovered }) => {
+    option: (styles: any, { isFocused, isSelected }: { isFocused: boolean; isSelected: boolean }) => {
       return {
         ...styles,
         backgroundColor: isSelected
           ? "#eb6753"
-          : isHovered
-          ? "#eb675312"
           : isFocused
           ? "#eb675312"
           : undefined,

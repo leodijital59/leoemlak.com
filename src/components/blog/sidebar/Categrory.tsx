@@ -1,4 +1,3 @@
-import React from "react";
 
 const Category = () => {
   const categories = ["Houses", "Apartments", "Office", "Villa", "Townhome"];

@@ -2,7 +2,7 @@
 'use client'
 
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import TopFilter from './TopFilter'
 
 
@@ -69,14 +69,14 @@ export default function FilteringAgent() {
 
     useEffect(() => {
       
-        const refItems = agents.filter((elm) => {
+        const refItems = agents.filter((elm: any) => {
          return  elm
           });
       
           let filteredArrays = [];
       
           if (propertyTypes.length > 0) {
-            const filtered = refItems.filter((elm) =>
+            const filtered = refItems.filter((elm: any) =>
             propertyTypes.includes(elm.category)
             );
             filteredArrays = [...filteredArrays, filtered];

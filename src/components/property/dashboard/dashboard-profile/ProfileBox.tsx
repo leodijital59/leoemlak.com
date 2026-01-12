@@ -1,5 +1,5 @@
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "@/components/common/Image";
 
 const ProfileBox = () => {

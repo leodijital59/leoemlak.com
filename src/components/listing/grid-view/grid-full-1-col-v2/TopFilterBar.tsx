@@ -1,9 +1,8 @@
 
 'use client'
 
-import React from "react";
 
-const TopFilterBar = ({setCurrentSortingOption,pageContentTrac}) => {
+const TopFilterBar = ({setCurrentSortingOption,pageContentTrac}: {setCurrentSortingOption: any, pageContentTrac: any}) => {
   return (
     <>
       <div className="col-sm-6">

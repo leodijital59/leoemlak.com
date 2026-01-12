@@ -43,7 +43,7 @@ const images = [
 ];
 
 const PropertyGallery = ({id}) => {
-  const data = listings.filter((elm) => elm.id == id)[0] || listings[0];
+  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
   return (
     <>
       <Gallery>

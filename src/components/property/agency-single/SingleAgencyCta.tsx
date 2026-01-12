@@ -1,12 +1,11 @@
 import { agentsData } from "@/data/agency";
 import Image from "@/components/common/Image";
-import React from "react";
 
 
 
 const SingleAgencyCta = ({id}) => {
 
-  const data = agentsData.filter((elm) => elm.id == id)[0] || agentsData[0];
+  const data = agentsData.filter((elm: any) => elm.id == id)[0] || agentsData[0];
 
   const agentData = {
     name: data.name,

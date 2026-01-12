@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 const HeroContent = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("buy");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
@@ -68,7 +68,7 @@ const HeroContent = () => {
                     <button
                       className="advance-search-icon ud-btn btn-thm ms-4"
                       type="button"
-                      onClick={() => router.push("/grid-full-2-col")}
+                      onClick={() => navigate({ to: "/grid-full-2-col" })}
                     >
                       <span className="flaticon-search" />
                     </button>

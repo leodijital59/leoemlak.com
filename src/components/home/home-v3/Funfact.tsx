@@ -1,8 +1,8 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
 import { useInView } from "react-intersection-observer";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const Funfact = () => {
   const funFacts = [
@@ -36,7 +36,7 @@ const Funfact = () => {
   );
 };
 
-const CounterWithAnimation = ({ end }) => {
+const CounterWithAnimation = ({ end }: { end: number }) => {
   const countRef = useRef(null);
   const [inView, setInView] = useState(false);
 

@@ -711,7 +711,6 @@ li {
 }
 
 .dashboard__main {
-    margin-top: 87px;
     padding-left: 300px;
     width: 100%;
 }
@@ -7234,6 +7233,10 @@ header.nav-homepage-style {
     position: fixed;
     width: 100%;
     z-index: 3;
+
+    &.dashboard {
+        width: 300px;
+    }
 }
 header.nav-homepage-style .ace-responsive-menu .sub-menu {
     background-color: #ffffff;

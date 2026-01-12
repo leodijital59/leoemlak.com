@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react";
 import SearchBox from "./SearchBox";
 import ListingStatus from "./ListingStatus";
 import PropertyType from "./PropertyType";

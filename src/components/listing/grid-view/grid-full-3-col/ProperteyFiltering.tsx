@@ -4,7 +4,7 @@
 
 
 import listings from "@/data/listings";
-import React, { useState,useEffect } from 'react'
+import { useState,useEffect } from 'react'
 import ListingSidebar from '../../sidebar'
 import AdvanceFilterModal from '@/components/common/advance-filter-two'
 import TopFilterBar from './TopFilterBar'
@@ -67,7 +67,7 @@ export default function ProperteyFiltering() {
 
     }
 
-    const handlelistingStatus =(elm)=>{
+    const handlelistingStatus =(elm: any)=>{
       setListingStatus(pre => pre == elm ? 'All':elm)
 
 
@@ -75,7 +75,7 @@ export default function ProperteyFiltering() {
 
     
     
-    const handlepropertyTypes =(elm)=>{
+    const handlepropertyTypes =(elm: any)=>{
 
 
       if (elm == 'All') {
@@ -87,27 +87,27 @@ export default function ProperteyFiltering() {
     
 
     }
-    const handlepriceRange =(elm)=>{
+    const handlepriceRange =(elm: any)=>{
       setPriceRange(elm)
 
     }
-    const handlebedrooms =(elm)=>{
+    const handlebedrooms =(elm: any)=>{
       setBedrooms(elm)
     }
-    const handlebathroms =(elm)=>{
+    const handlebathroms =(elm: any)=>{
       setBathroms(elm)
     }
-    const handlelocation =(elm)=>{
+    const handlelocation =(elm: any)=>{
       console.log(elm)
       setLocation(elm)
     }
-    const handlesquirefeet =(elm)=>{
+    const handlesquirefeet =(elm: any)=>{
       setSquirefeet(elm)
     }
-    const handleyearBuild =(elm)=>{
+    const handleyearBuild =(elm: any)=>{
       setyearBuild(elm)
     }
-    const handlecategories =(elm)=>{
+    const handlecategories =(elm: any)=>{
       if (elm == 'All') {
         setCategories([])
         
@@ -144,7 +144,7 @@ export default function ProperteyFiltering() {
 
     useEffect(() => {
       
-        const refItems = listings.filter((elm) => {
+        const refItems = listings.filter((elm: any) => {
             if (listingStatus == "All") {
               return true;
             } else if (listingStatus == "Buy") {
@@ -157,7 +157,7 @@ export default function ProperteyFiltering() {
           let filteredArrays = [];
       
           if (propertyTypes.length > 0) {
-            const filtered = refItems.filter((elm) =>
+            const filtered = refItems.filter((elm: any) =>
             propertyTypes.includes(elm.propertyType)
             );
             filteredArrays = [...filteredArrays, filtered];
@@ -166,7 +166,7 @@ export default function ProperteyFiltering() {
           filteredArrays = [...filteredArrays,refItems.filter((el=>el.bath >=bathroms)) ];
          
     
-          filteredArrays = [...filteredArrays,!categories.length ? [...refItems] : refItems.filter((elm)=>categories.every(elem=>elm.features.includes(elem))) ];
+          filteredArrays = [...filteredArrays,!categories.length ? [...refItems] : refItems.filter((elm: any)=>categories.every(elem=>elm.features.includes(elem))) ];
   
           if (location != 'All Cities') {
            

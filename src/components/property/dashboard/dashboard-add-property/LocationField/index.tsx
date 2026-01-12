@@ -1,4 +1,3 @@
-import React from "react";
 import SelectMulitField from "./SelectMulitField";
 import Map from "./Map";
 

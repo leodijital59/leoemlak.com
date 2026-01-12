@@ -1,19 +1,25 @@
 'use client'
 
-import React from "react";
 import Location from "./Location";
 
 const propertyTypes = [
   { label: "Houses" },
-
-  { label: "Apartments",},
+  { label: "Apartments" },
   { label: "Office" },
   { label: "Villa" },
 ];
 
+interface FilterFunctions {
+  setSearchQuery: (value: string) => void
+  propertyTypes: string[]
+  setPropertyTypes: (types: string[]) => void
+  handlepropertyTypes: (type: string) => void
+  locations: string[]
+  setLocations: (locations: string[]) => void
+  handleLocation: (location: string) => void
+}
 
-
-const TopFilter = ({filterFunctions}) => {
+const TopFilter = ({ filterFunctions }: { filterFunctions: FilterFunctions }) => {
   return (
     <>
       <div className="col-md-9">
@@ -43,17 +49,17 @@ const TopFilter = ({filterFunctions}) => {
                   <div className="checkbox-style1">
                                           <label className="custom_checkbox">
                         All
-                      <input type="checkbox" 
-                      checked={!filterFunctions?.propertyTypes.length}
-                      onChange={(e=>{filterFunctions?.setPropertyTypes([])})}/>
+                      <input type="checkbox"
+                      checked={!filterFunctions.propertyTypes.length}
+                      onChange={() => filterFunctions.setPropertyTypes([])}/>
                       <span className="checkmark" />
                     </label>
                     {propertyTypes.map((property, index) => (
                       <label className="custom_checkbox" key={index} >
                       {property.label}
                       <input type="checkbox"
-                      checked={filterFunctions?.propertyTypes.includes(property.label)}
-                      onChange={(e=>{filterFunctions.handlepropertyTypes(property.label)})}
+                      checked={filterFunctions.propertyTypes.includes(property.label)}
+                      onChange={() => filterFunctions.handlepropertyTypes(property.label)}
                        />
                       <span className="checkmark" />
                     </label>

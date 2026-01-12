@@ -1,4 +1,6 @@
-export default [
+import type { Property } from '@/types'
+
+const listings: Property[] = [
   {
 
     id: 1,
@@ -709,3 +711,5 @@ export default [
   ],
   },
 ];
+
+export default listings

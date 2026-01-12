@@ -1,12 +1,11 @@
 import agents from "@/data/agents";
 import Image from "@/components/common/Image";
-import React from "react";
 
 
 
 const SingleAgentCta = ({id}) => {
 
-  const data = agents.filter((elm) => elm.id == id)[0] || agents[0];
+  const data = agents.filter((elm: any) => elm.id == id)[0] || agents[0];
 
 
 

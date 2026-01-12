@@ -1,4 +1,3 @@
-import React from "react";
 import UploadPhotoGallery from "./UploadPhotoGallery";
 import VideoOptionFiled from "./VideoOptionFiled";
 

@@ -9,7 +9,7 @@ import { useMemo, useState } from "react";
 
 import listings from "@/data/listings";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 const option = {
   zoomControl: true,

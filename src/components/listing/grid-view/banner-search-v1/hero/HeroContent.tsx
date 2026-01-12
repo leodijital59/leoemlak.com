@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-const HeroContent = ({filterFunctions}) => {
+const HeroContent = ({filterFunctions}: {filterFunctions: any}) => {
   const [activeTab, setActiveTab] = useState("buy");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 

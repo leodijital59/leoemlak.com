@@ -1,6 +1,5 @@
 import apartmentType from "@/data/apartmentType";
-import Link from "@tanstack/react-router";
-import React from "react";
+import { Link } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 

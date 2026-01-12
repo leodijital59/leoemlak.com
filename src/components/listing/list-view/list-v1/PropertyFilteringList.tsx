@@ -1,6 +1,6 @@
 
 import listings from "@/data/listings";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ListingSidebar from "../../sidebar";
 import TopFilterBar from "./TopFilterBar";
 import FeaturedListings from "./FeatuerdListings";
@@ -127,7 +127,7 @@ export default function PropertyFilteringList() {
   };
 
   useEffect(() => {
-    const refItems = listings.filter((elm) => {
+    const refItems = listings.filter((elm: any) => {
       if (listingStatus == "All") {
         return true;
       } else if (listingStatus == "Buy") {
@@ -140,7 +140,7 @@ export default function PropertyFilteringList() {
     let filteredArrays = [];
 
     if (propertyTypes.length > 0) {
-      const filtered = refItems.filter((elm) =>
+      const filtered = refItems.filter((elm: any) =>
         propertyTypes.includes(elm.propertyType)
       );
       filteredArrays = [...filteredArrays, filtered];
@@ -177,7 +177,7 @@ export default function PropertyFilteringList() {
       ...filteredArrays,
       !categories.length
         ? [...refItems]
-        : refItems.filter((elm) =>
+        : refItems.filter((elm: any) =>
             categories.every((elem) => elm.features.includes(elem))
           ),
     ];

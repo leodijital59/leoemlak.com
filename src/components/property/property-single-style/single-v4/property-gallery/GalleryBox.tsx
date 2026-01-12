@@ -4,7 +4,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const GalleryBox = ({ id }) => {
-  const data = listings.filter((elm) => elm.id == id)[0] || listings[0];
+  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
   const imageUrls = [
     "/images/listings/listing-single-slide1.jpg",
     "/images/listings/listing-single-slide2.jpg",

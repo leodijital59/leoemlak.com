@@ -1,10 +1,10 @@
 
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
-const PopularListings = ({ data }) => {
+const PopularListings = ({ data }: { data: any[] }) => {
   return (
     <>
       <Swiper
@@ -25,7 +25,7 @@ const PopularListings = ({ data }) => {
           },
         }}
       >
-        {data.slice(0, 8).map((listing) => (
+        {data.slice(0, 8).map((listing: any) => (
           <SwiperSlide key={listing.id}>
             <div className="item">
               <div className="listing-style1">

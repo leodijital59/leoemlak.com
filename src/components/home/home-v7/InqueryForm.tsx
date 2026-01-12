@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 
 const InqueryForm = () => {
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     // Handle form submission
   };
@@ -31,13 +31,11 @@ const InqueryForm = () => {
   ];
 
   const customStyles = {
-    option: (styles, { isFocused, isSelected, isHovered }) => {
+    option: (styles: any, { isFocused, isSelected }: { isFocused: boolean; isSelected: boolean }) => {
       return {
         ...styles,
         backgroundColor: isSelected
           ? "#eb6753"
-          : isHovered
-          ? "#eb675312"
           : isFocused
           ? "#eb675312"
           : undefined,

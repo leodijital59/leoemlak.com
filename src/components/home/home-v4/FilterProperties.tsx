@@ -1,6 +1,6 @@
 import listings from "@/data/listings";
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 const FilterProperties = () => {
@@ -10,7 +10,7 @@ const FilterProperties = () => {
     (listing) => listing.tags && listing.tags.includes(selectedTag)
   );
 
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag: string) => {
     setSelectedTag(tag);
   };
 

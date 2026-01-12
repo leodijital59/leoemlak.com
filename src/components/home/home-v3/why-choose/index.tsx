@@ -1,5 +1,5 @@
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import Features from "./Features";
 
 const WhyChoose = () => {

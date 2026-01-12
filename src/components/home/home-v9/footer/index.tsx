@@ -1,5 +1,5 @@
 import Image from "@/components/common/Image";
-import Link from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import ContactMeta from "./ContactMeta";
 import Social from "./Social";
 import Subscribe from "./Subscribe";
