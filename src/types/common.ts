@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import type React from 'react'
 
 export interface NavItem {
   id: number
@@ -33,7 +33,7 @@ export interface PageMeta {
 }
 
 export interface LayoutProps {
-  children: ReactNode
+  children: React.ReactNode
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

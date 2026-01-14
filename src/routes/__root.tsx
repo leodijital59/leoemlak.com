@@ -13,7 +13,7 @@ export const Route = createRootRoute({
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
-      { title: "TanStack Start Starter" }
+      { title: import.meta.env.VITE_APP_NAME }
     ],
     links: [
       {
@@ -44,11 +44,11 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   // Bootstrap initialization
-  /* useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       import('bootstrap')
     }
-  }, [])*/
+  }, [])
 
   // AOS initialization
   useEffect(() => {
@@ -73,9 +73,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           '--title-font-family': 'Poppins, sans-serif',
         }}
       >
-        <div className="wrapper ovh">
-          {children}
-        </div>
+        {children}
         <ScrollToTop />
         <Scripts />
       </body>

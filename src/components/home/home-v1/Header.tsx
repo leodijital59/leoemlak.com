@@ -1,7 +1,6 @@
 import {Link} from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import MainMenu from "@/components/common/MainMenu";
-import SidebarPanel from "@/components/common/sidebar-panel";
 import Image from "@/components/common/Image";
 
 function Header () {
@@ -25,7 +24,7 @@ function Header () {
   return (
     <>
       <header
-        className={`header-nav nav-homepage-style main-menu  ${
+        className={`header-nav nav-homepage-style main-menu light-header ${
           navbar ? "sticky slideInDown animated" : ""
         }`}
       >
@@ -35,15 +34,7 @@ function Header () {
               <div className="col-auto">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="logos mr40">
-                    <Link className="header-logo logo1" to="/">
-                      <Image
-                        width={138}
-                        height={44}
-                        src="/images/header-logo.svg"
-                        alt="Header Logo"
-                      />
-                    </Link>
-                    <Link className="header-logo logo2" to="/">
+                    <Link className="header-logo" to="/">
                       <Image
                         width={138}
                         height={44}
@@ -63,18 +54,6 @@ function Header () {
           </div>
         </nav>
       </header>
-      {/* End Header */}
-
-      {/* DesktopSidebarMenu */}
-      <div
-        className="offcanvas offcanvas-end"
-        tabIndex={-1}
-        id="SidebarPanel"
-        aria-labelledby="SidebarPanelLabel"
-      >
-        <SidebarPanel />
-      </div>
-      {/* Sidebar Panel End */}
     </>
   );
 }

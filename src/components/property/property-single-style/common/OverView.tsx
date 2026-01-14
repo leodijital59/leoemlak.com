@@ -37,8 +37,8 @@ const OverView = ({id}) => {
       value: data.propertyType,
     },
   ];
-  
- 
+
+
   return (
     <>
       {overviewData.map((item, index) => (
