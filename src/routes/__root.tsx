@@ -1,19 +1,20 @@
 /// <reference types="vite/client" />
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import Aos from 'aos'
 import { useEffect } from 'react'
-import mainCss from '../styles/main.scss?url'
 import ScrollToTop from '@/components/common/ScrollTop'
 
 export const Route = createRootRoute({
-  head: () => ({
+  head: ({ matches }) => ({
     meta: [
       { charSet: "utf-8" },
       {
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
-      { title: import.meta.env.VITE_APP_NAME }
+      { title: [matches.at(-1)?.staticData.getTitle?.call(undefined), import.meta.env.VITE_APP_NAME].filter(Boolean).join(' | ') }
     ],
     links: [
       {
@@ -28,7 +29,6 @@ export const Route = createRootRoute({
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap',
       },
-      { rel: 'stylesheet', href: mainCss },
     ],
   }),
   component: RootComponent,
@@ -74,6 +74,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         }}
       >
         {children}
+        <TanStackDevtools
+            config={{
+              position: 'bottom-right',
+            }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+        />
         <ScrollToTop />
         <Scripts />
       </body>

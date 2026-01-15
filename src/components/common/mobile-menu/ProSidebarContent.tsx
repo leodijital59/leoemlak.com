@@ -1,7 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
 
 import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
-import { isParentActive } from "@/utilis/isMenuActive";
+import { isParentActive } from "@/lib/utils";
 import menu from "@/data/menu";
 
 const ProSidebarContent = () => {

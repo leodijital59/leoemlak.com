@@ -1,15 +1,17 @@
 import { defineConfig } from 'vite'
+import { devtools } from '@tanstack/devtools-vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
-// import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   server: {
     port: 3000,
   },
   plugins: [
-    // tailwindcss(),
+    devtools(),
+    tailwindcss(),
     tanstackStart({
       srcDirectory: 'src', // This is the default
       router: {
@@ -22,30 +24,4 @@ export default defineConfig({
     }),
     viteReact(),
   ],
-  /* optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        '.js': 'jsx',
-      },
-    },
-  },
-  esbuild: {
-    loader: 'jsx',
-    include: /src\/.*\.jsx?$/,
-    exclude: [],
-  },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        quietDeps: true,
-        silenceDeprecations: [
-          'mixed-decls',
-          'legacy-js-api',
-          'import',
-          'slash-div',
-          'global-builtin',
-        ],
-      },
-    },
-  },*/
 })
