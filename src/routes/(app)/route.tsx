@@ -2,13 +2,13 @@ import {Outlet, createFileRoute} from '@tanstack/react-router'
 import Header from "@/components/home/home-v1/Header.tsx";
 import MobileMenu from "@/components/common/mobile-menu";
 import Footer from "@/components/common/default-footer";
-import mainCss from '@/styles/main.scss?url';
+import css from '@/styles/main.scss?url';
 
 export const Route = createFileRoute('/(app)')({
     component: AppLayoutComponent,
     head: () => ({
         links: [
-            { rel: 'stylesheet', href: mainCss }
+            { rel: 'stylesheet', href: css }
         ]
     })
 })

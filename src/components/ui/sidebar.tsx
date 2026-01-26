@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {Link} from "@tanstack/react-router";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -500,6 +501,7 @@ function SidebarMenuButton({
   isActive = false,
   variant = "default",
   size = "default",
+  url = undefined,
   tooltip,
   className,
   ...props
@@ -507,12 +509,14 @@ function SidebarMenuButton({
   asChild?: boolean
   isActive?: boolean
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  url?: string
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : url ? Link : "button"
   const { isMobile, state } = useSidebar()
 
   const button = (
     <Comp
+      to={url}
       data-slot="sidebar-menu-button"
       data-sidebar="menu-button"
       data-size={size}
