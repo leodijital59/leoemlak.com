@@ -7,7 +7,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react"
 
-import { NavMain } from "@/components/nav-main"
+import { NavMain, type NavItem } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -21,7 +21,10 @@ import {
 } from "@/components/ui/sidebar"
 import {Link} from "@tanstack/react-router";
 
-const data = {
+const data: {
+  navMain: NavItem[]
+  navSecondary: { title: string; url: string; icon: typeof IconSettings }[]
+} = {
   navMain: [
     {
       title: "Dashboard",
@@ -29,19 +32,29 @@ const data = {
       icon: IconDashboard,
     },
     {
-      title: "Properties",
+      title: "İlanlar",
       url: "#",
       icon: IconBuildingCommunity,
+      items: [
+        {
+          title: "İlan Listesi",
+          url: "/admin/properties",
+        },
+        {
+          title: "Yeni İlan Ekle",
+          url: "/admin/properties/add",
+        },
+      ],
     },
     {
-      title: "Users",
+      title: "Kullanıcılar",
       url: "#",
       icon: IconUsers,
     },
   ],
   navSecondary: [
     {
-      title: "Settings",
+      title: "Ayarlar",
       url: "#",
       icon: IconSettings,
     },
@@ -60,7 +73,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <Link to="/" target="_blank">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">LeoEmlak</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

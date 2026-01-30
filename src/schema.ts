@@ -10,7 +10,6 @@ export const propertyTypeEnum = pgEnum('property_type', [
     'isyeri_ofis',
     'isyeri_dukkan',
     'isyeri_depo',
-    'isyeri_fabrika',
 ]);
 
 export const listingTypeEnum = pgEnum('listing_type', [
