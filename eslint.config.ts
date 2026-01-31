@@ -22,7 +22,7 @@ export default [
             '@typescript-eslint/no-unsafe-member-access': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
 
-            '@stylistic/spaced-comment': 'never',
+            '@stylistic/spaced-comment': 'off',
         },
     },
 ]

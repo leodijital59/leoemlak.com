@@ -1,10 +1,10 @@
 CREATE TYPE "public"."building_age" AS ENUM('0', '1-5', '6-10', '11-15', '16-20', '21+');--> statement-breakpoint
 CREATE TYPE "public"."heating_type" AS ENUM('Yok', 'Soba', 'Dogalgaz', 'Klima', 'Merkezi', 'Kombi', 'Yerden', 'Elektrik');--> statement-breakpoint
 CREATE TYPE "public"."listing_status" AS ENUM('active', 'passive');--> statement-breakpoint
-CREATE TYPE "public"."listing_type" AS ENUM('satilik', 'kiralik');--> statement-breakpoint
-CREATE TYPE "public"."property_type" AS ENUM('konut_daire', 'konut_villa', 'konut_mustakil', 'konut_residence', 'isyeri_ofis', 'isyeri_dukkan', 'isyeri_depo', 'isyeri_fabrika');--> statement-breakpoint
+CREATE TYPE "public"."listing_type" AS ENUM('sold', 'rented');--> statement-breakpoint
+CREATE TYPE "public"."property_type" AS ENUM('konut_daire', 'konut_villa', 'konut_mustakil', 'konut_residence', 'isyeri_ofis', 'isyeri_dukkan', 'isyeri_depo');--> statement-breakpoint
 CREATE TABLE "properties" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "properties_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"title" varchar(500) NOT NULL,
@@ -39,14 +39,14 @@ CREATE TABLE "properties" (
 );
 --> statement-breakpoint
 CREATE TABLE "property_features" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "property_features_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(200) NOT NULL,
 	CONSTRAINT "property_features_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE "property_images" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "property_images_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
-	"property_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"property_id" uuid NOT NULL,
 	"url" varchar(1000) NOT NULL,
 	"order" integer DEFAULT 0 NOT NULL,
 	"is_main_image" boolean DEFAULT false NOT NULL,
@@ -54,9 +54,9 @@ CREATE TABLE "property_images" (
 );
 --> statement-breakpoint
 CREATE TABLE "property_property_features" (
-	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "property_property_features_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
-	"property_id" integer NOT NULL,
-	"feature_id" integer NOT NULL
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"property_id" uuid NOT NULL,
+	"feature_id" uuid NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "property_images" ADD CONSTRAINT "property_images_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
