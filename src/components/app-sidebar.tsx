@@ -1,13 +1,16 @@
 import * as React from "react"
 import {
   IconBuildingCommunity,
+  IconCategory,
   IconDashboard,
   IconInnerShadowTop,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
 
-import { NavMain, type NavItem } from "@/components/nav-main"
+import {Link} from "@tanstack/react-router";
+import type {NavItem} from "@/components/nav-main";
+import { NavMain  } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
@@ -19,7 +22,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import {Link} from "@tanstack/react-router";
 
 const data: {
   navMain: NavItem[]
@@ -35,6 +37,11 @@ const data: {
       title: "İlanlar",
       url: "/admin/properties",
       icon: IconBuildingCommunity,
+    },
+    {
+      title: "Kategoriler",
+      url: "/admin/categories",
+      icon: IconCategory,
     },
     {
       title: "Kullanıcılar",

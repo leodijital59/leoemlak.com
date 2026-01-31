@@ -1,9 +1,48 @@
 {
-  "id": "f9a438de-2669-45a6-9f77-c60b6293be34",
+  "id": "5be3fd14-8061-4607-836d-8e448eb2c130",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.categories": {
+      "name": "categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.properties": {
       "name": "properties",
       "schema": "",
@@ -41,10 +80,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "property_type": {
-          "name": "property_type",
-          "type": "property_type",
-          "typeSchema": "public",
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -91,13 +129,7 @@
           "name": "neighborhood",
           "type": "varchar(200)",
           "primaryKey": false,
-          "notNull": false
-        },
-        "address": {
-          "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "latitude": {
           "name": "latitude",
@@ -217,7 +249,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "properties_category_id_categories_id_fk": {
+          "name": "properties_category_id_categories_id_fk",
+          "tableFrom": "properties",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -473,19 +519,6 @@
       "values": [
         "sold",
         "rented"
-      ]
-    },
-    "public.property_type": {
-      "name": "property_type",
-      "schema": "public",
-      "values": [
-        "konut_daire",
-        "konut_villa",
-        "konut_mustakil",
-        "konut_residence",
-        "isyeri_ofis",
-        "isyeri_dukkan",
-        "isyeri_depo"
       ]
     }
   },

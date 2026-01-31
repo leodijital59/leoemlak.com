@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
+import {ErrorComponent, HeadContent, Outlet, Scripts, createRootRoute} from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Aos from 'aos'
@@ -38,6 +38,9 @@ export const Route = createRootRoute({
     ],
   }),
   component: RootComponent,
+  errorComponent: ({ error }) => {
+    return <ErrorComponent error={error} />
+  }
 })
 
 function RootComponent() {

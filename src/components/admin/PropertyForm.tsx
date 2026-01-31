@@ -12,7 +12,6 @@ import {
     listingStatusOptions,
     listingTypeOptions,
     propertyFormSchema,
-    propertyTypeOptions
 } from "@/lib/validations/property";
 import {
     Form,
@@ -65,18 +64,63 @@ export interface PropertyFormInitialData extends PropertyFormValues {
     }[];
 }
 
+export interface CategoryOption {
+    id: string;
+    name: string;
+    parentId: string | null;
+}
+
 interface PropertyFormProps {
     mode: "create" | "edit";
     initialData?: PropertyFormInitialData;
+    categories: CategoryOption[];
     onSubmit: (formData: FormData) => Promise<void>;
     onCancel: () => void;
     onDelete?: () => Promise<void>;
 }
 
+interface CategorySelectItemsProps {
+    categories: CategoryOption[];
+    parentId?: string | null;
+    depth?: number;
+}
+
+function CategorySelectItems({ categories, parentId = null, depth = 0 }: CategorySelectItemsProps) {
+    const children = categories.filter(c => c.parentId === parentId);
+    if (children.length === 0) return null;
+
+    return (
+        <>
+            {children.map((category) => {
+                const hasChildren = categories.some(c => c.parentId === category.id);
+                const indent = "\u00A0\u00A0".repeat(depth);
+
+                return (
+                    <React.Fragment key={category.id}>
+                        <SelectItem
+                            value={category.id}
+                            disabled={hasChildren}
+                            className={hasChildren ? "font-semibold" : ""}
+                            style={{ paddingLeft: `${(depth * 12) + 8}px` }}
+                        >
+                            {indent}{category.name}
+                        </SelectItem>
+                        <CategorySelectItems
+                            categories={categories}
+                            parentId={category.id}
+                            depth={depth + 1}
+                        />
+                    </React.Fragment>
+                );
+            })}
+        </>
+    );
+}
+
 const defaultValues = {
     title: "",
     description: "",
-    propertyType: undefined as string | undefined,
+    categoryId: undefined as string | undefined,
     listingType: undefined as string | undefined,
     listingStatus: "active",
     price: undefined as number | undefined,
@@ -84,7 +128,6 @@ const defaultValues = {
     province: "",
     district: "",
     neighborhood: "",
-    address: "",
     latitude: undefined as number | undefined,
     longitude: undefined as number | undefined,
     grossArea: undefined as number | undefined,
@@ -105,7 +148,7 @@ const defaultValues = {
     videoUrl: "",
 };
 
-export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }: PropertyFormProps) {
+export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel, onDelete }: PropertyFormProps) {
     const [images, setImages] = React.useState<ImageItem[]>([]);
     const [imagesToDelete, setImagesToDelete] = React.useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -126,15 +169,14 @@ export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }
         return {
             title: initialData.title,
             description: initialData.description,
-            propertyType: initialData.propertyType,
+            categoryId: initialData.categoryId,
             listingType: initialData.listingType,
             listingStatus: initialData.listingStatus,
             price: initialData.price,
             pricePerSqm: initialData.pricePerSqm ?? undefined,
             province: initialData.province,
             district: initialData.district,
-            neighborhood: initialData.neighborhood ?? "",
-            address: initialData.address ?? "",
+            neighborhood: initialData.neighborhood,
             latitude: initialData.latitude ?? undefined,
             longitude: initialData.longitude ?? undefined,
             grossArea: initialData.grossArea ?? undefined,
@@ -339,10 +381,10 @@ export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <FormField
                                     control={form.control}
-                                    name="propertyType"
+                                    name="categoryId"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Emlak Tipi *</FormLabel>
+                                            <FormLabel>Kategori *</FormLabel>
                                             <Select onValueChange={field.onChange} value={field.value}>
                                                 <FormControl>
                                                     <SelectTrigger className="w-full">
@@ -350,11 +392,7 @@ export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {propertyTypeOptions.map((option) => (
-                                                        <SelectItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
+                                                    <CategorySelectItems categories={categories} />
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage />
@@ -511,7 +549,7 @@ export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }
                                     name="neighborhood"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Mahalle</FormLabel>
+                                            <FormLabel>Mahalle *</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Örn: Caferağa" {...field} />
                                             </FormControl>
@@ -520,23 +558,6 @@ export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }
                                     )}
                                 />
                             </div>
-
-                            <FormField
-                                control={form.control}
-                                name="address"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Adres</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Detaylı adres bilgisi..."
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
 
                             {/* Harita ile Konum Seçimi */}
                             <div className="space-y-2">

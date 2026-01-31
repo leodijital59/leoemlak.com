@@ -1,15 +1,5 @@
 import { z } from "zod";
 
-export const propertyTypeOptions = [
-  { value: "konut_daire", label: "Daire" },
-  { value: "konut_villa", label: "Villa" },
-  { value: "konut_mustakil", label: "Müstakil Ev" },
-  { value: "konut_residence", label: "Residence" },
-  { value: "isyeri_ofis", label: "Ofis" },
-  { value: "isyeri_dukkan", label: "Dükkan" },
-  { value: "isyeri_depo", label: "Depo" },
-] as const;
-
 export const listingTypeOptions = [
   { value: "sold", label: "Satılık" },
   { value: "rented", label: "Kiralık" },
@@ -40,7 +30,6 @@ export const buildingAgeOptions = [
   { value: "21+", label: "21+ Yıl" },
 ] as const;
 
-const propertyTypes = ["konut_daire", "konut_villa", "konut_mustakil", "konut_residence", "isyeri_ofis", "isyeri_dukkan", "isyeri_depo"] as const;
 const listingTypes = ["sold", "rented"] as const;
 const listingStatuses = ["active", "passive"] as const;
 const heatingTypes = ["Yok", "Soba", "Dogalgaz", "Klima", "Merkezi", "Kombi", "Yerden", "Elektrik"] as const;
@@ -50,7 +39,7 @@ export const propertyFormSchema = z.object({
   // Temel Bilgiler
   title: z.string().min(3, "Başlık en az 3 karakter olmalıdır"),
   description: z.string().min(10, "Açıklama en az 10 karakter olmalıdır"),
-  propertyType: z.enum(propertyTypes, { message: "Emlak tipi seçiniz" }),
+  categoryId: z.string().uuid({ message: "Kategori seçiniz" }),
   listingType: z.enum(listingTypes, { message: "İlan türü seçiniz" }),
   listingStatus: z.enum(listingStatuses).default("active"),
 
@@ -61,8 +50,7 @@ export const propertyFormSchema = z.object({
   // Konum
   province: z.string().min(1, "İl zorunludur"),
   district: z.string().min(1, "İlçe zorunludur"),
-  neighborhood: z.string().optional(),
-  address: z.string().optional(),
+  neighborhood: z.string().min(1, "Mahalle zorunludur"),
   latitude: z.coerce.number().optional().nullable(),
   longitude: z.coerce.number().optional().nullable(),
 

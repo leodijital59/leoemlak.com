@@ -1,17 +1,6 @@
 import {index, pgEnum, pgTable} from "drizzle-orm/pg-core";
 import {relations} from "drizzle-orm";
 
-// Enum Definitions
-export const propertyTypeEnum = pgEnum('property_type', [
-    'konut_daire',
-    'konut_villa',
-    'konut_mustakil',
-    'konut_residence',
-    'isyeri_ofis',
-    'isyeri_dukkan',
-    'isyeri_depo',
-]);
-
 export const listingTypeEnum = pgEnum('listing_type', [
     'sold',
     'rented'
@@ -42,6 +31,14 @@ export const buildingAgeEnum = pgEnum('building_age', [
     '21+'
 ]);
 
+// Property Categories Table (Hierarchical)
+export const categoriesTable = pgTable("categories", (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    name: t.varchar({length: 100}).notNull(),
+    parentId: t.uuid('parent_id'),
+    createdAt: t.timestamp('created_at').defaultNow().notNull(),
+}));
+
 // Properties Ana Tablosu
 export const propertiesTable = pgTable("properties", (t) => ({
     // ID & Timestamps
@@ -52,7 +49,7 @@ export const propertiesTable = pgTable("properties", (t) => ({
     // Temel Bilgiler
     title: t.varchar({length: 500}).notNull(),
     description: t.text().notNull(),
-    propertyType: propertyTypeEnum('property_type').notNull(),
+    categoryId: t.uuid('category_id').notNull().references(() => categoriesTable.id),
     listingType: listingTypeEnum('listing_type').notNull(),
     listingStatus: listingStatusEnum('listing_status').default('active').notNull(),
 
@@ -63,8 +60,7 @@ export const propertiesTable = pgTable("properties", (t) => ({
     // Konum Bilgileri
     province: t.varchar({length: 100}).notNull(),
     district: t.varchar({length: 100}).notNull(),
-    neighborhood: t.varchar({length: 200}),
-    address: t.text(),
+    neighborhood: t.varchar({length: 200}).notNull(),
     latitude: t.numeric({precision: 10, scale: 8}),
     longitude: t.numeric({precision: 11, scale: 8}),
 
@@ -124,7 +120,23 @@ export const propertyPropertyFeaturesTable = pgTable("property_property_features
 ]);
 
 // Relations
-export const propertiesRelations = relations(propertiesTable, ({many}) => ({
+export const propertyCategoriesRelations = relations(categoriesTable, ({one, many}) => ({
+    parent: one(categoriesTable, {
+        fields: [categoriesTable.parentId],
+        references: [categoriesTable.id],
+        relationName: 'categoryHierarchy',
+    }),
+    children: many(categoriesTable, {
+        relationName: 'categoryHierarchy',
+    }),
+    properties: many(propertiesTable),
+}));
+
+export const propertiesRelations = relations(propertiesTable, ({one, many}) => ({
+    category: one(categoriesTable, {
+        fields: [propertiesTable.categoryId],
+        references: [categoriesTable.id],
+    }),
     images: many(propertyImagesTable),
     propertyFeatures: many(propertyPropertyFeaturesTable),
 }));

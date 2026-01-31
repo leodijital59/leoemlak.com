@@ -3,34 +3,37 @@ import { toast } from "sonner";
 
 import type {PropertyFormInitialData} from "@/components/admin/PropertyForm";
 import { deleteProperty, getPropertyById, updateProperty } from "@/lib/server/property";
+import { getCategories } from "@/lib/server/category";
 import { PropertyForm } from "@/components/admin/PropertyForm";
 
 export const Route = createFileRoute("/admin/properties/$propertyId/edit")({
     component: EditPropertyPage,
     loader: async ({ params }) => {
-        const { property, images } = await getPropertyById({ data: params.propertyId });
-        return { property, images };
+        const [{ property, images }, categories] = await Promise.all([
+            getPropertyById({ data: params.propertyId }),
+            getCategories(),
+        ]);
+        return { property, images, categories };
     },
 });
 
 function EditPropertyPage() {
     const navigate = useNavigate();
-    const { property, images } = Route.useLoaderData();
+    const { property, images, categories } = Route.useLoaderData();
 
     // Transform database property to form initial data
     const initialData: PropertyFormInitialData = {
         id: property.id,
         title: property.title,
         description: property.description,
-        propertyType: property.propertyType,
+        categoryId: property.categoryId,
         listingType: property.listingType,
         listingStatus: property.listingStatus,
         price: parseFloat(property.price),
         pricePerSqm: property.pricePerSqm ? parseFloat(property.pricePerSqm) : null,
         province: property.province,
         district: property.district,
-        neighborhood: property.neighborhood ?? undefined,
-        address: property.address ?? undefined,
+        neighborhood: property.neighborhood,
         latitude: property.latitude ? parseFloat(property.latitude) : null,
         longitude: property.longitude ? parseFloat(property.longitude) : null,
         grossArea: property.grossArea ?? null,
@@ -89,6 +92,7 @@ function EditPropertyPage() {
         <PropertyForm
             mode="edit"
             initialData={initialData}
+            categories={categories}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
             onDelete={handleDelete}

@@ -7,10 +7,7 @@ import {
 } from "@tabler/icons-react";
 
 import { getProperties } from "@/lib/server/property";
-import {
-    listingStatusOptions,
-    propertyTypeOptions,
-} from "@/lib/validations/property";
+import { listingStatusOptions } from "@/lib/validations/property";
 import {
     Table,
     TableBody,
@@ -49,11 +46,6 @@ function formatDate(date: Date): string {
         month: "2-digit",
         year: "numeric",
     }).format(date);
-}
-
-function getPropertyTypeLabel(value: string): string {
-    const option = propertyTypeOptions.find((opt) => opt.value === value);
-    return option?.label ?? value;
 }
 
 function getStatusLabel(value: string): string {
@@ -119,12 +111,12 @@ function PropertiesListPage() {
                         <TableRow>
                             <TableHead className="w-[80px]">Fotoğraf</TableHead>
                             <TableHead>Başlık</TableHead>
-                            <TableHead>Tip</TableHead>
+                            <TableHead>Kategori</TableHead>
                             <TableHead>Konum</TableHead>
                             <TableHead>Fiyat</TableHead>
                             <TableHead>Durum</TableHead>
                             <TableHead>Tarih</TableHead>
-                            <TableHead className="w-[100px]"></TableHead>
+                            <TableHead className="w-[60px]"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -137,7 +129,7 @@ function PropertiesListPage() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            filteredProperties.map(({ property, images }) => {
+                            filteredProperties.map(({ property, images, category }) => {
                                 const mainImage = getMainImage(images);
                                 return (
                                     <TableRow key={property.id}>
@@ -165,10 +157,10 @@ function PropertiesListPage() {
                                             </Link>
                                         </TableCell>
 
-                                        {/* Property Type */}
+                                        {/* Category */}
                                         <TableCell>
                                             <Badge variant="secondary">
-                                                {getPropertyTypeLabel(property.propertyType)}
+                                                {category?.name ?? "-"}
                                             </Badge>
                                         </TableCell>
 

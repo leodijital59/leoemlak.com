@@ -3,7 +3,7 @@ import { del, put } from "@vercel/blob";
 import { desc, eq } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
 import db from "@/db";
-import { propertiesTable, propertyImagesTable } from "@/schema";
+import { propertiesTable, categoriesTable, propertyImagesTable } from "@/schema";
 import { propertyFormSchema } from "@/lib/validations/property";
 
 export const createProperty = createServerFn({ method: "POST" })
@@ -24,15 +24,14 @@ export const createProperty = createServerFn({ method: "POST" })
         const [newProperty] = await db.insert(propertiesTable).values({
             title: propertyData.title,
             description: propertyData.description,
-            propertyType: propertyData.propertyType,
+            categoryId: propertyData.categoryId,
             listingType: propertyData.listingType,
             listingStatus: propertyData.listingStatus,
             price: propertyData.price.toString(),
             pricePerSqm: propertyData.pricePerSqm?.toString() ?? null,
             province: propertyData.province,
             district: propertyData.district,
-            neighborhood: propertyData.neighborhood ?? null,
-            address: propertyData.address ?? null,
+            neighborhood: propertyData.neighborhood,
             latitude: propertyData.latitude?.toString() ?? null,
             longitude: propertyData.longitude?.toString() ?? null,
             grossArea: propertyData.grossArea ?? null,
@@ -88,15 +87,18 @@ export const getProperties = createServerFn({ method: "GET" })
             .select({
                 property: propertiesTable,
                 image: propertyImagesTable,
+                category: categoriesTable,
             })
             .from(propertiesTable)
             .leftJoin(propertyImagesTable, eq(propertiesTable.id, propertyImagesTable.propertyId))
+            .leftJoin(categoriesTable, eq(propertiesTable.categoryId, categoriesTable.id))
             .orderBy(desc(propertiesTable.createdAt));
 
         // Group images by property
         const propertiesMap = new Map<string, {
             property: typeof propertiesTable.$inferSelect;
             images: (typeof propertyImagesTable.$inferSelect)[];
+            category: typeof categoriesTable.$inferSelect | null;
         }>();
 
         for (const row of results) {
@@ -105,6 +107,7 @@ export const getProperties = createServerFn({ method: "GET" })
                 propertiesMap.set(propertyId, {
                     property: row.property,
                     images: [],
+                    category: row.category,
                 });
             }
             if (row.image) {
@@ -259,15 +262,14 @@ export const updateProperty = createServerFn({ method: "POST" })
             .set({
                 title: propertyData.title,
                 description: propertyData.description,
-                propertyType: propertyData.propertyType,
+                categoryId: propertyData.categoryId,
                 listingType: propertyData.listingType,
                 listingStatus: propertyData.listingStatus,
                 price: propertyData.price.toString(),
                 pricePerSqm: propertyData.pricePerSqm?.toString() ?? null,
                 province: propertyData.province,
                 district: propertyData.district,
-                neighborhood: propertyData.neighborhood ?? null,
-                address: propertyData.address ?? null,
+                neighborhood: propertyData.neighborhood,
                 latitude: propertyData.latitude?.toString() ?? null,
                 longitude: propertyData.longitude?.toString() ?? null,
                 grossArea: propertyData.grossArea ?? null,
