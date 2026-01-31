@@ -1,18 +1,15 @@
-import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import * as React from "react";
-import { toast } from "sonner";
 import {
-    IconDotsVertical,
     IconEdit,
-    IconTrash,
     IconPlus,
     IconSearch,
 } from "@tabler/icons-react";
 
-import { getProperties, deleteProperty } from "@/lib/server/property";
+import { getProperties } from "@/lib/server/property";
 import {
-    propertyTypeOptions,
     listingStatusOptions,
+    propertyTypeOptions,
 } from "@/lib/validations/property";
 import {
     Table,
@@ -25,25 +22,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/admin/properties/")({
     component: PropertiesListPage,
+    staticData: {
+        title: "İlanlar"
+    },
     loader: async () => {
         return await getProperties();
     },
@@ -79,11 +63,7 @@ function getStatusLabel(value: string): string {
 
 function PropertiesListPage() {
     const properties = Route.useLoaderData();
-    const router = useRouter();
     const [searchQuery, setSearchQuery] = React.useState("");
-    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-    const [propertyToDelete, setPropertyToDelete] = React.useState<number | null>(null);
-    const [isDeleting, setIsDeleting] = React.useState(false);
 
     // Filter properties by search query
     const filteredProperties = React.useMemo(() => {
@@ -93,29 +73,6 @@ function PropertiesListPage() {
             property.title.toLowerCase().includes(query)
         );
     }, [properties, searchQuery]);
-
-    const handleDeleteClick = (propertyId: number) => {
-        setPropertyToDelete(propertyId);
-        setDeleteDialogOpen(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (!propertyToDelete) return;
-
-        setIsDeleting(true);
-        try {
-            await deleteProperty({ data: propertyToDelete });
-            toast.success("İlan başarıyla silindi.");
-            router.invalidate();
-        } catch (error) {
-            console.error("Error deleting property:", error);
-            toast.error("İlan silinirken bir hata oluştu.");
-        } finally {
-            setIsDeleting(false);
-            setDeleteDialogOpen(false);
-            setPropertyToDelete(null);
-        }
-    };
 
     const getMainImage = (images: typeof properties[0]["images"]): string | null => {
         const mainImage = images.find((img) => img.isMainImage);
@@ -135,9 +92,9 @@ function PropertiesListPage() {
                     </p>
                 </div>
                 <Button asChild>
-                    <Link to="/admin/properties/add">
+                    <Link to="/admin/properties/create">
                         <IconPlus className="size-4" />
-                        Yeni İlan Ekle
+                        İlan Ekle
                     </Link>
                 </Button>
             </div>
@@ -167,7 +124,7 @@ function PropertiesListPage() {
                             <TableHead>Fiyat</TableHead>
                             <TableHead>Durum</TableHead>
                             <TableHead>Tarih</TableHead>
-                            <TableHead className="w-[80px]">İşlemler</TableHead>
+                            <TableHead className="w-[100px]"></TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -186,7 +143,7 @@ function PropertiesListPage() {
                                     <TableRow key={property.id}>
                                         {/* Thumbnail */}
                                         <TableCell>
-                                            <div className="size-12 overflow-hidden rounded-md bg-muted">
+                                            <Link className="block size-12 overflow-hidden rounded-md bg-muted" to="/admin/properties/$propertyId/edit" params={{ propertyId: property.id }}>
                                                 {mainImage ? (
                                                     <img
                                                         src={mainImage}
@@ -198,14 +155,14 @@ function PropertiesListPage() {
                                                         Yok
                                                     </div>
                                                 )}
-                                            </div>
+                                            </Link>
                                         </TableCell>
 
                                         {/* Title */}
                                         <TableCell className="font-medium max-w-[200px]">
-                                            <span className="line-clamp-2" title={property.title}>
+                                            <Link className="line-clamp-2 hover:underline" title={property.title} to="/admin/properties/$propertyId/edit" params={{ propertyId: property.id }}>
                                                 {property.title}
-                                            </span>
+                                            </Link>
                                         </TableCell>
 
                                         {/* Property Type */}
@@ -245,31 +202,12 @@ function PropertiesListPage() {
 
                                         {/* Actions */}
                                         <TableCell>
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="icon-sm">
-                                                        <IconDotsVertical className="size-4" />
-                                                        <span className="sr-only">İşlemler</span>
-                                                    </Button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem
-                                                        onClick={() => {
-                                                            toast.info("Düzenleme sayfası yakında eklenecek.");
-                                                        }}
-                                                    >
-                                                        <IconEdit className="size-4" />
-                                                        Düzenle
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuItem
-                                                        variant="destructive"
-                                                        onClick={() => handleDeleteClick(property.id)}
-                                                    >
-                                                        <IconTrash className="size-4" />
-                                                        Sil
-                                                    </DropdownMenuItem>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                            <Button variant="ghost" size="sm" asChild>
+                                                <Link to="/admin/properties/$propertyId/edit" params={{ propertyId: property.id }}>
+                                                    <IconEdit className="size-4" />
+                                                    Düzenle
+                                                </Link>
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 );
@@ -278,28 +216,6 @@ function PropertiesListPage() {
                     </TableBody>
                 </Table>
             </div>
-
-            {/* Delete Confirmation Dialog */}
-            <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>İlanı Sil</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Bu ilanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel disabled={isDeleting}>İptal</AlertDialogCancel>
-                        <AlertDialogAction
-                            onClick={handleDeleteConfirm}
-                            disabled={isDeleting}
-                            className="bg-destructive text-white hover:bg-destructive/90"
-                        >
-                            {isDeleting ? "Siliniyor..." : "Sil"}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
         </div>
     );
 }

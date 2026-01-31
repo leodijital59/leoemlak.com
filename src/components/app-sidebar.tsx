@@ -33,18 +33,8 @@ const data: {
     },
     {
       title: "İlanlar",
-      url: "#",
+      url: "/admin/properties",
       icon: IconBuildingCommunity,
-      items: [
-        {
-          title: "İlan Listesi",
-          url: "/admin/properties",
-        },
-        {
-          title: "Yeni İlan Ekle",
-          url: "/admin/properties/add",
-        },
-      ],
     },
     {
       title: "Kullanıcılar",

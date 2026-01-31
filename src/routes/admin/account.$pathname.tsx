@@ -1,8 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { AccountView } from '@neondatabase/neon-js/auth/react/ui';
+import {AccountView, accountViewPaths, authLocalization, getViewByPath} from '@neondatabase/neon-js/auth/react/ui';
 
 export const Route = createFileRoute('/admin/account/$pathname')({
     component: Account,
+    head: (ctx) => ({
+        meta: [{
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            title: [ctx.matches.at(0)?.meta?.find(({ title }: any) => title)?.title, authLocalization[getViewByPath(accountViewPaths, ctx.params.pathname) ?? "SIGN_IN"]].filter(Boolean).join(' | ')
+        }]
+    }),
 });
 
 function Account() {

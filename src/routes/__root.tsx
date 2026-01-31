@@ -6,6 +6,12 @@ import Aos from 'aos'
 import { useEffect } from 'react'
 import ScrollToTop from '@/components/common/ScrollTop'
 
+declare module "@tanstack/react-router" {
+  interface StaticDataRouteOption {
+    title?: string;
+  }
+}
+
 export const Route = createRootRoute({
   head: ({ matches }) => ({
     meta: [
@@ -14,7 +20,7 @@ export const Route = createRootRoute({
         name: "viewport",
         content: "width=device-width, initial-scale=1",
       },
-      { title: [matches.at(-1)?.staticData.getTitle?.call(undefined), import.meta.env.VITE_APP_NAME].filter(Boolean).join(' | ') }
+      { title: [import.meta.env.VITE_APP_NAME, matches.at(-1)?.staticData.title].filter(Boolean).join(' | ') }
     ],
     links: [
       {

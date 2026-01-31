@@ -1,21 +1,19 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as React from "react";
-import { toast } from "sonner";
-
-import { IconLoader2 } from "@tabler/icons-react";
-import type {FieldValues, SubmitHandler} from "react-hook-form";
-import type {ImageFile} from "@/components/admin/ImageUpload";
+import {IconLoader2, IconTrash} from "@tabler/icons-react";
+import {MapPin} from "lucide-react";
+import type { FieldValues, SubmitHandler } from "react-hook-form";
+import type { ExistingImage, ImageItem } from "@/components/admin/ImageUpload";
+import type {PropertyFormValues} from "@/lib/validations/property";
 import {
     buildingAgeOptions,
     heatingTypeOptions,
     listingStatusOptions,
     listingTypeOptions,
     propertyFormSchema,
-    propertyTypeOptions,
+    propertyTypeOptions
 } from "@/lib/validations/property";
-import { createProperty } from "@/lib/server/property";
 import {
     Form,
     FormControl,
@@ -45,10 +43,35 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { Map, MapControls, MapMarker, MarkerContent } from "@/components/ui/map";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
-export const Route = createFileRoute("/admin/properties/add")({
-    component: AddPropertyPage,
-});
+export interface PropertyFormInitialData extends PropertyFormValues {
+    id: string;
+    images: {
+        id: string;
+        url: string;
+        isMainImage: boolean;
+        order: number;
+    }[];
+}
+
+interface PropertyFormProps {
+    mode: "create" | "edit";
+    initialData?: PropertyFormInitialData;
+    onSubmit: (formData: FormData) => Promise<void>;
+    onCancel: () => void;
+    onDelete?: () => Promise<void>;
+}
 
 const defaultValues = {
     title: "",
@@ -82,67 +105,196 @@ const defaultValues = {
     videoUrl: "",
 };
 
-function AddPropertyPage() {
-    const navigate = useNavigate();
-    const [images, setImages] = React.useState<ImageFile[]>([]);
+export function PropertyForm({ mode, initialData, onSubmit, onCancel, onDelete }: PropertyFormProps) {
+    const [images, setImages] = React.useState<ImageItem[]>([]);
+    const [imagesToDelete, setImagesToDelete] = React.useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [isDeleting, setIsDeleting] = React.useState(false);
+
+    // Initialize marker position from initialData or default
+    const initialLat = initialData?.latitude ?? 39.925533;
+    const initialLng = initialData?.longitude ?? 32.866287;
     const [markerPosition, setMarkerPosition] = React.useState<{ lat: number; lng: number }>({
-        lat: 39.925533, // Ankara (default)
-        lng: 32.866287,
+        lat: initialLat,
+        lng: initialLng,
     });
+
+    // Initialize form with default or initial values
+    const formDefaultValues = React.useMemo(() => {
+        if (!initialData) return defaultValues;
+
+        return {
+            title: initialData.title,
+            description: initialData.description,
+            propertyType: initialData.propertyType,
+            listingType: initialData.listingType,
+            listingStatus: initialData.listingStatus,
+            price: initialData.price,
+            pricePerSqm: initialData.pricePerSqm ?? undefined,
+            province: initialData.province,
+            district: initialData.district,
+            neighborhood: initialData.neighborhood ?? "",
+            address: initialData.address ?? "",
+            latitude: initialData.latitude ?? undefined,
+            longitude: initialData.longitude ?? undefined,
+            grossArea: initialData.grossArea ?? undefined,
+            netArea: initialData.netArea ?? undefined,
+            landArea: initialData.landArea ?? undefined,
+            rooms: initialData.rooms ?? undefined,
+            bathrooms: initialData.bathrooms ?? undefined,
+            buildingAge: initialData.buildingAge ?? undefined,
+            totalFloors: initialData.totalFloors ?? undefined,
+            floorNumber: initialData.floorNumber ?? undefined,
+            heatingType: initialData.heatingType ?? undefined,
+            hasBalconies: initialData.hasBalconies,
+            hasElevator: initialData.hasElevator,
+            hasParking: initialData.hasParking,
+            hasSecurity: initialData.hasSecurity,
+            isFurnished: initialData.isFurnished,
+            isWithinSite: initialData.isWithinSite,
+            videoUrl: initialData.videoUrl ?? "",
+        };
+    }, [initialData]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const form = useForm<any>({
         // @ts-expect-error - Zod v4 type compatibility issue with @hookform/resolvers
         resolver: zodResolver(propertyFormSchema),
-        defaultValues,
+        defaultValues: formDefaultValues,
     });
 
-    const onSubmit: SubmitHandler<FieldValues> = async (formData) => {
+    // Initialize images from initialData in edit mode
+    React.useEffect(() => {
+        if (mode === "edit" && initialData?.images) {
+            const existingImages: ExistingImage[] = initialData.images.map((img) => ({
+                id: img.id,
+                url: img.url,
+                isMain: img.isMainImage,
+                order: img.order,
+                type: "existing" as const,
+            }));
+            setImages(existingImages);
+        }
+    }, [mode, initialData]);
+
+    // Update marker position when initialData changes
+    React.useEffect(() => {
+        if (initialData?.latitude && initialData.longitude) {
+            setMarkerPosition({
+                lat: initialData.latitude,
+                lng: initialData.longitude,
+            });
+        }
+    }, [initialData?.latitude, initialData?.longitude]);
+
+    const handleDeleteExistingImage = (id: string) => {
+        setImagesToDelete((prev) => [...prev, id]);
+    };
+
+    const handleFormSubmit: SubmitHandler<FieldValues> = async (formData) => {
         setIsSubmitting(true);
 
         try {
             // FormData oluştur
             const submitData = new FormData();
 
+            // Property ID for edit mode
+            if (mode === "edit" && initialData?.id) {
+                submitData.append("propertyId", initialData.id);
+            }
+
             // Property verilerini JSON olarak ekle
             submitData.append("property", JSON.stringify(formData));
 
-            // Image metadata'larını ekle (extension ve isMain)
-            const imageMeta = images.map((img) => ({
-                extension: img.file.name.split(".").pop() || "jpg",
+            // Separate new and existing images
+            const newImages = images.filter((img) => img.type === "new");
+            const existingImages = images.filter((img) => img.type === "existing");
+
+            // Image metadata'larını ekle (extension ve isMain) for new images
+            const imageMeta = newImages.map((img) => ({
+                extension: img.type === "new" ? img.file.name.split(".").pop() || "jpg" : "",
                 isMain: img.isMain,
             }));
             submitData.append("imageMeta", JSON.stringify(imageMeta));
 
-            // Image dosyalarını ekle
-            images.forEach((img) => {
-                submitData.append("images", img.file);
+            // Existing images metadata (with updated order and isMain)
+            const existingImagesMeta = existingImages.map((img) => ({
+                id: img.id,
+                isMain: img.isMain,
+                order: images.indexOf(img), // Use actual order in the combined array
+            }));
+            submitData.append("existingImages", JSON.stringify(existingImagesMeta));
+
+            // Images to delete
+            submitData.append("imagesToDelete", JSON.stringify(imagesToDelete));
+
+            // New image files
+            newImages.forEach((img) => {
+                if (img.type === "new") {
+                    submitData.append("images", img.file);
+                }
             });
 
-            await createProperty({ data: submitData });
-
-            toast.success("İlan başarıyla eklendi!");
-            navigate({ to: "/admin/properties" });
-        } catch (error) {
-            console.error("Error creating property:", error);
-            toast.error("İlan eklenirken bir hata oluştu.");
+            await onSubmit(submitData);
         } finally {
             setIsSubmitting(false);
         }
     };
 
+    const handleDelete = async () => {
+        if (!onDelete) return;
+        setIsDeleting(true);
+        try {
+            await onDelete();
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const submitButtonText = mode === "create"
+        ? (isSubmitting ? "Kaydediliyor..." : "İlanı Kaydet")
+        : (isSubmitting ? "Kaydediliyor..." : "Değişiklikleri Kaydet");
+
+    const pageTitle = mode === "create" ? "İlan Ekle" : "İlanı Düzenle";
+
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            <div>
-                <h1 className="text-2xl font-bold">Yeni İlan Ekle</h1>
-                <p className="text-muted-foreground">
-                    Yeni bir emlak ilanı oluşturmak için aşağıdaki formu doldurun.
-                </p>
+            <div className="flex items-start justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold">{pageTitle}</h1>
+                </div>
+                {(mode === "edit" && onDelete) && (
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive" size="sm" disabled={isDeleting}>
+                                <IconTrash className="size-4"/>
+                                {isDeleting ? "Siliniyor..." : "İlanı Sil"}
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>İlanı Sil</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Bu ilanı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve tüm görsellerle birlikte ilan kalıcı olarak silinecektir.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel disabled={isDeleting}>İptal</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleDelete}
+                                    disabled={isDeleting}
+                                    className="bg-destructive text-white hover:bg-destructive/90"
+                                >
+                                    {isDeleting ? "Siliniyor..." : "Sil"}
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                )}
             </div>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
                     {/* Temel Bilgiler */}
                     <Card>
                         <CardHeader>
@@ -395,7 +547,7 @@ function AddPropertyPage() {
                                 <div className="h-[400px] w-full rounded-lg border overflow-hidden">
                                     <Map
                                         center={[markerPosition.lng, markerPosition.lat]}
-                                        zoom={12}
+                                        zoom={14}
                                     >
                                         <MapMarker
                                             longitude={markerPosition.lng}
@@ -407,7 +559,14 @@ function AddPropertyPage() {
                                                 form.setValue('longitude', lngLat.lng);
                                             }}
                                         >
-                                            <MarkerContent />
+                                            <MarkerContent>
+                                                <div className="cursor-move">
+                                                    <MapPin
+                                                        className="fill-black stroke-white dark:fill-white"
+                                                        size={28}
+                                                    />
+                                                </div>
+                                            </MarkerContent>
                                         </MapMarker>
                                         <MapControls
                                             position="top-right"
@@ -770,7 +929,12 @@ function AddPropertyPage() {
                         <CardContent className="space-y-4">
                             <div>
                                 <FormLabel className="mb-2 block">Fotoğraflar</FormLabel>
-                                <ImageUpload value={images} onChange={setImages} maxFiles={20} />
+                                <ImageUpload
+                                    value={images}
+                                    onChange={setImages}
+                                    maxFiles={20}
+                                    onDeleteExisting={handleDeleteExistingImage}
+                                />
                             </div>
 
                             <FormField
@@ -797,7 +961,7 @@ function AddPropertyPage() {
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => navigate({ to: "/admin" })}
+                            onClick={onCancel}
                         >
                             İptal
                         </Button>
@@ -805,7 +969,7 @@ function AddPropertyPage() {
                             {isSubmitting && (
                                 <IconLoader2 className="mr-2 size-4 animate-spin" />
                             )}
-                            {isSubmitting ? "Kaydediliyor..." : "İlanı Kaydet"}
+                            {submitButtonText}
                         </Button>
                     </div>
                 </form>

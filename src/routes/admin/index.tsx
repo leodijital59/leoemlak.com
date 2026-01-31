@@ -6,6 +6,9 @@ import {SectionCards} from "@/components/section-cards";
 export const Route = createFileRoute('/admin/')({
   component: AdminDashboardPage,
   ssr: "data-only",
+  staticData: {
+    title: "Dashboard",
+  }
 });
 
 const data = [

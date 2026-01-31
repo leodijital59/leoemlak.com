@@ -1,40 +1,55 @@
 import * as React from "react";
 import {
   DndContext,
-  closestCenter,
   KeyboardSensor,
   PointerSensor,
+  closestCenter,
   useSensor,
-  useSensors,
-  type DragEndEvent,
+  useSensors
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
+  rectSortingStrategy,
   sortableKeyboardCoordinates,
   useSortable,
-  rectSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconGripVertical, IconPhoto, IconStar, IconStarFilled, IconTrash, IconUpload } from "@tabler/icons-react";
+import type {DragEndEvent} from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+// New file image (to be uploaded)
 export interface ImageFile {
   id: string;
   file: File;
   preview: string;
   isMain: boolean;
+  type: "new";
 }
 
+// Existing image (already on server)
+export interface ExistingImage {
+  id: string;
+  url: string;
+  isMain: boolean;
+  order: number;
+  type: "existing";
+}
+
+// Union type for both
+export type ImageItem = ImageFile | ExistingImage;
+
 interface ImageUploadProps {
-  value: ImageFile[];
-  onChange: (images: ImageFile[]) => void;
+  value: ImageItem[];
+  onChange: (images: ImageItem[]) => void;
   maxFiles?: number;
+  onDeleteExisting?: (id: string) => void;
 }
 
 interface SortableImageProps {
-  image: ImageFile;
+  image: ImageItem;
   onRemove: (id: string) => void;
   onSetMain: (id: string) => void;
 }
@@ -54,6 +69,8 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
     transition,
   };
 
+  const imageSrc = image.type === "new" ? image.preview : image.url;
+
   return (
     <div
       ref={setNodeRef}
@@ -65,7 +82,7 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
       )}
     >
       <img
-        src={image.preview}
+        src={imageSrc}
         alt="Preview"
         className="w-full h-full object-cover"
       />
@@ -117,7 +134,7 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
   );
 }
 
-export function ImageUpload({ value, onChange, maxFiles = 20 }: ImageUploadProps) {
+export function ImageUpload({ value, onChange, maxFiles = 20, onDeleteExisting }: ImageUploadProps) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = React.useState(false);
 
@@ -149,6 +166,7 @@ export function ImageUpload({ value, onChange, maxFiles = 20 }: ImageUploadProps
       file,
       preview: URL.createObjectURL(file),
       isMain: value.length === 0 && filesToAdd.indexOf(file) === 0,
+      type: "new" as const,
     }));
 
     onChange([...value, ...newImages]);
@@ -156,15 +174,23 @@ export function ImageUpload({ value, onChange, maxFiles = 20 }: ImageUploadProps
 
   const handleRemove = (id: string) => {
     const imageToRemove = value.find((img) => img.id === id);
-    if (imageToRemove) {
+    if (!imageToRemove) return;
+
+    // Revoke object URL for new images
+    if (imageToRemove.type === "new") {
       URL.revokeObjectURL(imageToRemove.preview);
+    }
+
+    // Notify parent about existing image deletion
+    if (imageToRemove.type === "existing" && onDeleteExisting) {
+      onDeleteExisting(id);
     }
 
     const newImages = value.filter((img) => img.id !== id);
 
     // If removed image was main and there are other images, set first as main
-    if (imageToRemove?.isMain && newImages.length > 0) {
-      newImages[0].isMain = true;
+    if (imageToRemove.isMain && newImages.length > 0) {
+      newImages[0] = { ...newImages[0], isMain: true };
     }
 
     onChange(newImages);
@@ -198,7 +224,11 @@ export function ImageUpload({ value, onChange, maxFiles = 20 }: ImageUploadProps
   // Cleanup previews on unmount
   React.useEffect(() => {
     return () => {
-      value.forEach((img) => URL.revokeObjectURL(img.preview));
+      value.forEach((img) => {
+        if (img.type === "new") {
+          URL.revokeObjectURL(img.preview);
+        }
+      });
     };
   }, []);
 

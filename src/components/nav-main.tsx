@@ -44,7 +44,7 @@ export function NavMain({
               tooltip="Hızlı Ekle"
               className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
             >
-              <Link to="/admin/properties/add">
+              <Link to="/admin/properties/create">
                 <IconCirclePlusFilled />
                 <span>Yeni İlan</span>
               </Link>
