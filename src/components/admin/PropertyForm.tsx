@@ -42,6 +42,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { Map, MapControls, MapMarker, MarkerContent } from "@/components/ui/map";
+import LocationSelect from "@/components/admin/location/LocationSelect";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -161,6 +162,7 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
         lat: initialLat,
         lng: initialLng,
     });
+    const mapRef = React.useRef<any>(null);
 
     // Initialize form with default or initial values
     const formDefaultValues = React.useMemo(() => {
@@ -204,6 +206,47 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
         resolver: zodResolver(propertyFormSchema),
         defaultValues: formDefaultValues,
     });
+
+    // Geocode location and update map
+    const handleLocationChange = React.useCallback(async (location: { province: string; district: string; neighborhood: string }) => {
+        try {
+            // Use Nominatim (OpenStreetMap) for geocoding
+            const query = `${location.neighborhood}, ${location.district}, ${location.province}`;
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=jsonv2&limit=1&countrycodes=tr`,
+                {
+                    headers: {
+                        'User-Agent': 'LeoEmlak Property Listing',
+                    }
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    const { lat, lon } = data[0];
+                    const latitude = parseFloat(lat);
+                    const longitude = parseFloat(lon);
+
+                    // Update marker position
+                    setMarkerPosition({ lat: latitude, lng: longitude });
+                    form.setValue('latitude', latitude);
+                    form.setValue('longitude', longitude);
+
+                    // Fly to location with animation
+                    if (mapRef.current) {
+                        mapRef.current.flyTo({
+                            center: [longitude, latitude],
+                            zoom: 15,
+                            duration: 2000,
+                        });
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Geocoding error:', error);
+        }
+    }, [form]);
 
     // Initialize images from initialData in edit mode
     React.useEffect(() => {
@@ -515,49 +558,7 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="province"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>İl *</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Örn: İstanbul" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="district"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>İlçe *</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Örn: Kadıköy" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="neighborhood"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Mahalle *</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Örn: Caferağa" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
+                            <LocationSelect form={form} onLocationChange={handleLocationChange} />
 
                             {/* Harita ile Konum Seçimi */}
                             <div className="space-y-2">
@@ -567,6 +568,7 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                 </p>
                                 <div className="h-[400px] w-full rounded-lg border overflow-hidden">
                                     <Map
+                                        ref={mapRef}
                                         center={[markerPosition.lng, markerPosition.lat]}
                                         zoom={14}
                                     >
