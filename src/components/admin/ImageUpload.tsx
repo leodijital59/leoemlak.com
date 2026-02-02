@@ -16,9 +16,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconGripVertical, IconPhoto, IconStar, IconStarFilled, IconTrash, IconUpload } from "@tabler/icons-react";
+import { Gallery, Item } from "react-photoswipe-gallery";
 import type {DragEndEvent} from "@dnd-kit/core";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import "photoswipe/dist/photoswipe.css";
 
 // New file image (to be uploaded)
 export interface ImageFile {
@@ -27,6 +29,8 @@ export interface ImageFile {
   preview: string;
   isMain: boolean;
   type: "new";
+  width?: number;
+  height?: number;
 }
 
 // Existing image (already on server)
@@ -36,6 +40,8 @@ export interface ExistingImage {
   isMain: boolean;
   order: number;
   type: "existing";
+  width?: number;
+  height?: number;
 }
 
 // Union type for both
@@ -81,19 +87,30 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
         image.isMain && "border-primary"
       )}
     >
-      <img
-        src={imageSrc}
-        alt="Preview"
-        className="w-full h-full object-cover"
-      />
+      <Item
+        original={imageSrc}
+        thumbnail={imageSrc}
+        width={image.width || 1200}
+        height={image.height || 900}
+      >
+        {({ ref: photoswipeRef, open }) => (
+          <img
+            ref={photoswipeRef}
+            src={imageSrc}
+            alt="Preview"
+            className="w-full h-full object-cover cursor-pointer"
+            onClick={open}
+          />
+        )}
+      </Item>
 
       {/* Overlay controls */}
-      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none">
         <Button
           type="button"
           size="icon"
           variant="secondary"
-          className="size-8 cursor-grab active:cursor-grabbing"
+          className="size-8 cursor-grab active:cursor-grabbing pointer-events-auto"
           {...attributes}
           {...listeners}
         >
@@ -103,7 +120,7 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
           type="button"
           size="icon"
           variant={image.isMain ? "default" : "secondary"}
-          className="size-8"
+          className="size-8 pointer-events-auto"
           onClick={() => onSetMain(image.id)}
           title={image.isMain ? "Ana resim" : "Ana resim yap"}
         >
@@ -117,7 +134,7 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
           type="button"
           size="icon"
           variant="destructive"
-          className="size-8"
+          className="size-8 pointer-events-auto"
           onClick={() => onRemove(image.id)}
         >
           <IconTrash className="size-4" />
@@ -155,20 +172,45 @@ export function ImageUpload({ value, onChange, maxFiles = 20, onDeleteExisting }
     }
   };
 
-  const handleFilesSelected = (files: FileList | null) => {
+  const handleFilesSelected = async (files: FileList | null) => {
     if (!files) return;
 
     const remainingSlots = maxFiles - value.length;
     const filesToAdd = Array.from(files).slice(0, remainingSlots);
 
-    const newImages: ImageFile[] = filesToAdd.map((file) => ({
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      file,
-      preview: URL.createObjectURL(file),
-      isMain: value.length === 0 && filesToAdd.indexOf(file) === 0,
-      type: "new" as const,
-    }));
+    const newImagesPromises = filesToAdd.map((file, index) => {
+      return new Promise<ImageFile>((resolve) => {
+        const preview = URL.createObjectURL(file);
+        const img = new Image();
 
+        img.onload = () => {
+          resolve({
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            file,
+            preview,
+            isMain: value.length === 0 && index === 0,
+            type: "new" as const,
+            width: img.naturalWidth,
+            height: img.naturalHeight,
+          });
+        };
+
+        img.onerror = () => {
+          // If image fails to load, add without dimensions
+          resolve({
+            id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            file,
+            preview,
+            isMain: value.length === 0 && index === 0,
+            type: "new" as const,
+          });
+        };
+
+        img.src = preview;
+      });
+    });
+
+    const newImages = await Promise.all(newImagesPromises);
     onChange([...value, ...newImages]);
   };
 
@@ -273,24 +315,34 @@ export function ImageUpload({ value, onChange, maxFiles = 20, onDeleteExisting }
 
       {/* Image grid */}
       {value.length > 0 && (
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
+        <Gallery
+          options={{
+            initialZoomLevel: 1,
+            secondaryZoomLevel: 1.5,
+            maxZoomLevel: 3,
+            bgOpacity: 0.9,
+            padding: { top: 20, bottom: 40, left: 20, right: 20 },
+          }}
         >
-          <SortableContext items={value.map((img) => img.id)} strategy={rectSortingStrategy}>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {value.map((image) => (
-                <SortableImage
-                  key={image.id}
-                  image={image}
-                  onRemove={handleRemove}
-                  onSetMain={handleSetMain}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={value.map((img) => img.id)} strategy={rectSortingStrategy}>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {value.map((image) => (
+                  <SortableImage
+                    key={image.id}
+                    image={image}
+                    onRemove={handleRemove}
+                    onSetMain={handleSetMain}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </Gallery>
       )}
 
       {value.length > 0 && (

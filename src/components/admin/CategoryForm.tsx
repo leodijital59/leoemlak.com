@@ -165,7 +165,7 @@ export function CategoryForm({
                 {mode === "edit" && onDelete && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <Button variant="destructive" size="sm" disabled={isDeleting}>
+                            <Button variant="destructive" disabled={isDeleting}>
                                 <IconTrash className="size-4" />
                                 {isDeleting ? "Siliniyor..." : "Kategoriyi Sil"}
                             </Button>

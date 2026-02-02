@@ -247,9 +247,11 @@ interface LocationSelectProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     form: any;
     onLocationChange?: (location: { province: string; district: string; neighborhood: string }) => void;
+    isReverseGeocodingRef?: React.RefObject<boolean>;
+    isEditMode?: boolean;
 }
 
-export default function LocationSelect({ form, onLocationChange }: LocationSelectProps) {
+export default function LocationSelect({ form, onLocationChange, isReverseGeocodingRef, isEditMode = false }: LocationSelectProps) {
     const selectedProvince = form.watch("province") as string;
     const selectedDistrict = form.watch("district") as string;
 
@@ -272,24 +274,40 @@ export default function LocationSelect({ form, onLocationChange }: LocationSelec
         ? (neighborhoodsByProvinceAndDistrict[neighborhoodKey] || [])
         : [];
 
-    // İl değiştiğinde ilçe ve mahalle sıfırla
+    // İl değiştiğinde ilçe ve mahalle sıfırla (reverse geocoding sırasında veya edit mode ilk yüklemede değil)
     React.useEffect(() => {
         if (!isProvinceMounted.current) {
             isProvinceMounted.current = true;
             return;
         }
+        // Skip resetting when updating from reverse geocoding
+        if (isReverseGeocodingRef?.current) {
+            return;
+        }
+        // Skip resetting in edit mode if district is already set (initial load)
+        if (isEditMode && form.getValues("district")) {
+            return;
+        }
         form.setValue("district", "");
         form.setValue("neighborhood", "");
-    }, [selectedProvince, form]);
+    }, [selectedProvince, form, isReverseGeocodingRef, isEditMode]);
 
-    // İlçe değiştiğinde mahalle sıfırla
+    // İlçe değiştiğinde mahalle sıfırla (reverse geocoding sırasında veya edit mode ilk yüklemede değil)
     React.useEffect(() => {
         if (!isDistrictMounted.current) {
             isDistrictMounted.current = true;
             return;
         }
+        // Skip resetting when updating from reverse geocoding
+        if (isReverseGeocodingRef?.current) {
+            return;
+        }
+        // Skip resetting in edit mode if neighborhood is already set (initial load)
+        if (isEditMode && form.getValues("neighborhood")) {
+            return;
+        }
         form.setValue("neighborhood", "");
-    }, [selectedDistrict, form]);
+    }, [selectedDistrict, form, isReverseGeocodingRef, isEditMode]);
 
     const handleProvinceSelect = () => {
         setAutoOpenDistrict(false);

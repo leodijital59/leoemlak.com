@@ -60,9 +60,9 @@ function PropertiesListPage() {
     // Filter properties by search query
     const filteredProperties = React.useMemo(() => {
         if (!searchQuery.trim()) return properties;
-        const query = searchQuery.toLowerCase();
+        const query = searchQuery.toLocaleLowerCase('tr');
         return properties.filter(({ property }) =>
-            property.title.toLowerCase().includes(query)
+            Array<keyof typeof property>("title", "province", "district").find((value: keyof typeof property) => String(property[value]).toLocaleLowerCase('tr').includes(query))
         );
     }, [properties, searchQuery]);
 

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {IconLoader2, IconTrash} from "@tabler/icons-react";
 import {MapPin} from "lucide-react";
+import {useEffect} from "react";
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import type { ExistingImage, ImageItem } from "@/components/admin/ImageUpload";
 import type {PropertyFormValues} from "@/lib/validations/property";
@@ -41,7 +42,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ImageUpload } from "@/components/admin/ImageUpload";
-import { Map, MapControls, MapMarker, MarkerContent } from "@/components/ui/map";
+import {Map, MapControls, MapMarker, MarkerContent, useMap} from "@/components/ui/map";
 import LocationSelect from "@/components/admin/location/LocationSelect";
 import {
     AlertDialog,
@@ -118,6 +119,28 @@ function CategorySelectItems({ categories, parentId = null, depth = 0 }: Categor
     );
 }
 
+function MapEventListener({ onLocationClick } : { onLocationClick: (lngLat: {
+    lat: number
+    lng: number
+}) => void }) {
+    const { map, isLoaded } = useMap();
+
+    useEffect(() => {
+        if (!map || !isLoaded) return;
+
+        const handleClick = ({ lngLat }: { lngLat: any }) => {
+            onLocationClick(lngLat);
+        };
+
+        map.on("click", handleClick);
+        return () => {
+            map.off("click", handleClick)
+        };
+    }, [map, isLoaded]);
+
+    return null;
+}
+
 const defaultValues = {
     title: "",
     description: "",
@@ -156,13 +179,12 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
     const [isDeleting, setIsDeleting] = React.useState(false);
 
     // Initialize marker position from initialData or default
-    const initialLat = initialData?.latitude ?? 39.925533;
-    const initialLng = initialData?.longitude ?? 32.866287;
-    const [markerPosition, setMarkerPosition] = React.useState<{ lat: number; lng: number }>({
-        lat: initialLat,
-        lng: initialLng,
-    });
+    const [markerPosition, setMarkerPosition] = React.useState<{ lat: number; lng: number } | undefined>((initialData?.latitude && initialData?.longitude) ? {
+        lat: initialData.latitude,
+        lng: initialData.longitude,
+    } : undefined);
     const mapRef = React.useRef<any>(null);
+    const isReverseGeocodingRef = React.useRef(false);
 
     // Initialize form with default or initial values
     const formDefaultValues = React.useMemo(() => {
@@ -245,6 +267,61 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
             }
         } catch (error) {
             console.error('Geocoding error:', error);
+        }
+    }, [form]);
+
+    // Reverse geocode coordinates to location (coordinates -> address)
+    const handleReverseGeocode = React.useCallback(async (lat: number, lng: number) => {
+        try {
+            isReverseGeocodingRef.current = true;
+
+            const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=jsonv2&addressdetails=1`,
+                {
+                    headers: {
+                        'User-Agent': 'LeoEmlak Property Listing',
+                    }
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.address) {
+                    const address = data.address;
+
+                    // Turkish uppercase conversion (handles İ/I correctly)
+                    const toTurkishUpper = (str: string) => {
+                        return str
+                            .replace(/i/g, 'İ')
+                            .replace(/ı/g, 'I')
+                            .toLocaleUpperCase('tr-TR');
+                    };
+
+                    // Extract location info from address and convert to uppercase
+                    // Nominatim returns: city/town, county/district, state/province
+                    const province = toTurkishUpper(address.province || address.state || address.city || '');
+                    const district = toTurkishUpper(address.county || address.town || address.city_district || '');
+                    const neighborhood = toTurkishUpper(address.suburb || address.neighbourhood || address.quarter || address.hamlet || '');
+
+                    // Update form fields if values are found
+                    if (province) {
+                        form.setValue('province', province);
+                    }
+                    if (district) {
+                        form.setValue('district', district);
+                    }
+                    if (neighborhood) {
+                        form.setValue('neighborhood', neighborhood);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Reverse geocoding error:', error);
+        } finally {
+            // Reset flag after a short delay to allow form updates to complete
+            setTimeout(() => {
+                isReverseGeocodingRef.current = false;
+            }, 100);
         }
     }, [form]);
 
@@ -344,14 +421,14 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            <div className="flex items-start justify-between">
+            <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-2xl font-bold">{pageTitle}</h1>
                 </div>
                 {(mode === "edit" && onDelete) && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <Button variant="destructive" size="sm" disabled={isDeleting}>
+                            <Button variant="destructive" disabled={isDeleting}>
                                 <IconTrash className="size-4"/>
                                 {isDeleting ? "Siliniyor..." : "İlanı Sil"}
                             </Button>
@@ -558,7 +635,12 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <LocationSelect form={form} onLocationChange={handleLocationChange} />
+                            <LocationSelect
+                                form={form}
+                                onLocationChange={handleLocationChange}
+                                isReverseGeocodingRef={isReverseGeocodingRef}
+                                isEditMode={mode === "edit"}
+                            />
 
                             {/* Harita ile Konum Seçimi */}
                             <div className="space-y-2">
@@ -569,17 +651,19 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                 <div className="h-[400px] w-full rounded-lg border overflow-hidden">
                                     <Map
                                         ref={mapRef}
-                                        center={[markerPosition.lng, markerPosition.lat]}
-                                        zoom={14}
+                                        center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35,39.3]}
+                                        zoom={markerPosition ? 14 : 5}
                                     >
-                                        <MapMarker
+                                        {markerPosition && <MapMarker
                                             longitude={markerPosition.lng}
                                             latitude={markerPosition.lat}
                                             draggable
-                                            onDragEnd={(lngLat) => {
-                                                setMarkerPosition({ lat: lngLat.lat, lng: lngLat.lng });
-                                                form.setValue('latitude', lngLat.lat);
-                                                form.setValue('longitude', lngLat.lng);
+                                            onDragEnd={(coords) => {
+                                                setMarkerPosition({ lat: coords.lat, lng: coords.lng });
+                                                form.setValue('latitude', coords.lat);
+                                                form.setValue('longitude', coords.lng);
+                                                // Reverse geocode to find location name
+                                                handleReverseGeocode(coords.lat, coords.lng);
                                             }}
                                         >
                                             <MarkerContent>
@@ -590,7 +674,7 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                                     />
                                                 </div>
                                             </MarkerContent>
-                                        </MapMarker>
+                                        </MapMarker>}
                                         <MapControls
                                             position="top-right"
                                             showZoom
@@ -599,6 +683,20 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                                 setMarkerPosition({ lat: coords.latitude, lng: coords.longitude });
                                                 form.setValue('latitude', coords.latitude);
                                                 form.setValue('longitude', coords.longitude);
+                                                // Reverse geocode to find location name
+                                                handleReverseGeocode(coords.latitude, coords.longitude);
+                                            }}
+                                        />
+                                        <MapEventListener
+                                            onLocationClick={coords => {
+                                                setMarkerPosition(coords);
+                                                setTimeout(handleReverseGeocode, 2000, coords.lat, coords.lng);
+                                                if (mapRef.current) {
+                                                    mapRef.current.flyTo({
+                                                        center: [coords.lng, coords.lat],
+                                                        duration: 2000,
+                                                    });
+                                                }
                                             }}
                                         />
                                     </Map>
