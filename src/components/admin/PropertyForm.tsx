@@ -41,6 +41,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import {Map, MapControls, MapMarker, MarkerContent, useMap} from "@/components/ui/map";
 import LocationSelect from "@/components/admin/location/LocationSelect";
@@ -328,14 +329,44 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
     // Initialize images from initialData in edit mode
     React.useEffect(() => {
         if (mode === "edit" && initialData?.images) {
-            const existingImages: ExistingImage[] = initialData.images.map((img) => ({
-                id: img.id,
-                url: img.url,
-                isMain: img.isMainImage,
-                order: img.order,
-                type: "existing" as const,
-            }));
-            setImages(existingImages);
+            // Load images and get their dimensions
+            const loadImagesWithDimensions = async () => {
+                const imagePromises = initialData.images.map((img) => {
+                    return new Promise<ExistingImage>((resolve) => {
+                        const image = new Image();
+
+                        image.onload = () => {
+                            resolve({
+                                id: img.id,
+                                url: img.url,
+                                isMain: img.isMainImage,
+                                order: img.order,
+                                type: "existing" as const,
+                                width: image.naturalWidth,
+                                height: image.naturalHeight,
+                            });
+                        };
+
+                        image.onerror = () => {
+                            // If image fails to load, add without dimensions
+                            resolve({
+                                id: img.id,
+                                url: img.url,
+                                isMain: img.isMainImage,
+                                order: img.order,
+                                type: "existing" as const,
+                            });
+                        };
+
+                        image.src = img.url;
+                    });
+                });
+
+                const loadedImages = await Promise.all(imagePromises);
+                setImages(loadedImages);
+            };
+
+            loadImagesWithDimensions();
         }
     }, [mode, initialData]);
 
@@ -456,629 +487,652 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
             </div>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-                    {/* Temel Bilgiler */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Temel Bilgiler</CardTitle>
-                            <CardDescription>
-                                İlanın başlığı, açıklaması ve türü hakkında bilgiler.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="title"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>İlan Başlığı *</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Örn: Deniz Manzaralı 3+1 Daire" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                <form onSubmit={form.handleSubmit(handleFormSubmit)}>
+                    <Tabs defaultValue="basic" className="space-y-6">
+                        <TabsList variant="line" className="w-full h-auto flex-wrap">
+                            <TabsTrigger value="basic" className="flex-1 min-w-fit">Temel Bilgiler</TabsTrigger>
+                            <TabsTrigger value="price" className="flex-1 min-w-fit">Fiyat</TabsTrigger>
+                            <TabsTrigger value="location" className="flex-1 min-w-fit">Konum</TabsTrigger>
+                            <TabsTrigger value="features" className="flex-1 min-w-fit">Özellikler</TabsTrigger>
+                            <TabsTrigger value="extras" className="flex-1 min-w-fit">Ek Özellikler</TabsTrigger>
+                            <TabsTrigger value="media" className="flex-1 min-w-fit">Medya</TabsTrigger>
+                        </TabsList>
 
-                            <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Açıklama *</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="İlan hakkında detaylı açıklama yazın..."
-                                                className="min-h-[120px]"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="categoryId"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Kategori *</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value}>
+                        {/* Temel Bilgiler Tab */}
+                        <TabsContent value="basic">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Temel Bilgiler</CardTitle>
+                                    <CardDescription>
+                                        İlanın başlığı, açıklaması ve türü hakkında bilgiler.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <FormField
+                                        control={form.control}
+                                        name="title"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>İlan Başlığı *</FormLabel>
                                                 <FormControl>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Seçiniz" />
-                                                    </SelectTrigger>
+                                                    <Input placeholder="Örn: Deniz Manzaralı 3+1 Daire" {...field} />
                                                 </FormControl>
-                                                <SelectContent>
-                                                    <CategorySelectItems categories={categories} />
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                                <FormField
-                                    control={form.control}
-                                    name="listingType"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>İlan Türü *</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormField
+                                        control={form.control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Açıklama *</FormLabel>
                                                 <FormControl>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Seçiniz" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {listingTypeOptions.map((option) => (
-                                                        <SelectItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="listingStatus"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>İlan Durumu</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value}>
-                                                <FormControl>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Seçiniz" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {listingStatusOptions.map((option) => (
-                                                        <SelectItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Fiyat */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Fiyat Bilgileri</CardTitle>
-                            <CardDescription>
-                                İlanın fiyatı ve m² fiyatı.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="price"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Fiyat (₺) *</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || "")}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="pricePerSqm"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>m² Fiyatı (₺)</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Konum */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Konum Bilgileri</CardTitle>
-                            <CardDescription>
-                                Emlakın bulunduğu konum bilgileri.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <LocationSelect
-                                form={form}
-                                onLocationChange={handleLocationChange}
-                                isReverseGeocodingRef={isReverseGeocodingRef}
-                                isEditMode={mode === "edit"}
-                            />
-
-                            {/* Harita ile Konum Seçimi */}
-                            <div className="space-y-2">
-                                <FormLabel>Konum</FormLabel>
-                                <p className="text-sm text-muted-foreground">
-                                    Haritada marker'ı sürükleyerek veya "Konumumu Bul" butonunu kullanarak lokasyon seçebilirsiniz.
-                                </p>
-                                <div className="h-[400px] w-full rounded-lg border overflow-hidden">
-                                    <Map
-                                        ref={mapRef}
-                                        center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35,39.3]}
-                                        zoom={markerPosition ? 14 : 5}
-                                    >
-                                        {markerPosition && <MapMarker
-                                            longitude={markerPosition.lng}
-                                            latitude={markerPosition.lat}
-                                            draggable
-                                            onDragEnd={(coords) => {
-                                                setMarkerPosition({ lat: coords.lat, lng: coords.lng });
-                                                form.setValue('latitude', coords.lat);
-                                                form.setValue('longitude', coords.lng);
-                                                // Reverse geocode to find location name
-                                                handleReverseGeocode(coords.lat, coords.lng);
-                                            }}
-                                        >
-                                            <MarkerContent>
-                                                <div className="cursor-move">
-                                                    <MapPin
-                                                        className="fill-black stroke-white dark:fill-white"
-                                                        size={28}
+                                                    <Textarea
+                                                        placeholder="İlan hakkında detaylı açıklama yazın..."
+                                                        className="min-h-[120px]"
+                                                        {...field}
                                                     />
-                                                </div>
-                                            </MarkerContent>
-                                        </MapMarker>}
-                                        <MapControls
-                                            position="top-right"
-                                            showZoom
-                                            showLocate
-                                            onLocate={(coords) => {
-                                                setMarkerPosition({ lat: coords.latitude, lng: coords.longitude });
-                                                form.setValue('latitude', coords.latitude);
-                                                form.setValue('longitude', coords.longitude);
-                                                // Reverse geocode to find location name
-                                                handleReverseGeocode(coords.latitude, coords.longitude);
-                                            }}
-                                        />
-                                        <MapEventListener
-                                            onLocationClick={coords => {
-                                                setMarkerPosition(coords);
-                                                setTimeout(handleReverseGeocode, 2000, coords.lat, coords.lng);
-                                                if (mapRef.current) {
-                                                    mapRef.current.flyTo({
-                                                        center: [coords.lng, coords.lat],
-                                                        duration: 2000,
-                                                    });
-                                                }
-                                            }}
-                                        />
-                                    </Map>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Özellikler */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Emlak Özellikleri</CardTitle>
-                            <CardDescription>
-                                Metrekare, oda sayısı ve bina bilgileri.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="grossArea"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Brüt m²</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="netArea"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Net m²</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="landArea"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Arsa m²</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="rooms"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Oda Sayısı</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="bathrooms"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Banyo Sayısı</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-
-                            <Separator />
-
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="buildingAge"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Bina Yaşı</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                value={field.value || undefined}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Seçiniz" />
-                                                    </SelectTrigger>
                                                 </FormControl>
-                                                <SelectContent>
-                                                    {buildingAgeOptions.map((option) => (
-                                                        <SelectItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                                <FormField
-                                    control={form.control}
-                                    name="totalFloors"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Toplam Kat</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="categoryId"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Kategori *</FormLabel>
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder="Seçiniz" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <CategorySelectItems categories={categories} />
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                <FormField
-                                    control={form.control}
-                                    name="floorNumber"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Bulunduğu Kat</FormLabel>
-                                            <FormControl>
-                                                <Input
-                                                    type="number"
-                                                    placeholder="0"
-                                                    {...field}
-                                                    value={field.value || ""}
-                                                    onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
-                                                />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                        <FormField
+                                            control={form.control}
+                                            name="listingType"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>İlan Türü *</FormLabel>
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder="Seçiniz" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {listingTypeOptions.map((option) => (
+                                                                <SelectItem key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                                <FormField
-                                    control={form.control}
-                                    name="heatingType"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Isıtma Tipi</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                value={field.value || undefined}
+                                        <FormField
+                                            control={form.control}
+                                            name="listingStatus"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>İlan Durumu</FormLabel>
+                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder="Seçiniz" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {listingStatusOptions.map((option) => (
+                                                                <SelectItem key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Fiyat Tab */}
+                        <TabsContent value="price">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Fiyat Bilgileri</CardTitle>
+                                    <CardDescription>
+                                        İlanın fiyatı ve m² fiyatı.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="price"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Fiyat (₺) *</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || "")}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="pricePerSqm"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>m² Fiyatı (₺)</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Konum Tab */}
+                        <TabsContent value="location">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Konum Bilgileri</CardTitle>
+                                    <CardDescription>
+                                        Emlakın bulunduğu konum bilgileri.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <LocationSelect
+                                        form={form}
+                                        onLocationChange={handleLocationChange}
+                                        isReverseGeocodingRef={isReverseGeocodingRef}
+                                        isEditMode={mode === "edit"}
+                                    />
+
+                                    {/* Harita ile Konum Seçimi */}
+                                    <div className="space-y-2">
+                                        <FormLabel>Konum</FormLabel>
+                                        <p className="text-sm text-muted-foreground">
+                                            Haritada marker'ı sürükleyerek veya "Konumumu Bul" butonunu kullanarak lokasyon seçebilirsiniz.
+                                        </p>
+                                        <div className="h-[400px] w-full rounded-lg border overflow-hidden">
+                                            <Map
+                                                ref={mapRef}
+                                                center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35,39.3]}
+                                                zoom={markerPosition ? 14 : 5}
                                             >
+                                                {markerPosition && <MapMarker
+                                                    longitude={markerPosition.lng}
+                                                    latitude={markerPosition.lat}
+                                                    draggable
+                                                    onDragEnd={(coords) => {
+                                                        setMarkerPosition({ lat: coords.lat, lng: coords.lng });
+                                                        form.setValue('latitude', coords.lat);
+                                                        form.setValue('longitude', coords.lng);
+                                                        // Reverse geocode to find location name
+                                                        handleReverseGeocode(coords.lat, coords.lng);
+                                                    }}
+                                                >
+                                                    <MarkerContent>
+                                                        <div className="cursor-move">
+                                                            <MapPin
+                                                                className="fill-black stroke-white dark:fill-white"
+                                                                size={28}
+                                                            />
+                                                        </div>
+                                                    </MarkerContent>
+                                                </MapMarker>}
+                                                <MapControls
+                                                    position="top-right"
+                                                    showZoom
+                                                    showLocate
+                                                    onLocate={(coords) => {
+                                                        setMarkerPosition({ lat: coords.latitude, lng: coords.longitude });
+                                                        form.setValue('latitude', coords.latitude);
+                                                        form.setValue('longitude', coords.longitude);
+                                                        // Reverse geocode to find location name
+                                                        handleReverseGeocode(coords.latitude, coords.longitude);
+                                                    }}
+                                                />
+                                                <MapEventListener
+                                                    onLocationClick={coords => {
+                                                        setMarkerPosition(coords);
+                                                        setTimeout(handleReverseGeocode, 2000, coords.lat, coords.lng);
+                                                        if (mapRef.current) {
+                                                            mapRef.current.flyTo({
+                                                                center: [coords.lng, coords.lat],
+                                                                duration: 2000,
+                                                            });
+                                                        }
+                                                    }}
+                                                />
+                                            </Map>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Özellikler Tab */}
+                        <TabsContent value="features">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Emlak Özellikleri</CardTitle>
+                                    <CardDescription>
+                                        Metrekare, oda sayısı ve bina bilgileri.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="grossArea"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Brüt m²</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="netArea"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Net m²</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="landArea"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Arsa m²</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="rooms"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Oda Sayısı</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="bathrooms"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Banyo Sayısı</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+                                    <Separator />
+
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="buildingAge"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Bina Yaşı</FormLabel>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        value={field.value || undefined}
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder="Seçiniz" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {buildingAgeOptions.map((option) => (
+                                                                <SelectItem key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="totalFloors"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Toplam Kat</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="floorNumber"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Bulunduğu Kat</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="heatingType"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Isıtma Tipi</FormLabel>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        value={field.value || undefined}
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-full">
+                                                                <SelectValue placeholder="Seçiniz" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {heatingTypeOptions.map((option) => (
+                                                                <SelectItem key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Ek Özellikler Tab */}
+                        <TabsContent value="extras">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Ek Özellikler</CardTitle>
+                                    <CardDescription>
+                                        Emlakın sahip olduğu ek özellikler.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="hasBalconies"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal cursor-pointer">
+                                                        Balkon
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="hasElevator"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal cursor-pointer">
+                                                        Asansör
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="hasParking"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal cursor-pointer">
+                                                        Otopark
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="hasSecurity"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal cursor-pointer">
+                                                        Güvenlik
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="isFurnished"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal cursor-pointer">
+                                                        Eşyalı
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+
+                                        <FormField
+                                            control={form.control}
+                                            name="isWithinSite"
+                                            render={({ field }) => (
+                                                <FormItem className="flex items-center space-x-2 space-y-0">
+                                                    <FormControl>
+                                                        <Checkbox
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                        />
+                                                    </FormControl>
+                                                    <FormLabel className="font-normal cursor-pointer">
+                                                        Site İçinde
+                                                    </FormLabel>
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Medya Tab */}
+                        <TabsContent value="media">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Medya</CardTitle>
+                                    <CardDescription>
+                                        Fotoğraflar ve video bağlantısı ekleyin.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <div>
+                                        <FormLabel className="mb-2 block">Fotoğraflar</FormLabel>
+                                        <ImageUpload
+                                            value={images}
+                                            onChange={setImages}
+                                            maxFiles={20}
+                                            onDeleteExisting={handleDeleteExistingImage}
+                                        />
+                                    </div>
+
+                                    <FormField
+                                        control={form.control}
+                                        name="videoUrl"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Video URL</FormLabel>
                                                 <FormControl>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Seçiniz" />
-                                                    </SelectTrigger>
+                                                    <Input
+                                                        placeholder="https://youtube.com/watch?v=..."
+                                                        {...field}
+                                                    />
                                                 </FormControl>
-                                                <SelectContent>
-                                                    {heatingTypeOptions.map((option) => (
-                                                        <SelectItem key={option.value} value={option.value}>
-                                                            {option.label}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Ek Özellikler */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Ek Özellikler</CardTitle>
-                            <CardDescription>
-                                Emlakın sahip olduğu ek özellikler.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="hasBalconies"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal cursor-pointer">
-                                                Balkon
-                                            </FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="hasElevator"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal cursor-pointer">
-                                                Asansör
-                                            </FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="hasParking"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal cursor-pointer">
-                                                Otopark
-                                            </FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="hasSecurity"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal cursor-pointer">
-                                                Güvenlik
-                                            </FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="isFurnished"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal cursor-pointer">
-                                                Eşyalı
-                                            </FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-
-                                <FormField
-                                    control={form.control}
-                                    name="isWithinSite"
-                                    render={({ field }) => (
-                                        <FormItem className="flex items-center space-x-2 space-y-0">
-                                            <FormControl>
-                                                <Checkbox
-                                                    checked={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            </FormControl>
-                                            <FormLabel className="font-normal cursor-pointer">
-                                                Site İçinde
-                                            </FormLabel>
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Medya */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Medya</CardTitle>
-                            <CardDescription>
-                                Fotoğraflar ve video bağlantısı ekleyin.
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div>
-                                <FormLabel className="mb-2 block">Fotoğraflar</FormLabel>
-                                <ImageUpload
-                                    value={images}
-                                    onChange={setImages}
-                                    maxFiles={20}
-                                    onDeleteExisting={handleDeleteExistingImage}
-                                />
-                            </div>
-
-                            <FormField
-                                control={form.control}
-                                name="videoUrl"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Video URL</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="https://youtube.com/watch?v=..."
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </CardContent>
-                    </Card>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+                    </Tabs>
 
                     {/* Submit */}
-                    <div className="flex justify-end gap-4">
+                    <div className="flex justify-end gap-4 mt-6">
                         <Button
                             type="button"
                             variant="outline"

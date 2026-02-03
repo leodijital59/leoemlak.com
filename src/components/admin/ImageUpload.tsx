@@ -104,8 +104,8 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
         )}
       </Item>
 
-      {/* Overlay controls */}
-      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none">
+      {/* Desktop Overlay controls (hover) */}
+      <div className="hidden lg:flex absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity items-center justify-center gap-2 pointer-events-none">
         <Button
           type="button"
           size="icon"
@@ -141,9 +141,46 @@ function SortableImage({ image, onRemove, onSetMain }: SortableImageProps) {
         </Button>
       </div>
 
+      {/* Mobile controls (bottom bar, always visible) */}
+      <div className="lg:hidden absolute bottom-0 left-0 right-0 bg-black/80 backdrop-blur-sm p-2 flex items-center justify-center gap-2">
+        <Button
+          type="button"
+          size="icon"
+          variant="secondary"
+          className="size-8 cursor-grab active:cursor-grabbing"
+          {...attributes}
+          {...listeners}
+        >
+          <IconGripVertical className="size-4" />
+        </Button>
+        <Button
+          type="button"
+          size="icon"
+          variant={image.isMain ? "default" : "secondary"}
+          className="size-8"
+          onClick={() => onSetMain(image.id)}
+          title={image.isMain ? "Ana resim" : "Ana resim yap"}
+        >
+          {image.isMain ? (
+            <IconStarFilled className="size-4" />
+          ) : (
+            <IconStar className="size-4" />
+          )}
+        </Button>
+        <Button
+          type="button"
+          size="icon"
+          variant="destructive"
+          className="size-8"
+          onClick={() => onRemove(image.id)}
+        >
+          <IconTrash className="size-4" />
+        </Button>
+      </div>
+
       {/* Main image badge */}
       {image.isMain && (
-        <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
+        <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded z-10">
           Ana Resim
         </div>
       )}
@@ -330,7 +367,7 @@ export function ImageUpload({ value, onChange, maxFiles = 20, onDeleteExisting }
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={value.map((img) => img.id)} strategy={rectSortingStrategy}>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                 {value.map((image) => (
                   <SortableImage
                     key={image.id}
