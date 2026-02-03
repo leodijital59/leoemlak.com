@@ -1,8 +1,8 @@
-import {Outlet, createFileRoute, Link, useNavigate} from '@tanstack/react-router'
+import {Link, Outlet, createFileRoute, useNavigate} from '@tanstack/react-router'
 import { NeonAuthUIProvider } from '@neondatabase/neon-js/auth/react';
 import { SignedOut } from '@neondatabase/neon-js/auth/react/ui';
 import { authClient } from '@/auth';
-import css from '@/styles/admin.css?url';
+import css from '@/styles/auth.css?url';
 
 export const Route = createFileRoute('/(auth)')({
     component: RouteComponent,
