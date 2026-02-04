@@ -24,7 +24,6 @@ import {
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
@@ -203,9 +202,6 @@ export function CategoryForm({
                     <Card>
                         <CardHeader>
                             <CardTitle>Kategori Bilgileri</CardTitle>
-                            <CardDescription>
-                                Kategori adı ve üst kategori bilgilerini girin.
-                            </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <FormField
