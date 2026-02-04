@@ -21,16 +21,20 @@ export interface NavItem {
   title: string
   url: string
   icon?: Icon
+  role?: string | null
   items?: {
     title: string
     url: string
+    role?: string | null
   }[]
 }
 
 export function NavMain({
   items,
+  role = "user",
 }: {
   items: NavItem[]
+  role?: string | null
 }) {
   const location = useLocation()
 
@@ -53,7 +57,7 @@ export function NavMain({
         </SidebarMenu>
         <SidebarMenu>
           {items.map((item) =>
-            item.items && item.items.length > 0 ? (
+            item.items && item.items.length > 0 ? ((item.role && item.role === role || !item.role) &&
               <Collapsible
                 key={item.title}
                 asChild
@@ -72,7 +76,7 @@ export function NavMain({
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items.map((subItem) => (
+                      {item.items.map((subItem) => ((subItem.role && subItem.role === role || !subItem.role) &&
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton
                             asChild
@@ -88,7 +92,7 @@ export function NavMain({
                   </CollapsibleContent>
                 </SidebarMenuItem>
               </Collapsible>
-            ) : (
+            ) : ((item.role && item.role === role || !item.role) &&
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   tooltip={item.title}

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import {createFileRoute, useLocation} from '@tanstack/react-router';
 import { AuthView, authLocalization, authViewPaths, getViewByPath } from '@neondatabase/neon-js/auth/react/ui';
 
 export const Route = createFileRoute('/(auth)/auth/$pathname')({
@@ -14,6 +14,10 @@ export const Route = createFileRoute('/(auth)/auth/$pathname')({
 
 function Auth() {
     const { pathname } = Route.useParams();
+    const redirectTo = useLocation({
+        select: (location) => location.search.redirectTo || "/admin",
+    });
+
     return (
         <div
             style={{
@@ -23,7 +27,7 @@ function Auth() {
                 minHeight: '100vh',
             }}
         >
-            <AuthView pathname={pathname} />
+            <AuthView pathname={pathname} redirectTo={redirectTo} />
         </div>
     );
 }

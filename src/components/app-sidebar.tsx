@@ -22,12 +22,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { authClient } from "@/auth";
 
-const data: {
-  navMain: NavItem[]
-  navSecondary: { title: string; url: string; icon: typeof IconSettings }[]
+const navigation: {
+  main: NavItem[]
+  secondary: { title: string; url: string; icon: typeof IconSettings }[]
 } = {
-  navMain: [
+  main: [
     {
       title: "Dashboard",
       url: "/admin",
@@ -45,11 +46,12 @@ const data: {
     },
     {
       title: "Kullanıcılar",
-      url: "#",
+      url: "/admin/users",
       icon: IconUsers,
+      role: "admin"
     },
   ],
-  navSecondary: [
+  secondary: [
     {
       title: "Ayarlar",
       url: "#",
@@ -59,6 +61,7 @@ const data: {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data } = authClient.useSession();
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -77,8 +80,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navigation.main} role={data?.user.role} />
+        <NavSecondary items={navigation.secondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
