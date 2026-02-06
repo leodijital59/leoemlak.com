@@ -1,0 +1,542 @@
+{
+  "id": "0a9252cd-ac96-47be-b745-5d8f0125eb7b",
+  "prevId": "5be3fd14-8061-4607-836d-8e448eb2c130",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.categories": {
+      "name": "categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.properties": {
+      "name": "properties",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "listing_type": {
+          "name": "listing_type",
+          "type": "listing_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "listing_status": {
+          "name": "listing_status",
+          "type": "listing_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_per_sqm": {
+          "name": "price_per_sqm",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "province": {
+          "name": "province",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "district": {
+          "name": "district",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "neighborhood": {
+          "name": "neighborhood",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "latitude": {
+          "name": "latitude",
+          "type": "numeric(10, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "longitude": {
+          "name": "longitude",
+          "type": "numeric(11, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "grossArea": {
+          "name": "grossArea",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "netArea": {
+          "name": "netArea",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "landArea": {
+          "name": "landArea",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rooms": {
+          "name": "rooms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bathrooms": {
+          "name": "bathrooms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "building_age": {
+          "name": "building_age",
+          "type": "building_age",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "totalFloors": {
+          "name": "totalFloors",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "floorNumber": {
+          "name": "floorNumber",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "heating_type": {
+          "name": "heating_type",
+          "type": "heating_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hasBalconies": {
+          "name": "hasBalconies",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "hasElevator": {
+          "name": "hasElevator",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "hasParking": {
+          "name": "hasParking",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "hasSecurity": {
+          "name": "hasSecurity",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "isFurnished": {
+          "name": "isFurnished",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "isWithinSite": {
+          "name": "isWithinSite",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "videoUrl": {
+          "name": "videoUrl",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "properties_category_id_categories_id_fk": {
+          "name": "properties_category_id_categories_id_fk",
+          "tableFrom": "properties",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.property_features": {
+      "name": "property_features",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "property_features_name_unique": {
+          "name": "property_features_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.property_images": {
+      "name": "property_images",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "property_id": {
+          "name": "property_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "is_main_image": {
+          "name": "is_main_image",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "property_id_idx": {
+          "name": "property_id_idx",
+          "columns": [
+            {
+              "expression": "property_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "property_images_property_id_properties_id_fk": {
+          "name": "property_images_property_id_properties_id_fk",
+          "tableFrom": "property_images",
+          "tableTo": "properties",
+          "columnsFrom": [
+            "property_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.property_property_features": {
+      "name": "property_property_features",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "property_id": {
+          "name": "property_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "feature_id": {
+          "name": "feature_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        }
+      },
+      "indexes": {
+        "ppf_property_id_idx": {
+          "name": "ppf_property_id_idx",
+          "columns": [
+            {
+              "expression": "property_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "ppf_feature_id_idx": {
+          "name": "ppf_feature_id_idx",
+          "columns": [
+            {
+              "expression": "feature_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "property_property_features_property_id_properties_id_fk": {
+          "name": "property_property_features_property_id_properties_id_fk",
+          "tableFrom": "property_property_features",
+          "tableTo": "properties",
+          "columnsFrom": [
+            "property_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "property_property_features_feature_id_property_features_id_fk": {
+          "name": "property_property_features_feature_id_property_features_id_fk",
+          "tableFrom": "property_property_features",
+          "tableTo": "property_features",
+          "columnsFrom": [
+            "feature_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.building_age": {
+      "name": "building_age",
+      "schema": "public",
+      "values": [
+        "0",
+        "1-5",
+        "6-10",
+        "11-15",
+        "16-20",
+        "21+"
+      ]
+    },
+    "public.heating_type": {
+      "name": "heating_type",
+      "schema": "public",
+      "values": [
+        "Yok",
+        "Soba",
+        "Dogalgaz",
+        "Klima",
+        "Merkezi",
+        "Kombi",
+        "Yerden",
+        "Elektrik"
+      ]
+    },
+    "public.listing_status": {
+      "name": "listing_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "passive"
+      ]
+    },
+    "public.listing_type": {
+      "name": "listing_type",
+      "schema": "public",
+      "values": [
+        "sold",
+        "rented"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

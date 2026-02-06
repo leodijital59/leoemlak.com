@@ -114,6 +114,7 @@ export const propertyPropertyFeaturesTable = pgTable("property_property_features
     id: t.uuid().primaryKey().defaultRandom(),
     propertyId: t.uuid('property_id').notNull().references(() => propertiesTable.id, {onDelete: 'cascade'}),
     featureId: t.uuid('feature_id').notNull().references(() => propertyFeaturesTable.id, {onDelete: 'cascade'}),
+    value: t.boolean().default(true).notNull(),
 }), (table) => [
     index('ppf_property_id_idx').on(table.propertyId),
     index('ppf_feature_id_idx').on(table.featureId),

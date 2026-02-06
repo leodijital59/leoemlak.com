@@ -1,0 +1,1 @@
+ALTER TABLE "property_property_features" ADD COLUMN "value" boolean DEFAULT true NOT NULL;
