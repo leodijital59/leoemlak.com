@@ -4,6 +4,7 @@ import {
   IconCategory,
   IconDashboard,
   IconInnerShadowTop,
+  IconList,
   IconSettings,
   IconUsers,
 } from "@tabler/icons-react"
@@ -43,6 +44,11 @@ const navigation: {
       title: "Kategoriler",
       url: "/admin/categories",
       icon: IconCategory,
+    },
+    {
+      title: "Özellikler",
+      url: "/admin/features",
+      icon: IconList,
     },
     {
       title: "Kullanıcılar",
