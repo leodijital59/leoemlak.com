@@ -8,6 +8,7 @@ import type { FieldValues, SubmitHandler } from "react-hook-form";
 import type { ExistingImage, ImageItem } from "@/components/admin/ImageUpload";
 import type {PropertyFormValues} from "@/lib/validations/property";
 import { createFeature } from "@/lib/server/feature";
+import { getCategoryFeatures } from "@/lib/server/category";
 import {
     buildingAgeOptions,
     heatingTypeOptions,
@@ -189,6 +190,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
     // Dynamic features state
     const [availableFeatures, setAvailableFeatures] = React.useState(features);
     const [selectedFeatures, setSelectedFeatures] = React.useState<Map<string, boolean>>(new Map());
+    const [categoryFeatureIds, setCategoryFeatureIds] = React.useState<Set<string>>(new Set());
     const [featureSearchQuery, setFeatureSearchQuery] = React.useState("");
     const [isCreatingFeature, setIsCreatingFeature] = React.useState(false);
     const [showFeatureDropdown, setShowFeatureDropdown] = React.useState(false);
@@ -405,6 +407,15 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
         }
     }, [mode, initialData?.propertyFeatures]);
 
+    // Load category features in edit mode
+    React.useEffect(() => {
+        if (mode === "edit" && initialData?.categoryId) {
+            getCategoryFeatures({ data: initialData.categoryId }).then((features) => {
+                setCategoryFeatureIds(new Set(features.map(f => f.featureId)));
+            });
+        }
+    }, [mode, initialData?.categoryId]);
+
     // Close dropdown when clicking outside
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -445,9 +456,9 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
         // Create new feature
         setIsCreatingFeature(true);
         try {
-            const newFeature = await createFeature({ data: { name: trimmedName } });
-            setAvailableFeatures((prev) => [...prev, { id: newFeature.id, name: newFeature.name }]);
-            setSelectedFeatures((prev) => new Map(prev).set(newFeature.id, true));
+            const { feature } = await createFeature({ data: { name: trimmedName } });
+            setAvailableFeatures((prev) => [...prev, { id: feature.id, name: feature.name }]);
+            setSelectedFeatures((prev) => new Map(prev).set(feature.id, true));
             setFeatureSearchQuery("");
             setShowFeatureDropdown(false);
         } catch (error) {
@@ -459,6 +470,11 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
     };
 
     const removeFeature = (featureId: string) => {
+        // Prevent removing category features
+        if (categoryFeatureIds.has(featureId)) {
+            return;
+        }
+
         setSelectedFeatures((prev) => {
             const newMap = new Map(prev);
             newMap.delete(featureId);
@@ -488,15 +504,34 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
             .slice(0, 5); // Limit to 5 results
     }, [featureSearchQuery, availableFeatures, selectedFeatures]);
 
+    // Check if there's an exact match
+    const exactMatch = React.useMemo(() => {
+        return filteredFeatures.some(
+            f => f.name.toLowerCase() === featureSearchQuery.toLowerCase()
+        );
+    }, [filteredFeatures, featureSearchQuery]);
+
     // Get selected features with names and values
     const selectedFeaturesWithNames = React.useMemo(() => {
-        return Array.from(selectedFeatures.entries())
+        const featuresWithNames = Array.from(selectedFeatures.entries())
             .map(([featureId, value]) => {
                 const feature = availableFeatures.find(f => f.id === featureId);
                 return feature ? { ...feature, value } : null;
             })
             .filter(Boolean) as { id: string; name: string; value: boolean }[];
-    }, [selectedFeatures, availableFeatures]);
+
+        // Separate category features and manual features
+        const categoryFeatures = featuresWithNames
+            .filter(f => categoryFeatureIds.has(f.id))
+            .sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+
+        const manualFeatures = featuresWithNames
+            .filter(f => !categoryFeatureIds.has(f.id))
+            .sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+
+        // Return category features first, then manual features
+        return [...categoryFeatures, ...manualFeatures];
+    }, [selectedFeatures, availableFeatures, categoryFeatureIds]);
 
     const handleFormSubmit: SubmitHandler<FieldValues> = async (formData) => {
         setIsSubmitting(true);
@@ -668,7 +703,39 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Kategori *</FormLabel>
-                                                    <Select onValueChange={field.onChange} value={field.value}>
+                                                    <Select
+                                                        onValueChange={(value) => {
+                                                            field.onChange(value);
+
+                                                            // Remove previous category features
+                                                            setSelectedFeatures((prev) => {
+                                                                const next = new Map(prev);
+                                                                categoryFeatureIds.forEach((featureId) => {
+                                                                    next.delete(featureId);
+                                                                });
+                                                                return next;
+                                                            });
+
+                                                            // Load and add new category features
+                                                            if (value) {
+                                                                getCategoryFeatures({ data: value }).then((features) => {
+                                                                    const newCategoryFeatureIds = new Set(features.map(f => f.featureId));
+                                                                    setCategoryFeatureIds(newCategoryFeatureIds);
+
+                                                                    setSelectedFeatures((prev) => {
+                                                                        const next = new Map(prev);
+                                                                        features.forEach((feature) => {
+                                                                            next.set(feature.featureId, false); // Default value: false
+                                                                        });
+                                                                        return next;
+                                                                    });
+                                                                });
+                                                            } else {
+                                                                setCategoryFeatureIds(new Set());
+                                                            }
+                                                        }}
+                                                        value={field.value}
+                                                    >
                                                         <FormControl>
                                                             <SelectTrigger className="w-full">
                                                                 <SelectValue placeholder="Seçiniz" />
@@ -1236,47 +1303,34 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                             {/* Dropdown with filtered features */}
                                             {showFeatureDropdown && featureSearchQuery.trim() && (
                                                 <div className="absolute z-10 w-full mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-auto">
-                                                    {filteredFeatures.length > 0 ? (
-                                                        <div className="py-1">
-                                                            {filteredFeatures.map((feature) => (
-                                                                <button
-                                                                    key={feature.id}
-                                                                    type="button"
-                                                                    onClick={() => {
-                                                                        setSelectedFeatures((prev) => new Map(prev).set(feature.id, true));
-                                                                        setFeatureSearchQuery("");
-                                                                        setShowFeatureDropdown(false);
-                                                                    }}
-                                                                    className="w-full px-3 py-2 text-left hover:bg-muted transition-colors text-sm"
-                                                                >
-                                                                    {feature.name}
-                                                                </button>
-                                                            ))}
+                                                    {filteredFeatures.map((feature) => (
+                                                        <div
+                                                            key={feature.id}
+                                                            onClick={() => {
+                                                                setSelectedFeatures((prev) => new Map(prev).set(feature.id, true));
+                                                                setFeatureSearchQuery("");
+                                                                setShowFeatureDropdown(false);
+                                                            }}
+                                                            className="px-4 py-2 hover:bg-muted cursor-pointer transition-colors text-sm"
+                                                        >
+                                                            {feature.name}
                                                         </div>
-                                                    ) : (
-                                                        <div className="p-3 space-y-2">
-                                                            <p className="text-sm text-muted-foreground">
-                                                                &quot;{featureSearchQuery}&quot; bulunamadı
-                                                            </p>
-                                                            <Button
-                                                                type="button"
-                                                                size="sm"
-                                                                onClick={() => handleAddFeature(featureSearchQuery)}
-                                                                disabled={isCreatingFeature}
-                                                                className="w-full"
-                                                            >
-                                                                {isCreatingFeature ? (
-                                                                    <>
-                                                                        <IconLoader2 className="mr-2 size-4 animate-spin" />
-                                                                        Oluşturuluyor...
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <IconPlus className="mr-2 size-4" />
-                                                                        &quot;{featureSearchQuery}&quot; oluştur ve ekle
-                                                                    </>
-                                                                )}
-                                                            </Button>
+                                                    ))}
+
+                                                    {/* Create new feature option */}
+                                                    {!exactMatch && featureSearchQuery.length >= 2 && (
+                                                        <div
+                                                            onClick={() => handleAddFeature(featureSearchQuery)}
+                                                            className="px-4 py-2 bg-accent hover:bg-accent/80 cursor-pointer border-t transition-colors text-sm"
+                                                        >
+                                                            {isCreatingFeature ? (
+                                                                <span className="flex items-center gap-2">
+                                                                    <IconLoader2 className="size-4 animate-spin" />
+                                                                    Oluşturuluyor...
+                                                                </span>
+                                                            ) : (
+                                                                <span>+ "{featureSearchQuery}" oluştur ve ekle</span>
+                                                            )}
                                                         </div>
                                                     )}
                                                 </div>
@@ -1287,29 +1341,34 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                         {selectedFeaturesWithNames.length > 0 && (
                                             <div className="space-y-2">
                                                 <div className="flex flex-wrap gap-2">
-                                                    {selectedFeaturesWithNames.map((feature) => (
-                                                        <Badge
-                                                            key={feature.id}
-                                                            variant={feature.value ? "default" : "outline"}
-                                                            className="pl-2 pr-1 py-1.5 cursor-pointer hover:opacity-80 transition-opacity"
-                                                            onClick={() => toggleFeatureValue(feature.id)}
-                                                        >
-                                                            {feature.value && (
-                                                                <IconCheck className="size-3 mr-1" />
-                                                            )}
-                                                            {feature.name}
-                                                            <button
-                                                                type="button"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    removeFeature(feature.id);
-                                                                }}
-                                                                className="ml-2 hover:bg-muted/50 rounded-sm p-0.5 transition-colors"
+                                                    {selectedFeaturesWithNames.map((feature) => {
+                                                        const isCategoryFeature = categoryFeatureIds.has(feature.id);
+                                                        return (
+                                                            <Badge
+                                                                key={feature.id}
+                                                                variant={feature.value ? "default" : "outline"}
+                                                                className="px-2 py-1.5 cursor-pointer hover:opacity-80 transition-opacity"
+                                                                onClick={() => toggleFeatureValue(feature.id)}
                                                             >
-                                                                <IconX className="size-3" />
-                                                            </button>
-                                                        </Badge>
-                                                    ))}
+                                                                {feature.value && (
+                                                                    <IconCheck className="size-3 mr-1" />
+                                                                )}
+                                                                {feature.name}
+                                                                {!isCategoryFeature && (
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            removeFeature(feature.id);
+                                                                        }}
+                                                                        className="ml-1 hover:bg-muted/50 rounded-sm p-0.5 transition-colors"
+                                                                    >
+                                                                        <IconX className="size-3" />
+                                                                    </button>
+                                                                )}
+                                                            </Badge>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                         )}

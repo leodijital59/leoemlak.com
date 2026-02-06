@@ -3,7 +3,7 @@ import { asc, eq } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
 import type {CategoryFormValues} from "@/lib/validations/category";
 import db from "@/db";
-import { categoriesTable } from "@/schema";
+import { categoriesTable, categoryFeaturesTable, propertyFeaturesTable } from "@/schema";
 import { categoryFormSchema  } from "@/lib/validations/category";
 
 export interface CategoryTreeItem {
@@ -72,6 +72,41 @@ export const getCategoryById = createServerFn({ method: "GET" })
         }
     });
 
+export const getCategoryFeatures = createServerFn({ method: "GET" })
+    .inputValidator((categoryId: string) => categoryId)
+    .handler(async ({ data: categoryId }) => {
+        const features = await db
+            .select({
+                featureId: categoryFeaturesTable.featureId,
+                featureName: propertyFeaturesTable.name,
+            })
+            .from(categoryFeaturesTable)
+            .innerJoin(
+                propertyFeaturesTable,
+                eq(categoryFeaturesTable.featureId, propertyFeaturesTable.id)
+            )
+            .where(eq(categoryFeaturesTable.categoryId, categoryId));
+
+        return features;
+    });
+
+async function saveCategoryFeatures(categoryId: string, featureIds: string[]) {
+    // Delete existing relationships
+    await db
+        .delete(categoryFeaturesTable)
+        .where(eq(categoryFeaturesTable.categoryId, categoryId));
+
+    // Insert new relationships
+    if (featureIds.length > 0) {
+        await db.insert(categoryFeaturesTable).values(
+            featureIds.map((featureId) => ({
+                categoryId,
+                featureId,
+            }))
+        );
+    }
+}
+
 export const createCategory = createServerFn({ method: "POST" })
     .inputValidator((data: CategoryFormValues) => categoryFormSchema.parse(data))
     .handler(async ({ data }) => {
@@ -82,6 +117,11 @@ export const createCategory = createServerFn({ method: "POST" })
                 parentId: data.parentId || null,
             })
             .returning({ id: categoriesTable.id});
+
+        // Save category features
+        if (data.features && data.features.length > 0) {
+            await saveCategoryFeatures(newCategory.id, data.features);
+        }
 
         return { success: true, category_id: newCategory.id };
     });
@@ -100,6 +140,9 @@ export const updateCategory = createServerFn({ method: "POST" })
                     parentId: data.parentId || null,
                 })
                 .where(eq(categoriesTable.id, data.id));
+
+            // Update category features
+            await saveCategoryFeatures(data.id, data.features || []);
 
             return { success: true, category_id: data.id };
         } catch {

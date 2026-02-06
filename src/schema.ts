@@ -120,6 +120,16 @@ export const propertyPropertyFeaturesTable = pgTable("property_property_features
     index('ppf_feature_id_idx').on(table.featureId),
 ]);
 
+// Category-Features Junction Tablosu (Kategoriye Özel Özellikler)
+export const categoryFeaturesTable = pgTable("category_features", (t) => ({
+    id: t.uuid().primaryKey().defaultRandom(),
+    categoryId: t.uuid('category_id').notNull().references(() => categoriesTable.id, {onDelete: 'cascade'}),
+    featureId: t.uuid('feature_id').notNull().references(() => propertyFeaturesTable.id, {onDelete: 'cascade'}),
+}), (table) => [
+    index('cf_category_id_idx').on(table.categoryId),
+    index('cf_feature_id_idx').on(table.featureId),
+]);
+
 // Relations
 export const propertyCategoriesRelations = relations(categoriesTable, ({one, many}) => ({
     parent: one(categoriesTable, {
@@ -151,6 +161,7 @@ export const propertyImagesRelations = relations(propertyImagesTable, ({one}) =>
 
 export const propertyFeaturesRelations = relations(propertyFeaturesTable, ({many}) => ({
     properties: many(propertyPropertyFeaturesTable),
+    categories: many(categoryFeaturesTable),
 }));
 
 export const propertyPropertyFeaturesRelations = relations(propertyPropertyFeaturesTable, ({one}) => ({
@@ -160,6 +171,17 @@ export const propertyPropertyFeaturesRelations = relations(propertyPropertyFeatu
     }),
     feature: one(propertyFeaturesTable, {
         fields: [propertyPropertyFeaturesTable.featureId],
+        references: [propertyFeaturesTable.id],
+    }),
+}));
+
+export const categoryFeaturesRelations = relations(categoryFeaturesTable, ({one}) => ({
+    category: one(categoriesTable, {
+        fields: [categoryFeaturesTable.categoryId],
+        references: [categoriesTable.id],
+    }),
+    feature: one(propertyFeaturesTable, {
+        fields: [categoryFeaturesTable.featureId],
         references: [propertyFeaturesTable.id],
     }),
 }));

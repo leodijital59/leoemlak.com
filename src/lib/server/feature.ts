@@ -44,7 +44,7 @@ export const createFeature = createServerFn({ method: "POST" })
                 .insert(propertyFeaturesTable)
                 .values({ name: data.name })
                 .returning();
-            return { success: true, feature_id: newFeature.id };
+            return { success: true, feature: newFeature };
         } catch (error: any) {
             if (error.code === "23505") { // Unique constraint violation
                 throw new Error("Bu özellik adı zaten mevcut");

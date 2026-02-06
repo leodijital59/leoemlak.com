@@ -15,6 +15,13 @@
       "when": 1770383986701,
       "tag": "0001_naive_shatterstar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770401812034,
+      "tag": "0002_yummy_sally_floyd",
+      "breakpoints": true
     }
   ]
 }

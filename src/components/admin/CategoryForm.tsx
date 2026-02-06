@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { IconLoader2, IconTrash } from "@tabler/icons-react";
+import { IconLoader2, IconTrash, IconX } from "@tabler/icons-react";
 import type { CategoryFormValues } from "@/lib/validations/category";
 import { categoryFormSchema } from "@/lib/validations/category";
 import {
@@ -38,6 +38,10 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { createFeature, getFeatures } from "@/lib/server/feature";
+import { getCategoryFeatures } from "@/lib/server/category";
 
 export interface CategoryFormInitialData extends CategoryFormValues {
     id: string;
@@ -102,6 +106,27 @@ export function CategoryForm({
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isDeleting, setIsDeleting] = React.useState(false);
 
+    // Feature management state
+    const [availableFeatures, setAvailableFeatures] = React.useState<{ id: string; name: string }[]>([]);
+    const [selectedFeatures, setSelectedFeatures] = React.useState<Set<string>>(new Set());
+    const [featureSearchQuery, setFeatureSearchQuery] = React.useState("");
+    const [showFeatureDropdown, setShowFeatureDropdown] = React.useState(false);
+    const [isCreatingFeature, setIsCreatingFeature] = React.useState(false);
+
+    // Load all features on mount
+    React.useEffect(() => {
+        getFeatures().then(setAvailableFeatures);
+    }, []);
+
+    // Load category features in edit mode
+    React.useEffect(() => {
+        if (mode === "edit" && initialData?.id) {
+            getCategoryFeatures({ data: initialData.id }).then((features) => {
+                setSelectedFeatures(new Set(features.map(f => f.featureId)));
+            });
+        }
+    }, [mode, initialData?.id]);
+
     // Filter out current category and its descendants from parent options (to prevent circular references)
     const availableParents = React.useMemo(() => {
         if (mode === "create" || !initialData) {
@@ -126,10 +151,56 @@ export function CategoryForm({
         },
     });
 
+    // Feature management handlers
+    const handleAddFeature = (featureId: string) => {
+        setSelectedFeatures(prev => new Set(prev).add(featureId));
+        setFeatureSearchQuery("");
+        setShowFeatureDropdown(false);
+    };
+
+    const handleCreateAndAddFeature = async () => {
+        setIsCreatingFeature(true);
+        try {
+            const { feature } = await createFeature({ data: { name: featureSearchQuery } });
+            // Add the new feature to available features
+            setAvailableFeatures(prev => [...prev, { id: feature.id, name: feature.name }]);
+            // Add it to selected features
+            handleAddFeature(feature.id);
+        } catch (error) {
+            console.error("Error creating feature:", error);
+        } finally {
+            setIsCreatingFeature(false);
+        }
+    };
+
+    const removeFeature = (featureId: string) => {
+        setSelectedFeatures(prev => {
+            const next = new Set(prev);
+            next.delete(featureId);
+            return next;
+        });
+    };
+
+    const filteredFeatures = React.useMemo(() => {
+        return availableFeatures
+            .filter(f =>
+                f.name.toLowerCase().includes(featureSearchQuery.toLowerCase()) &&
+                !selectedFeatures.has(f.id)
+            )
+            .slice(0, 5);
+    }, [availableFeatures, featureSearchQuery, selectedFeatures]);
+
+    const exactMatch = filteredFeatures.some(
+        f => f.name.toLowerCase() === featureSearchQuery.toLowerCase()
+    );
+
     const handleFormSubmit = async (data: CategoryFormValues) => {
         setIsSubmitting(true);
         try {
-            await onSubmit(data);
+            await onSubmit({
+                ...data,
+                features: Array.from(selectedFeatures),
+            });
         } finally {
             setIsSubmitting(false);
         }
@@ -244,6 +315,84 @@ export function CategoryForm({
                                     </FormItem>
                                 )}
                             />
+                        </CardContent>
+                    </Card>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Kategori Özellikleri</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="space-y-2">
+                                <Label>Özellikler</Label>
+                                <div className="relative">
+                                    <Input
+                                        type="text"
+                                        placeholder="Özellik ara veya ekle..."
+                                        value={featureSearchQuery}
+                                        onChange={(e) => {
+                                            setFeatureSearchQuery(e.target.value);
+                                            setShowFeatureDropdown(true);
+                                        }}
+                                        onFocus={() => setShowFeatureDropdown(true)}
+                                        onBlur={() => {
+                                            // Delay to allow click on dropdown items
+                                            setTimeout(() => setShowFeatureDropdown(false), 200);
+                                        }}
+                                    />
+
+                                    {/* Dropdown */}
+                                    {showFeatureDropdown && featureSearchQuery && (
+                                        <div className="absolute z-10 w-full mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-auto">
+                                            {filteredFeatures.map((feature) => (
+                                                <div
+                                                    key={feature.id}
+                                                    onClick={() => handleAddFeature(feature.id)}
+                                                    className="px-4 py-2 hover:bg-muted cursor-pointer transition-colors text-sm"
+                                                >
+                                                    {feature.name}
+                                                </div>
+                                            ))}
+
+                                            {/* Create new feature option */}
+                                            {!exactMatch && featureSearchQuery.length >= 2 && (
+                                                <div
+                                                    onClick={() => handleCreateAndAddFeature()}
+                                                    className="px-4 py-2 bg-accent hover:bg-accent/80 cursor-pointer border-t transition-colors text-sm"
+                                                >
+                                                    {isCreatingFeature ? (
+                                                        <span className="flex items-center gap-2">
+                                                            <IconLoader2 className="size-4 animate-spin" />
+                                                            Oluşturuluyor...
+                                                        </span>
+                                                    ) : (
+                                                        <span>+ "{featureSearchQuery}" oluştur ve ekle</span>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Selected Features - Badges */}
+                                <div className="flex flex-wrap gap-2">
+                                    {Array.from(selectedFeatures).map((featureId) => {
+                                        const feature = availableFeatures.find(f => f.id === featureId);
+                                        return (
+                                            <Badge key={featureId} variant="secondary" className="py-1.5 gap-1 text-sm">
+                                                {feature?.name}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFeature(featureId)}
+                                                    className="ml-1 hover:bg-destructive/90 rounded-sm p-0.5 transition-colors"
+                                                >
+                                                    <IconX className="size-3" />
+                                                </button>
+                                            </Badge>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
 
