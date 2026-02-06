@@ -4,22 +4,24 @@ import { toast } from "sonner";
 import type {PropertyFormInitialData} from "@/components/admin/PropertyForm";
 import { deleteProperty, getPropertyById, updateProperty } from "@/lib/server/property";
 import { getCategories } from "@/lib/server/category";
+import { getFeatures } from "@/lib/server/feature";
 import { PropertyForm } from "@/components/admin/PropertyForm";
 
 export const Route = createFileRoute("/admin/properties/$propertyId/edit")({
     component: EditPropertyPage,
     loader: async ({ params }) => {
-        const [{ property, images }, categories] = await Promise.all([
+        const [{ property, images, features }, categories, allFeatures] = await Promise.all([
             getPropertyById({ data: params.propertyId }),
             getCategories(),
+            getFeatures(),
         ]);
-        return { property, images, categories };
+        return { property, images, features, categories, allFeatures };
     },
 });
 
 function EditPropertyPage() {
     const navigate = useNavigate();
-    const { property, images, categories } = Route.useLoaderData();
+    const { property, images, features, categories, allFeatures } = Route.useLoaderData();
 
     // Transform database property to form initial data
     const initialData: PropertyFormInitialData = {
@@ -58,6 +60,10 @@ function EditPropertyPage() {
             isMainImage: img.isMainImage,
             order: img.order,
         })),
+        propertyFeatures: features.map((f) => ({
+            featureId: f.featureId,
+            value: f.value,
+        })),
     };
 
     const handleSubmit = async (formData: FormData) => {
@@ -93,6 +99,7 @@ function EditPropertyPage() {
             mode="edit"
             initialData={initialData}
             categories={categories}
+            features={allFeatures}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
             onDelete={handleDelete}

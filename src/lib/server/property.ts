@@ -3,7 +3,7 @@ import { del, put } from "@vercel/blob";
 import { desc, eq } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
 import db from "@/db";
-import { propertiesTable, categoriesTable, propertyImagesTable } from "@/schema";
+import { categoriesTable, propertiesTable, propertyFeaturesTable, propertyImagesTable, propertyPropertyFeaturesTable } from "@/schema";
 import { propertyFormSchema } from "@/lib/validations/property";
 
 export const createProperty = createServerFn({ method: "POST" })
@@ -19,6 +19,10 @@ export const createProperty = createServerFn({ method: "POST" })
 
         // Image dosyalarını al
         const imageFiles = formData.getAll("images") as File[];
+
+        // Feature'ları parse et
+        const featuresJson = formData.get("features") as string;
+        const features: { featureId: string; value: boolean }[] = JSON.parse(featuresJson || "[]");
 
         // 1. Property'yi database'e ekle
         const [newProperty] = await db.insert(propertiesTable).values({
@@ -76,6 +80,16 @@ export const createProperty = createServerFn({ method: "POST" })
             );
 
             await db.insert(propertyImagesTable).values(imageRecords);
+        }
+
+        // 3. Feature'ları ekle
+        if (features.length > 0) {
+            const featureRecords = features.map(f => ({
+                propertyId: newProperty.id,
+                featureId: f.featureId,
+                value: f.value,
+            }));
+            await db.insert(propertyPropertyFeaturesTable).values(featureRecords);
         }
 
         return { success: true, propertyId: newProperty.id };
@@ -159,7 +173,21 @@ export const getPropertyById = createServerFn({ method: "GET" })
                 .from(propertyImagesTable)
                 .where(eq(propertyImagesTable.propertyId, id))
                 .orderBy(propertyImagesTable.order);
-            return { property, images };
+
+            const features = await db
+                .select({
+                    featureId: propertyPropertyFeaturesTable.featureId,
+                    value: propertyPropertyFeaturesTable.value,
+                    featureName: propertyFeaturesTable.name,
+                })
+                .from(propertyPropertyFeaturesTable)
+                .innerJoin(
+                    propertyFeaturesTable,
+                    eq(propertyPropertyFeaturesTable.featureId, propertyFeaturesTable.id)
+                )
+                .where(eq(propertyPropertyFeaturesTable.propertyId, id));
+
+            return { property, images, features };
         } catch {
             throw notFound();
         }
@@ -192,6 +220,10 @@ export const updateProperty = createServerFn({ method: "POST" })
 
         // New image files
         const imageFiles = formData.getAll("images") as File[];
+
+        // Feature'ları parse et
+        const featuresJson = formData.get("features") as string;
+        const features: { featureId: string; value: boolean }[] = JSON.parse(featuresJson || "[]");
 
         // 1. Delete removed images from Vercel Blob and database
         if (imagesToDelete.length > 0) {
@@ -291,6 +323,18 @@ export const updateProperty = createServerFn({ method: "POST" })
                 updatedAt: new Date(),
             })
             .where(eq(propertiesTable.id, propertyId));
+
+        // 5. Update features (replace strategy: delete all, insert new)
+        await db.delete(propertyPropertyFeaturesTable).where(eq(propertyPropertyFeaturesTable.propertyId, propertyId));
+
+        if (features.length > 0) {
+            const featureRecords = features.map(f => ({
+                propertyId,
+                featureId: f.featureId,
+                value: f.value,
+            }));
+            await db.insert(propertyPropertyFeaturesTable).values(featureRecords);
+        }
 
         return { success: true, propertyId };
     });

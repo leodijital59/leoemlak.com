@@ -3,6 +3,7 @@ import { toast } from "sonner";
 
 import { createProperty } from "@/lib/server/property";
 import { getCategories } from "@/lib/server/category";
+import { getFeatures } from "@/lib/server/feature";
 import { PropertyForm } from "@/components/admin/PropertyForm";
 
 export const Route = createFileRoute("/admin/properties/create")({
@@ -11,13 +12,17 @@ export const Route = createFileRoute("/admin/properties/create")({
         title: "İlan Ekle"
     },
     loader: async () => {
-        return await getCategories();
+        const [categories, features] = await Promise.all([
+            getCategories(),
+            getFeatures(),
+        ]);
+        return { categories, features };
     },
 });
 
 function CreatePropertyPage() {
     const navigate = useNavigate();
-    const categories = Route.useLoaderData();
+    const { categories, features } = Route.useLoaderData();
 
     const handleSubmit = async (formData: FormData) => {
         try {
@@ -39,6 +44,7 @@ function CreatePropertyPage() {
         <PropertyForm
             mode="create"
             categories={categories}
+            features={features}
             onSubmit={handleSubmit}
             onCancel={handleCancel}
         />

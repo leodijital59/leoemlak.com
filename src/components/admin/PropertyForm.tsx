@@ -1,12 +1,13 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {IconLoader2, IconTrash} from "@tabler/icons-react";
+import {IconCheck, IconLoader2, IconPlus, IconTrash, IconX} from "@tabler/icons-react";
 import {MapPin} from "lucide-react";
 import {useEffect} from "react";
 import type { FieldValues, SubmitHandler } from "react-hook-form";
 import type { ExistingImage, ImageItem } from "@/components/admin/ImageUpload";
 import type {PropertyFormValues} from "@/lib/validations/property";
+import { createFeature } from "@/lib/server/feature";
 import {
     buildingAgeOptions,
     heatingTypeOptions,
@@ -33,6 +34,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import {
     Card,
     CardContent,
@@ -43,7 +45,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ImageUpload } from "@/components/admin/ImageUpload";
-import {Map, MapControls, MapMarker, MarkerContent, useMap} from "@/components/ui/map";
+import {Map as MapComp, MapControls, MapMarker, MarkerContent, useMap} from "@/components/ui/map";
 import LocationSelect from "@/components/admin/location/LocationSelect";
 import {
     AlertDialog,
@@ -65,6 +67,10 @@ export interface PropertyFormInitialData extends PropertyFormValues {
         isMainImage: boolean;
         order: number;
     }[];
+    propertyFeatures?: {
+        featureId: string;
+        value: boolean;
+    }[];
 }
 
 export interface CategoryOption {
@@ -77,6 +83,7 @@ interface PropertyFormProps {
     mode: "create" | "edit";
     initialData?: PropertyFormInitialData;
     categories: CategoryOption[];
+    features: { id: string; name: string }[];
     onSubmit: (formData: FormData) => Promise<void>;
     onCancel: () => void;
     onDelete?: () => Promise<void>;
@@ -173,14 +180,21 @@ const defaultValues = {
     videoUrl: "",
 };
 
-export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel, onDelete }: PropertyFormProps) {
+export function PropertyForm({ mode, initialData, categories, features, onSubmit, onCancel, onDelete }: PropertyFormProps) {
     const [images, setImages] = React.useState<ImageItem[]>([]);
     const [imagesToDelete, setImagesToDelete] = React.useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [isDeleting, setIsDeleting] = React.useState(false);
 
+    // Dynamic features state
+    const [availableFeatures, setAvailableFeatures] = React.useState(features);
+    const [selectedFeatures, setSelectedFeatures] = React.useState<Map<string, boolean>>(new Map());
+    const [featureSearchQuery, setFeatureSearchQuery] = React.useState("");
+    const [isCreatingFeature, setIsCreatingFeature] = React.useState(false);
+    const [showFeatureDropdown, setShowFeatureDropdown] = React.useState(false);
+
     // Initialize marker position from initialData or default
-    const [markerPosition, setMarkerPosition] = React.useState<{ lat: number; lng: number } | undefined>((initialData?.latitude && initialData?.longitude) ? {
+    const [markerPosition, setMarkerPosition] = React.useState<{ lat: number; lng: number } | undefined>((initialData?.latitude && initialData.longitude) ? {
         lat: initialData.latitude,
         lng: initialData.longitude,
     } : undefined);
@@ -380,9 +394,109 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
         }
     }, [initialData?.latitude, initialData?.longitude]);
 
+    // Initialize selected features from initialData in edit mode
+    React.useEffect(() => {
+        if (mode === "edit" && initialData?.propertyFeatures) {
+            const featuresMap = new Map<string, boolean>();
+            initialData.propertyFeatures.forEach(pf => {
+                featuresMap.set(pf.featureId, pf.value);
+            });
+            setSelectedFeatures(featuresMap);
+        }
+    }, [mode, initialData?.propertyFeatures]);
+
+    // Close dropdown when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+            if (!target.closest('.feature-search-container')) {
+                setShowFeatureDropdown(false);
+            }
+        };
+
+        if (showFeatureDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [showFeatureDropdown]);
+
     const handleDeleteExistingImage = (id: string) => {
         setImagesToDelete((prev) => [...prev, id]);
     };
+
+    const handleAddFeature = async (featureName: string) => {
+        if (!featureName.trim()) return;
+
+        const trimmedName = featureName.trim();
+
+        // Check if feature already exists
+        const existingFeature = availableFeatures.find(
+            f => f.name.toLowerCase() === trimmedName.toLowerCase()
+        );
+
+        if (existingFeature) {
+            // Select existing feature
+            setSelectedFeatures((prev) => new Map(prev).set(existingFeature.id, true));
+            setFeatureSearchQuery("");
+            setShowFeatureDropdown(false);
+            return;
+        }
+
+        // Create new feature
+        setIsCreatingFeature(true);
+        try {
+            const newFeature = await createFeature({ data: { name: trimmedName } });
+            setAvailableFeatures((prev) => [...prev, { id: newFeature.id, name: newFeature.name }]);
+            setSelectedFeatures((prev) => new Map(prev).set(newFeature.id, true));
+            setFeatureSearchQuery("");
+            setShowFeatureDropdown(false);
+        } catch (error) {
+            console.error("Failed to create feature:", error);
+            alert("Özellik oluşturulamadı. Lütfen tekrar deneyin.");
+        } finally {
+            setIsCreatingFeature(false);
+        }
+    };
+
+    const removeFeature = (featureId: string) => {
+        setSelectedFeatures((prev) => {
+            const newMap = new Map(prev);
+            newMap.delete(featureId);
+            return newMap;
+        });
+    };
+
+    const toggleFeatureValue = (featureId: string) => {
+        setSelectedFeatures((prev) => {
+            const newMap = new Map(prev);
+            const currentValue = newMap.get(featureId);
+            if (currentValue !== undefined) {
+                newMap.set(featureId, !currentValue);
+            }
+            return newMap;
+        });
+    };
+
+    // Filter features based on search query
+    const filteredFeatures = React.useMemo(() => {
+        if (!featureSearchQuery.trim()) return [];
+
+        const query = featureSearchQuery.toLowerCase();
+        return availableFeatures
+            .filter(f => !selectedFeatures.has(f.id)) // Exclude already selected
+            .filter(f => f.name.toLowerCase().includes(query))
+            .slice(0, 5); // Limit to 5 results
+    }, [featureSearchQuery, availableFeatures, selectedFeatures]);
+
+    // Get selected features with names and values
+    const selectedFeaturesWithNames = React.useMemo(() => {
+        return Array.from(selectedFeatures.entries())
+            .map(([featureId, value]) => {
+                const feature = availableFeatures.find(f => f.id === featureId);
+                return feature ? { ...feature, value } : null;
+            })
+            .filter(Boolean) as { id: string; name: string; value: boolean }[];
+    }, [selectedFeatures, availableFeatures]);
 
     const handleFormSubmit: SubmitHandler<FieldValues> = async (formData) => {
         setIsSubmitting(true);
@@ -427,6 +541,13 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                     submitData.append("images", img.file);
                 }
             });
+
+            // Features
+            const featuresArray = Array.from(selectedFeatures.entries()).map(([featureId, value]) => ({
+                featureId,
+                value,
+            }));
+            submitData.append("features", JSON.stringify(featuresArray));
 
             await onSubmit(submitData);
         } finally {
@@ -676,9 +797,6 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Konum Bilgileri</CardTitle>
-                                    <CardDescription>
-                                        Emlakın bulunduğu konum bilgileri.
-                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <LocationSelect
@@ -695,7 +813,7 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                             Haritada marker'ı sürükleyerek veya "Konumumu Bul" butonunu kullanarak lokasyon seçebilirsiniz.
                                         </p>
                                         <div className="h-[400px] w-full rounded-lg border overflow-hidden">
-                                            <Map
+                                            <MapComp
                                                 ref={mapRef}
                                                 center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35,39.3]}
                                                 zoom={markerPosition ? 14 : 5}
@@ -745,7 +863,7 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                                         }
                                                     }}
                                                 />
-                                            </Map>
+                                            </MapComp>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -972,9 +1090,6 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Ek Özellikler</CardTitle>
-                                    <CardDescription>
-                                        Emlakın sahip olduğu ek özellikler.
-                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -1085,6 +1200,119 @@ export function PropertyForm({ mode, initialData, categories, onSubmit, onCancel
                                                 </FormItem>
                                             )}
                                         />
+                                    </div>
+
+                                    <Separator className="my-6" />
+
+                                    <div className="space-y-4">
+                                        <div>
+                                            <h3 className="text-lg font-semibold">Dinamik Özellikler</h3>
+                                        </div>
+
+                                        {/* Search/Add Feature Input */}
+                                        <div className="relative feature-search-container">
+                                            <Input
+                                                placeholder="Özellik adı aratın veya oluşturun (örn: Jakuzi, Fiber vb)..."
+                                                value={featureSearchQuery}
+                                                onChange={(e) => {
+                                                    setFeatureSearchQuery(e.target.value);
+                                                    setShowFeatureDropdown(true);
+                                                }}
+                                                onFocus={() => setShowFeatureDropdown(true)}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === "Enter") {
+                                                        e.preventDefault();
+                                                        if (featureSearchQuery.trim()) {
+                                                            handleAddFeature(featureSearchQuery);
+                                                        }
+                                                    } else if (e.key === "Escape") {
+                                                        setShowFeatureDropdown(false);
+                                                        setFeatureSearchQuery("");
+                                                    }
+                                                }}
+                                                disabled={isCreatingFeature}
+                                            />
+
+                                            {/* Dropdown with filtered features */}
+                                            {showFeatureDropdown && featureSearchQuery.trim() && (
+                                                <div className="absolute z-10 w-full mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-auto">
+                                                    {filteredFeatures.length > 0 ? (
+                                                        <div className="py-1">
+                                                            {filteredFeatures.map((feature) => (
+                                                                <button
+                                                                    key={feature.id}
+                                                                    type="button"
+                                                                    onClick={() => {
+                                                                        setSelectedFeatures((prev) => new Map(prev).set(feature.id, true));
+                                                                        setFeatureSearchQuery("");
+                                                                        setShowFeatureDropdown(false);
+                                                                    }}
+                                                                    className="w-full px-3 py-2 text-left hover:bg-muted transition-colors text-sm"
+                                                                >
+                                                                    {feature.name}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="p-3 space-y-2">
+                                                            <p className="text-sm text-muted-foreground">
+                                                                &quot;{featureSearchQuery}&quot; bulunamadı
+                                                            </p>
+                                                            <Button
+                                                                type="button"
+                                                                size="sm"
+                                                                onClick={() => handleAddFeature(featureSearchQuery)}
+                                                                disabled={isCreatingFeature}
+                                                                className="w-full"
+                                                            >
+                                                                {isCreatingFeature ? (
+                                                                    <>
+                                                                        <IconLoader2 className="mr-2 size-4 animate-spin" />
+                                                                        Oluşturuluyor...
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <IconPlus className="mr-2 size-4" />
+                                                                        &quot;{featureSearchQuery}&quot; oluştur ve ekle
+                                                                    </>
+                                                                )}
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Selected Features as Badges */}
+                                        {selectedFeaturesWithNames.length > 0 && (
+                                            <div className="space-y-2">
+                                                <div className="flex flex-wrap gap-2">
+                                                    {selectedFeaturesWithNames.map((feature) => (
+                                                        <Badge
+                                                            key={feature.id}
+                                                            variant={feature.value ? "default" : "outline"}
+                                                            className="pl-2 pr-1 py-1.5 cursor-pointer hover:opacity-80 transition-opacity"
+                                                            onClick={() => toggleFeatureValue(feature.id)}
+                                                        >
+                                                            {feature.value && (
+                                                                <IconCheck className="size-3 mr-1" />
+                                                            )}
+                                                            {feature.name}
+                                                            <button
+                                                                type="button"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    removeFeature(feature.id);
+                                                                }}
+                                                                className="ml-2 hover:bg-muted/50 rounded-sm p-0.5 transition-colors"
+                                                            >
+                                                                <IconX className="size-3" />
+                                                            </button>
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </CardContent>
                             </Card>
