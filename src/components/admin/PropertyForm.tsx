@@ -150,7 +150,7 @@ function MapEventListener({ onLocationClick } : { onLocationClick: (lngLat: {
 
 const defaultValues = {
     title: "",
-    description: [{ type: "p", children: [{ text: "" }] }],
+    description: JSON.stringify([{ type: "p", children: [{ text: "" }] }]),
     categoryId: undefined as string | undefined,
     listingType: undefined as string | undefined,
     listingStatus: "active",
@@ -176,7 +176,7 @@ const defaultValues = {
     hasSecurity: false,
     isFurnished: false,
     isWithinSite: false,
-    videoUrl: "",
+    videoUrl: undefined as string | undefined,
 };
 
 export function PropertyForm({ mode, initialData, categories, features, onSubmit, onCancel, onDelete }: PropertyFormProps) {
@@ -207,7 +207,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
 
         return {
             title: initialData.title,
-            description: initialData.description ? JSON.parse(initialData.description) : defaultValues.description,
+            description: initialData.description || defaultValues.description,
             categoryId: initialData.categoryId,
             listingType: initialData.listingType,
             listingStatus: initialData.listingStatus,

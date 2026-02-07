@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from 'react';
 import {
     Plate,
     usePlateEditor,
@@ -11,12 +12,12 @@ import {EditorKit} from "@/components/editor/editor-kit.tsx";
 
 export interface EditorFieldProps {
     /**
-     * The current Plate Value. Should be an array of Plate nodes.
+     * The current editor value. Can be either a Plate Value (array of nodes) or a JSON string.
      */
-    value?: Value;
+    value?: Value | string;
 
     /**
-     * Called when the editor value changes.
+     * Called when the editor value changes. Returns a JSON stringified value.
      */
     onChange?: (value: string) => void;
 
@@ -32,25 +33,37 @@ export function EditorField({
     placeholder = "Type here...",
     ...props
 }: EditorFieldProps) {
+    // Parse incoming value: string (JSON) → Value, or use Value as-is
+    const parsedValue = useMemo(() => {
+        if (!value) {
+            return [{ type: "p", children: [{ text: "" }] }];
+        }
+
+        // If value is a string (JSON), parse it
+        if (typeof value === "string") {
+            try {
+                return JSON.parse(value) as Value;
+            } catch {
+                // Invalid JSON, return default value
+                return [{ type: "p", children: [{ text: "" }] }];
+            }
+        }
+
+        // Already a Value array, use as-is
+        return value;
+    }, [value]);
+
     const editor = usePlateEditor({
         plugins: EditorKit,
-        /*[
-            BoldPlugin,
-            ItalicPlugin,
-            UnderlinePlugin,
-            H1Plugin.withComponent(H1Element),
-            H2Plugin.withComponent(H2Element),
-            H3Plugin.withComponent(H3Element),
-            BlockquotePlugin.withComponent(BlockquoteElement),
-        ],*/
-        value: value ?? [{ type: "p", children: [{ text: "" }] }],
+        value: parsedValue,
     });
 
     return (
         <Plate
             editor={editor}
-            onChange={({ value }) => {
-                onChange?.(JSON.stringify(value, null, 0));
+            onChange={({ value: editorValue }) => {
+                // Always return JSON string to maintain consistency
+                onChange?.(JSON.stringify(editorValue));
             }}
             {...props}
         >

@@ -60,7 +60,7 @@ export const propertyFormSchema = z.object({
   heatingType: z.enum(heatingTypes).optional().nullable(),
 
   // Medya
-  videoUrl: z.url("Geçerli bir URL giriniz").optional(),
+  videoUrl: z.url("Geçerli bir URL giriniz").optional().nullable(),
 });
 
 export type PropertyFormValues = z.infer<typeof propertyFormSchema>;
