@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {IconCheck, IconLoader2, IconPlus, IconTrash, IconX} from "@tabler/icons-react";
+import {IconCheck, IconLoader2, IconTrash, IconX} from "@tabler/icons-react";
 import {MapPin} from "lucide-react";
 import {useEffect} from "react";
-import type { FieldValues, SubmitHandler } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import type { ExistingImage, ImageItem } from "@/components/admin/ImageUpload";
 import type {PropertyFormValues} from "@/lib/validations/property";
 import { createFeature } from "@/lib/server/feature";
@@ -25,7 +25,6 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -59,6 +58,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {EditorField} from "@/components/admin/EditorField.tsx";
 
 export interface PropertyFormInitialData extends PropertyFormValues {
     id: string;
@@ -152,7 +152,7 @@ function MapEventListener({ onLocationClick } : { onLocationClick: (lngLat: {
 
 const defaultValues = {
     title: "",
-    description: "",
+    description: [{ type: "p", children: [{ text: "" }] }],
     categoryId: undefined as string | undefined,
     listingType: undefined as string | undefined,
     listingStatus: "active",
@@ -209,7 +209,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
 
         return {
             title: initialData.title,
-            description: initialData.description,
+            description: initialData.description ? JSON.parse(initialData.description) : defaultValues.description,
             categoryId: initialData.categoryId,
             listingType: initialData.listingType,
             listingStatus: initialData.listingStatus,
@@ -533,7 +533,8 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
         return [...categoryFeatures, ...manualFeatures];
     }, [selectedFeatures, availableFeatures, categoryFeatureIds]);
 
-    const handleFormSubmit: SubmitHandler<FieldValues> = async (formData) => {
+    const handleFormSubmit: SubmitHandler<PropertyFormValues> = async (formData: PropertyFormValues) => {
+        console.log(formData)
         setIsSubmitting(true);
 
         try {
@@ -647,7 +648,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                     <Tabs defaultValue="basic" className="space-y-6">
                         <TabsList variant="line" className="w-full h-auto flex-wrap">
                             <TabsTrigger value="basic" className="flex-1 min-w-fit">Temel Bilgiler</TabsTrigger>
-                            <TabsTrigger value="price" className="flex-1 min-w-fit">Fiyat</TabsTrigger>
+                            <TabsTrigger value="description" className="flex-1 min-w-fit">Açıklama</TabsTrigger>
                             <TabsTrigger value="location" className="flex-1 min-w-fit">Konum</TabsTrigger>
                             <TabsTrigger value="features" className="flex-1 min-w-fit">Özellikler</TabsTrigger>
                             <TabsTrigger value="extras" className="flex-1 min-w-fit">Ek Özellikler</TabsTrigger>
@@ -655,13 +656,10 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                         </TabsList>
 
                         {/* Temel Bilgiler Tab */}
-                        <TabsContent value="basic">
+                        <TabsContent value="basic" className="space-y-6">
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Temel Bilgiler</CardTitle>
-                                    <CardDescription>
-                                        İlanın başlığı, açıklaması ve türü hakkında bilgiler.
-                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <FormField
@@ -672,24 +670,6 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                                 <FormLabel>İlan Başlığı *</FormLabel>
                                                 <FormControl>
                                                     <Input placeholder="Örn: Deniz Manzaralı 3+1 Daire" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    <FormField
-                                        control={form.control}
-                                        name="description"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Açıklama *</FormLabel>
-                                                <FormControl>
-                                                    <Textarea
-                                                        placeholder="İlan hakkında detaylı açıklama yazın..."
-                                                        className="min-h-[120px]"
-                                                        {...field}
-                                                    />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -802,16 +782,10 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                     </div>
                                 </CardContent>
                             </Card>
-                        </TabsContent>
 
-                        {/* Fiyat Tab */}
-                        <TabsContent value="price">
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Fiyat Bilgileri</CardTitle>
-                                    <CardDescription>
-                                        İlanın fiyatı ve m² fiyatı.
-                                    </CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -855,6 +829,32 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                             )}
                                         />
                                     </div>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        {/* Açıklama Tab */}
+                        <TabsContent value="description">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>Açıklama</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <FormField
+                                        control={form.control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormControl>
+                                                    <EditorField
+                                                        {...field}
+                                                        placeholder="İlan hakkında detaylı açıklama yazın..."
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
                                 </CardContent>
                             </Card>
                         </TabsContent>
