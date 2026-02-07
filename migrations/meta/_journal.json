@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1769970000830,
-      "tag": "0000_abandoned_hulk",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1770383986701,
-      "tag": "0001_naive_shatterstar",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1770401812034,
-      "tag": "0002_yummy_sally_floyd",
+      "when": 1770490717831,
+      "tag": "0000_brief_hydra",
       "breakpoints": true
     }
   ]

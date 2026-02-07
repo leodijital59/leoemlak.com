@@ -1,4 +1,3 @@
-CREATE TYPE "public"."building_age" AS ENUM('0', '1-5', '6-10', '11-15', '16-20', '21+');--> statement-breakpoint
 CREATE TYPE "public"."heating_type" AS ENUM('Yok', 'Soba', 'Dogalgaz', 'Klima', 'Merkezi', 'Kombi', 'Yerden', 'Elektrik');--> statement-breakpoint
 CREATE TYPE "public"."listing_status" AS ENUM('active', 'passive');--> statement-breakpoint
 CREATE TYPE "public"."listing_type" AS ENUM('sold', 'rented');--> statement-breakpoint
@@ -7,6 +6,12 @@ CREATE TABLE "categories" (
 	"name" varchar(100) NOT NULL,
 	"parent_id" uuid,
 	"created_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "category_features" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"category_id" uuid NOT NULL,
+	"feature_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "properties" (
@@ -28,18 +33,12 @@ CREATE TABLE "properties" (
 	"grossArea" integer,
 	"netArea" integer,
 	"landArea" integer,
-	"rooms" integer,
-	"bathrooms" integer,
-	"building_age" "building_age",
-	"totalFloors" integer,
-	"floorNumber" integer,
+	"rooms" smallint,
+	"bathrooms" smallint,
+	"buildingAge" smallint,
+	"totalFloors" smallint,
+	"floorNumber" smallint,
 	"heating_type" "heating_type",
-	"hasBalconies" boolean DEFAULT false,
-	"hasElevator" boolean DEFAULT false,
-	"hasParking" boolean DEFAULT false,
-	"hasSecurity" boolean DEFAULT false,
-	"isFurnished" boolean DEFAULT false,
-	"isWithinSite" boolean DEFAULT false,
 	"videoUrl" varchar(500)
 );
 --> statement-breakpoint
@@ -54,20 +53,24 @@ CREATE TABLE "property_images" (
 	"property_id" uuid NOT NULL,
 	"url" varchar(1000) NOT NULL,
 	"order" integer DEFAULT 0 NOT NULL,
-	"is_main_image" boolean DEFAULT false NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"is_main_image" boolean DEFAULT false NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "property_property_features" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"property_id" uuid NOT NULL,
-	"feature_id" uuid NOT NULL
+	"feature_id" uuid NOT NULL,
+	"value" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "category_features" ADD CONSTRAINT "category_features_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "category_features" ADD CONSTRAINT "category_features_feature_id_property_features_id_fk" FOREIGN KEY ("feature_id") REFERENCES "public"."property_features"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "properties" ADD CONSTRAINT "properties_category_id_categories_id_fk" FOREIGN KEY ("category_id") REFERENCES "public"."categories"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "property_images" ADD CONSTRAINT "property_images_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "property_property_features" ADD CONSTRAINT "property_property_features_property_id_properties_id_fk" FOREIGN KEY ("property_id") REFERENCES "public"."properties"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "property_property_features" ADD CONSTRAINT "property_property_features_feature_id_property_features_id_fk" FOREIGN KEY ("feature_id") REFERENCES "public"."property_features"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "cf_category_id_idx" ON "category_features" USING btree ("category_id");--> statement-breakpoint
+CREATE INDEX "cf_feature_id_idx" ON "category_features" USING btree ("feature_id");--> statement-breakpoint
 CREATE INDEX "property_id_idx" ON "property_images" USING btree ("property_id");--> statement-breakpoint
 CREATE INDEX "ppf_property_id_idx" ON "property_property_features" USING btree ("property_id");--> statement-breakpoint
 CREATE INDEX "ppf_feature_id_idx" ON "property_property_features" USING btree ("feature_id");

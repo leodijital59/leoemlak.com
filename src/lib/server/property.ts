@@ -47,13 +47,7 @@ export const createProperty = createServerFn({ method: "POST" })
             totalFloors: propertyData.totalFloors ?? null,
             floorNumber: propertyData.floorNumber ?? null,
             heatingType: propertyData.heatingType ?? null,
-            hasBalconies: propertyData.hasBalconies,
-            hasElevator: propertyData.hasElevator,
-            hasParking: propertyData.hasParking,
-            hasSecurity: propertyData.hasSecurity,
-            isFurnished: propertyData.isFurnished,
-            isWithinSite: propertyData.isWithinSite,
-            videoUrl: propertyData.videoUrl || null,
+            videoUrl: propertyData.videoUrl ?? null,
         }).returning({ id: propertiesTable.id });
 
         // 2. Image'ları Vercel Blob'a yükle ve URL'leri kaydet
@@ -313,13 +307,7 @@ export const updateProperty = createServerFn({ method: "POST" })
                 totalFloors: propertyData.totalFloors ?? null,
                 floorNumber: propertyData.floorNumber ?? null,
                 heatingType: propertyData.heatingType ?? null,
-                hasBalconies: propertyData.hasBalconies,
-                hasElevator: propertyData.hasElevator,
-                hasParking: propertyData.hasParking,
-                hasSecurity: propertyData.hasSecurity,
-                isFurnished: propertyData.isFurnished,
-                isWithinSite: propertyData.isWithinSite,
-                videoUrl: propertyData.videoUrl || null,
+                videoUrl: propertyData.videoUrl ?? null,
                 updatedAt: new Date(),
             })
             .where(eq(propertiesTable.id, propertyId));

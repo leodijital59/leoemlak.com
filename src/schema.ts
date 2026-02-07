@@ -22,15 +22,6 @@ export const heatingTypeEnum = pgEnum('heating_type', [
     'Elektrik'
 ]);
 
-export const buildingAgeEnum = pgEnum('building_age', [
-    '0',
-    '1-5',
-    '6-10',
-    '11-15',
-    '16-20',
-    '21+'
-]);
-
 // Property Categories Table (Hierarchical)
 export const categoriesTable = pgTable("categories", (t) => ({
     id: t.uuid().primaryKey().defaultRandom(),
@@ -44,7 +35,7 @@ export const propertiesTable = pgTable("properties", (t) => ({
     // ID & Timestamps
     id: t.uuid().primaryKey().defaultRandom(),
     createdAt: t.timestamp('created_at').defaultNow().notNull(),
-    updatedAt: t.timestamp('updated_at').defaultNow().notNull(),
+    updatedAt: t.timestamp('updated_at').defaultNow().notNull().$onUpdateFn(() => new Date()),
 
     // Temel Bilgiler
     title: t.varchar({length: 500}).notNull(),
@@ -70,22 +61,14 @@ export const propertiesTable = pgTable("properties", (t) => ({
     landArea: t.integer(),
 
     // Oda Bilgileri
-    rooms: t.integer(),
-    bathrooms: t.integer(),
+    rooms: t.smallint(),
+    bathrooms: t.smallint(),
 
     // Bina Bilgileri
-    buildingAge: buildingAgeEnum('building_age'),
-    totalFloors: t.integer(),
-    floorNumber: t.integer(),
+    buildingAge: t.smallint(),
+    totalFloors: t.smallint(),
+    floorNumber: t.smallint(),
     heatingType: heatingTypeEnum('heating_type'),
-
-    // Boolean özellikler
-    hasBalconies: t.boolean().default(false),
-    hasElevator: t.boolean().default(false),
-    hasParking: t.boolean().default(false),
-    hasSecurity: t.boolean().default(false),
-    isFurnished: t.boolean().default(false),
-    isWithinSite: t.boolean().default(false),
 
     // Diğer
     videoUrl: t.varchar({length: 500}),
@@ -98,7 +81,6 @@ export const propertyImagesTable = pgTable("property_images", (t) => ({
     url: t.varchar({length: 1000}).notNull(),
     order: t.integer().default(0).notNull(),
     isMainImage: t.boolean('is_main_image').default(false).notNull(),
-    createdAt: t.timestamp('created_at').defaultNow().notNull(),
 }), (table) => [
     index('property_id_idx').on(table.propertyId),
 ]);

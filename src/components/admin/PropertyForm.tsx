@@ -10,7 +10,6 @@ import type {PropertyFormValues} from "@/lib/validations/property";
 import { createFeature } from "@/lib/server/feature";
 import { getCategoryFeatures } from "@/lib/server/category";
 import {
-    buildingAgeOptions,
     heatingTypeOptions,
     listingStatusOptions,
     listingTypeOptions,
@@ -33,7 +32,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import {
     Card,
@@ -168,7 +166,7 @@ const defaultValues = {
     landArea: undefined as number | undefined,
     rooms: undefined as number | undefined,
     bathrooms: undefined as number | undefined,
-    buildingAge: undefined as string | undefined,
+    buildingAge: undefined as number | undefined,
     totalFloors: undefined as number | undefined,
     floorNumber: undefined as number | undefined,
     heatingType: undefined as string | undefined,
@@ -229,13 +227,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
             totalFloors: initialData.totalFloors ?? undefined,
             floorNumber: initialData.floorNumber ?? undefined,
             heatingType: initialData.heatingType ?? undefined,
-            hasBalconies: initialData.hasBalconies,
-            hasElevator: initialData.hasElevator,
-            hasParking: initialData.hasParking,
-            hasSecurity: initialData.hasSecurity,
-            isFurnished: initialData.isFurnished,
-            isWithinSite: initialData.isWithinSite,
-            videoUrl: initialData.videoUrl ?? "",
+            videoUrl: initialData.videoUrl ?? undefined,
         };
     }, [initialData]);
 
@@ -1058,23 +1050,15 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Bina Yaşı</FormLabel>
-                                                    <Select
-                                                        onValueChange={field.onChange}
-                                                        value={field.value || undefined}
-                                                    >
-                                                        <FormControl>
-                                                            <SelectTrigger className="w-full">
-                                                                <SelectValue placeholder="Seçiniz" />
-                                                            </SelectTrigger>
-                                                        </FormControl>
-                                                        <SelectContent>
-                                                            {buildingAgeOptions.map((option) => (
-                                                                <SelectItem key={option.value} value={option.value}>
-                                                                    {option.label}
-                                                                </SelectItem>
-                                                            ))}
-                                                        </SelectContent>
-                                                    </Select>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="0"
+                                                            {...field}
+                                                            value={field.value || ""}
+                                                            onChange={(e) => field.onChange(e.target.valueAsNumber || null)}
+                                                        />
+                                                    </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
@@ -1159,220 +1143,98 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                     <CardTitle>Ek Özellikler</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                                        <FormField
-                                            control={form.control}
-                                            name="hasBalconies"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal cursor-pointer">
-                                                        Balkon
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="hasElevator"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal cursor-pointer">
-                                                        Asansör
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="hasParking"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal cursor-pointer">
-                                                        Otopark
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="hasSecurity"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal cursor-pointer">
-                                                        Güvenlik
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="isFurnished"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal cursor-pointer">
-                                                        Eşyalı
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-
-                                        <FormField
-                                            control={form.control}
-                                            name="isWithinSite"
-                                            render={({ field }) => (
-                                                <FormItem className="flex items-center space-x-2 space-y-0">
-                                                    <FormControl>
-                                                        <Checkbox
-                                                            checked={field.value}
-                                                            onCheckedChange={field.onChange}
-                                                        />
-                                                    </FormControl>
-                                                    <FormLabel className="font-normal cursor-pointer">
-                                                        Site İçinde
-                                                    </FormLabel>
-                                                </FormItem>
-                                            )}
-                                        />
-                                    </div>
-
-                                    <Separator className="my-6" />
-
-                                    <div className="space-y-4">
-                                        <div>
-                                            <h3 className="text-lg font-semibold">Dinamik Özellikler</h3>
-                                        </div>
-
-                                        {/* Search/Add Feature Input */}
-                                        <div className="relative feature-search-container">
-                                            <Input
-                                                placeholder="Özellik adı aratın veya oluşturun (örn: Jakuzi, Fiber vb)..."
-                                                value={featureSearchQuery}
-                                                onChange={(e) => {
-                                                    setFeatureSearchQuery(e.target.value);
-                                                    setShowFeatureDropdown(true);
-                                                }}
-                                                onFocus={() => setShowFeatureDropdown(true)}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === "Enter") {
-                                                        e.preventDefault();
-                                                        if (featureSearchQuery.trim()) {
-                                                            handleAddFeature(featureSearchQuery);
-                                                        }
-                                                    } else if (e.key === "Escape") {
-                                                        setShowFeatureDropdown(false);
-                                                        setFeatureSearchQuery("");
+                                    <div className="relative feature-search-container">
+                                        <Input
+                                            placeholder="Özellik adı aratın veya oluşturun (örn: Jakuzi, Fiber vb)..."
+                                            value={featureSearchQuery}
+                                            onChange={(e) => {
+                                                setFeatureSearchQuery(e.target.value);
+                                                setShowFeatureDropdown(true);
+                                            }}
+                                            onFocus={() => setShowFeatureDropdown(true)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    e.preventDefault();
+                                                    if (featureSearchQuery.trim()) {
+                                                        handleAddFeature(featureSearchQuery);
                                                     }
-                                                }}
-                                                disabled={isCreatingFeature}
-                                            />
+                                                } else if (e.key === "Escape") {
+                                                    setShowFeatureDropdown(false);
+                                                    setFeatureSearchQuery("");
+                                                }
+                                            }}
+                                            disabled={isCreatingFeature}
+                                        />
 
-                                            {/* Dropdown with filtered features */}
-                                            {showFeatureDropdown && featureSearchQuery.trim() && (
-                                                <div className="absolute z-10 w-full mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-auto">
-                                                    {filteredFeatures.map((feature) => (
-                                                        <div
-                                                            key={feature.id}
-                                                            onClick={() => {
-                                                                setSelectedFeatures((prev) => new Map(prev).set(feature.id, true));
-                                                                setFeatureSearchQuery("");
-                                                                setShowFeatureDropdown(false);
-                                                            }}
-                                                            className="px-4 py-2 hover:bg-muted cursor-pointer transition-colors text-sm"
-                                                        >
-                                                            {feature.name}
-                                                        </div>
-                                                    ))}
+                                        {showFeatureDropdown && featureSearchQuery.trim() && (
+                                            <div className="absolute z-10 w-full mt-1 bg-background border rounded-lg shadow-lg max-h-60 overflow-auto">
+                                                {filteredFeatures.map((feature) => (
+                                                    <div
+                                                        key={feature.id}
+                                                        onClick={() => {
+                                                            setSelectedFeatures((prev) => new Map(prev).set(feature.id, true));
+                                                            setFeatureSearchQuery("");
+                                                            setShowFeatureDropdown(false);
+                                                        }}
+                                                        className="px-4 py-2 hover:bg-muted cursor-pointer transition-colors text-sm"
+                                                    >
+                                                        {feature.name}
+                                                    </div>
+                                                ))}
 
-                                                    {/* Create new feature option */}
-                                                    {!exactMatch && featureSearchQuery.length >= 2 && (
-                                                        <div
-                                                            onClick={() => handleAddFeature(featureSearchQuery)}
-                                                            className="px-4 py-2 bg-accent hover:bg-accent/80 cursor-pointer border-t transition-colors text-sm"
-                                                        >
-                                                            {isCreatingFeature ? (
-                                                                <span className="flex items-center gap-2">
-                                                                    <IconLoader2 className="size-4 animate-spin" />
-                                                                    Oluşturuluyor...
-                                                                </span>
-                                                            ) : (
-                                                                <span>+ "{featureSearchQuery}" oluştur ve ekle</span>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {/* Selected Features as Badges */}
-                                        {selectedFeaturesWithNames.length > 0 && (
-                                            <div className="space-y-2">
-                                                <div className="flex flex-wrap gap-2">
-                                                    {selectedFeaturesWithNames.map((feature) => {
-                                                        const isCategoryFeature = categoryFeatureIds.has(feature.id);
-                                                        return (
-                                                            <Badge
-                                                                key={feature.id}
-                                                                variant={feature.value ? "default" : "outline"}
-                                                                className="px-2 py-1.5 cursor-pointer hover:opacity-80 transition-opacity"
-                                                                onClick={() => toggleFeatureValue(feature.id)}
-                                                            >
-                                                                {feature.value && (
-                                                                    <IconCheck className="size-3 mr-1" />
-                                                                )}
-                                                                {feature.name}
-                                                                {!isCategoryFeature && (
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={(e) => {
-                                                                            e.stopPropagation();
-                                                                            removeFeature(feature.id);
-                                                                        }}
-                                                                        className="ml-1 hover:bg-muted/50 rounded-sm p-0.5 transition-colors"
-                                                                    >
-                                                                        <IconX className="size-3" />
-                                                                    </button>
-                                                                )}
-                                                            </Badge>
-                                                        );
-                                                    })}
-                                                </div>
+                                                {!exactMatch && featureSearchQuery.length >= 2 && (
+                                                    <div
+                                                        onClick={() => handleAddFeature(featureSearchQuery)}
+                                                        className="px-4 py-2 bg-accent hover:bg-accent/80 cursor-pointer border-t transition-colors text-sm"
+                                                    >
+                                                        {isCreatingFeature ? (
+                                                            <span className="flex items-center gap-2">
+                                                                <IconLoader2 className="size-4 animate-spin" />
+                                                                Oluşturuluyor...
+                                                            </span>
+                                                        ) : (
+                                                            <span>+ "{featureSearchQuery}" oluştur ve ekle</span>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
                                     </div>
+
+                                    {selectedFeaturesWithNames.length > 0 && (
+                                        <div className="space-y-2">
+                                            <div className="flex flex-wrap gap-2">
+                                                {selectedFeaturesWithNames.map((feature) => {
+                                                    const isCategoryFeature = categoryFeatureIds.has(feature.id);
+                                                    return (
+                                                        <Badge
+                                                            key={feature.id}
+                                                            variant={feature.value ? "default" : "outline"}
+                                                            className="px-2 py-1.5 cursor-pointer hover:opacity-80 transition-opacity"
+                                                            onClick={() => toggleFeatureValue(feature.id)}
+                                                        >
+                                                            {feature.value && (
+                                                                <IconCheck className="size-3 mr-1" />
+                                                            )}
+                                                            {feature.name}
+                                                            {!isCategoryFeature && (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        removeFeature(feature.id);
+                                                                    }}
+                                                                    className="ml-1 hover:bg-muted/50 rounded-sm p-0.5 transition-colors"
+                                                                >
+                                                                    <IconX className="size-3" />
+                                                                </button>
+                                                            )}
+                                                        </Badge>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    )}
                                 </CardContent>
                             </Card>
                         </TabsContent>

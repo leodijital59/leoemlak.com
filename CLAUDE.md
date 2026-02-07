@@ -38,6 +38,8 @@ npx drizzle-kit studio     # Open Drizzle Studio GUI
 - **UI**: shadcn/ui (new-york style) + Radix UI primitives + Tailwind CSS 4
 - **Forms**: react-hook-form + zod
 - **Auth**: Neon Auth (@neondatabase/neon-js/auth)
+- **Rich Text Editor**: Plate.js (slate-based editor with plugins)
+- **File Upload**: Vercel Blob Storage (@vercel/blob)
 
 ### Directory Structure
 ```
@@ -47,11 +49,15 @@ src/
 │   ├── (auth)/       # Auth routes (login, register)
 │   └── admin/        # Protected admin panel (requires auth)
 ├── components/
-│   ├── ui/           # shadcn/ui components (50+ components)
+│   ├── ui/           # shadcn/ui components (90+ components including Plate.js editor nodes)
+│   ├── admin/        # Admin-specific form components (PropertyForm, CategoryForm, FeatureForm, etc.)
 │   ├── property/     # Property-related components
-│   │   └── dashboard/# Admin dashboard components
 │   ├── home/         # Homepage components
 │   └── common/       # Shared components
+├── lib/
+│   ├── server/       # Server-side business logic (createServerFn handlers)
+│   ├── validations/  # Zod schemas for form validation
+│   └── client/       # Client-side utilities
 ├── schema.ts         # Drizzle ORM database schema
 ├── db.ts             # Database connection (Neon)
 ├── auth.ts           # Auth client configuration
@@ -59,24 +65,25 @@ src/
 ```
 
 ### Database Schema (src/schema.ts)
-Main tables:
-- `propertiesTable` - Property listings with all details
-- `propertyImagesTable` - Multiple images per property (cascade delete)
-- `propertyFeaturesTable` - Dynamic amenity/feature definitions
-- `propertyPropertyFeaturesTable` - Many-to-many junction for features
+Core tables with hierarchical and relational structure:
+- `categoriesTable` - Hierarchical property categories (self-referential with `parentId`)
+- `propertiesTable` - Property listings with all details (references `categoriesTable`)
+- `propertyImagesTable` - Multiple images per property (cascade delete on property deletion)
+- `propertyFeaturesTable` - Dynamic amenity/feature definitions (shared across properties)
+- `propertyPropertyFeaturesTable` - Many-to-many junction for property features with boolean `value` field
+- `categoryFeaturesTable` - Many-to-many junction for category-specific features
 
-Key enums: `propertyTypeEnum`, `listingTypeEnum`, `listingStatusEnum`, `heatingTypeEnum`, `buildingAgeEnum`
+Key enums: `listingTypeEnum` (sold/rented), `listingStatusEnum` (active/passive), `heatingTypeEnum`
+
+All tables use UUID primary keys with `defaultRandom()`. Relations are defined using Drizzle's `relations()` API.
 
 ### Path Aliases
-Configured in tsconfig.json:
+Configured in tsconfig.json and vite.config.ts:
 - `@/` → `src/`
-- `@/components` → `src/components`
-- `@/lib` → `src/lib`
-- `@/hooks` → `src/hooks`
 
 ### Styling
 - Public pages: Bootstrap 5 + custom SCSS (`src/styles/`)
-- Admin panel: Tailwind CSS + shadcn/ui (`src/styles/admin.css`)
+- Admin panel: Tailwind CSS 4 + shadcn/ui (`src/styles/admin.css`)
 - Use `cn()` utility from `@/lib/utils` for conditional classes
 
 ### Environment Variables
@@ -86,6 +93,21 @@ Required in `.env`:
 - `NEON_AUTH_BASE_URL` - Neon Auth base URL (server-side)
 
 ## Key Patterns
+
+### Server Functions (TanStack Start)
+Business logic lives in `src/lib/server/*.ts` using `createServerFn()`:
+- Always use `.inputValidator()` for type-safe inputs (Zod schemas from `src/lib/validations/`)
+- Return plain objects (serializable data only)
+- Handle errors with appropriate HTTP responses
+- Example: `createProperty`, `updateProperty`, `deleteProperty` in `src/lib/server/property.ts`
+
+### Form Handling
+All admin forms follow this pattern:
+1. Define Zod schema in `src/lib/validations/<entity>.ts`
+2. Create form component in `src/components/admin/<Entity>Form.tsx`
+3. Use `react-hook-form` with `@hookform/resolvers/zod`
+4. Submit to server function via `createServerFn()`
+5. Handle success/error states with toast notifications
 
 ### Adding New Routes
 Create files in `src/routes/` following TanStack Router conventions:
@@ -97,12 +119,29 @@ Create files in `src/routes/` following TanStack Router conventions:
 Route tree auto-regenerates on file changes.
 
 ### Admin Authentication
-Admin routes (`/admin/*`) are protected by NeonAuthUIProvider. Use `<SignedIn>` and `<SignedOut>` components for conditional rendering.
+Admin routes (`/admin/*`) are protected by `NeonAuthUIProvider`. Use `<SignedIn>` and `<SignedOut>` components for conditional rendering.
 
-### Form Components
-Property forms use a tab-based wizard pattern in `src/components/property/dashboard/dashboard-add-property/`:
-1. PropertyDescription - Basic info
-2. UploadMedia - Images and video
-3. LocationField - Map integration with @react-google-maps/api
-4. DetailsFiled - Property specifications
-5. Amenities - Feature selection
+### Image Upload Pattern
+Property images use Vercel Blob Storage:
+1. Client uploads images to blob storage via `put()` from `@vercel/blob`
+2. Form submits image URLs + metadata to server function
+3. Server function inserts into `propertyImagesTable` with order and `isMainImage` flag
+4. Delete operations use `del()` to clean up blob storage
+
+### Rich Text Editor (Plate.js)
+Use `EditorField` component from `src/components/admin/EditorField.tsx`:
+- Provides modular plugin kits (basic, list, indent, link)
+- Returns JSON value compatible with Plate.js
+- Static rendering via `editor-static.tsx` component
+- Store editor value as JSON text in database
+
+## Database Workflow
+
+### Schema Changes
+1. Modify `src/schema.ts`
+2. Run `npx drizzle-kit generate` to create migration files in `migrations/`
+3. Review generated SQL in `migrations/0000_*.sql`
+4. Apply migrations with `npx drizzle-kit migrate`
+5. Commit both schema.ts and migration files
+
+**Important**: Never delete old migration files. Always create new migrations for schema changes.

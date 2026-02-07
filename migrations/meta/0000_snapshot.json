@@ -1,5 +1,5 @@
 {
-  "id": "5be3fd14-8061-4607-836d-8e448eb2c130",
+  "id": "f0c40b6b-5f50-4e75-aff0-ebf19b6bc6e6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -37,6 +37,96 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.category_features": {
+      "name": "category_features",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "feature_id": {
+          "name": "feature_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "cf_category_id_idx": {
+          "name": "cf_category_id_idx",
+          "columns": [
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cf_feature_id_idx": {
+          "name": "cf_feature_id_idx",
+          "columns": [
+            {
+              "expression": "feature_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "category_features_category_id_categories_id_fk": {
+          "name": "category_features_category_id_categories_id_fk",
+          "tableFrom": "category_features",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "category_features_feature_id_property_features_id_fk": {
+          "name": "category_features_feature_id_property_features_id_fk",
+          "tableFrom": "category_features",
+          "tableTo": "property_features",
+          "columnsFrom": [
+            "feature_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -163,32 +253,31 @@
         },
         "rooms": {
           "name": "rooms",
-          "type": "integer",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": false
         },
         "bathrooms": {
           "name": "bathrooms",
-          "type": "integer",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": false
         },
-        "building_age": {
-          "name": "building_age",
-          "type": "building_age",
-          "typeSchema": "public",
+        "buildingAge": {
+          "name": "buildingAge",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": false
         },
         "totalFloors": {
           "name": "totalFloors",
-          "type": "integer",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": false
         },
         "floorNumber": {
           "name": "floorNumber",
-          "type": "integer",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": false
         },
@@ -198,48 +287,6 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
-        },
-        "hasBalconies": {
-          "name": "hasBalconies",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "hasElevator": {
-          "name": "hasElevator",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "hasParking": {
-          "name": "hasParking",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "hasSecurity": {
-          "name": "hasSecurity",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "isFurnished": {
-          "name": "isFurnished",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "isWithinSite": {
-          "name": "isWithinSite",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
         },
         "videoUrl": {
           "name": "videoUrl",
@@ -340,13 +387,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {
@@ -409,6 +449,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
         }
       },
       "indexes": {
@@ -479,18 +526,6 @@
     }
   },
   "enums": {
-    "public.building_age": {
-      "name": "building_age",
-      "schema": "public",
-      "values": [
-        "0",
-        "1-5",
-        "6-10",
-        "11-15",
-        "16-20",
-        "21+"
-      ]
-    },
     "public.heating_type": {
       "name": "heating_type",
       "schema": "public",

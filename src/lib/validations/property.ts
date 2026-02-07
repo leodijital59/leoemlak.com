@@ -21,19 +21,9 @@ export const heatingTypeOptions = [
   { value: "Elektrik", label: "Elektrikli" },
 ] as const;
 
-export const buildingAgeOptions = [
-  { value: "0", label: "0 (Sıfır)" },
-  { value: "1-5", label: "1-5 Yıl" },
-  { value: "6-10", label: "6-10 Yıl" },
-  { value: "11-15", label: "11-15 Yıl" },
-  { value: "16-20", label: "16-20 Yıl" },
-  { value: "21+", label: "21+ Yıl" },
-] as const;
-
 const listingTypes = ["sold", "rented"] as const;
 const listingStatuses = ["active", "passive"] as const;
 const heatingTypes = ["Yok", "Soba", "Dogalgaz", "Klima", "Merkezi", "Kombi", "Yerden", "Elektrik"] as const;
-const buildingAges = ["0", "1-5", "6-10", "11-15", "16-20", "21+"] as const;
 
 export const propertyFormSchema = z.object({
   // Temel Bilgiler
@@ -64,21 +54,13 @@ export const propertyFormSchema = z.object({
   bathrooms: z.coerce.number().int().positive().optional().nullable(),
 
   // Bina
-  buildingAge: z.enum(buildingAges).optional().nullable(),
+  buildingAge: z.coerce.number().int().positive().optional().nullable(),
   totalFloors: z.coerce.number().int().positive().optional().nullable(),
   floorNumber: z.coerce.number().int().optional().nullable(),
   heatingType: z.enum(heatingTypes).optional().nullable(),
 
-  // Boolean özellikler
-  hasBalconies: z.boolean().default(false),
-  hasElevator: z.boolean().default(false),
-  hasParking: z.boolean().default(false),
-  hasSecurity: z.boolean().default(false),
-  isFurnished: z.boolean().default(false),
-  isWithinSite: z.boolean().default(false),
-
   // Medya
-  videoUrl: z.string().url("Geçerli bir URL giriniz").optional().or(z.literal("")),
+  videoUrl: z.url("Geçerli bir URL giriniz").optional(),
 });
 
 export type PropertyFormValues = z.infer<typeof propertyFormSchema>;
