@@ -308,7 +308,6 @@ export const updateProperty = createServerFn({ method: "POST" })
                 floorNumber: propertyData.floorNumber ?? null,
                 heatingType: propertyData.heatingType ?? null,
                 videoUrl: propertyData.videoUrl ?? null,
-                updatedAt: new Date(),
             })
             .where(eq(propertiesTable.id, propertyId));
 

@@ -39,7 +39,7 @@ export const propertiesTable = pgTable("properties", (t) => ({
 
     // Temel Bilgiler
     title: t.varchar({length: 500}).notNull(),
-    description: t.text().notNull(),
+    description: t.text(),
     categoryId: t.uuid('category_id').notNull().references(() => categoriesTable.id),
     listingType: listingTypeEnum('listing_type').notNull(),
     listingStatus: listingStatusEnum('listing_status').default('active').notNull(),

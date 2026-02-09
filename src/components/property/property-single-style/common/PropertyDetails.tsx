@@ -1,75 +1,68 @@
+import type { PropertyData } from '@/types/property-display'
+import { formatArea, formatBuildingAge, formatFloor, formatPrice, translateListingType } from '@/lib/formatters'
 
-const PropertyDetails = () => {
-  const columns = [
-    [
-      {
-        label: "Property ID",
-        value: "RT48",
-      },
-      {
-        label: "Price",
-        value: "$252,000",
-      },
-      {
-        label: "Property Size",
-        value: "1500 Sq Ft",
-      },
-      {
-        label: "Bathrooms",
-        value: "3",
-      },
-      {
-        label: "Bedrooms",
-        value: "2",
-      },
-    ],
-    [
-      {
-        label: "Garage",
-        value: "2",
-      },
-      {
-        label: "Garage Size",
-        value: "200 SqFt",
-      },
-      {
-        label: "Year Built",
-        value: "2022",
-      },
-      {
-        label: "Property Type",
-        value: "Apartment",
-      },
-      {
-        label: "Property Status",
-        value: "For Sale",
-      },
-    ],
-  ];
+type Props = {
+  property: PropertyData
+}
+
+const PropertyDetails = ({ property }: Props) => {
+  const details = [
+    {
+      label: "İlan No",
+      value: property.id.substring(0, 8).toUpperCase(),
+    },
+    {
+      label: "Fiyat",
+      value: formatPrice(property.price),
+    },
+    {
+      label: "Brüt Alan",
+      value: formatArea(property.grossArea),
+    },
+    property.netArea && {
+      label: "Net Alan",
+      value: formatArea(property.netArea),
+    },
+    property.bathrooms !== null && {
+      label: "Banyo Sayısı",
+      value: property.bathrooms,
+    },
+    property.rooms !== null && {
+      label: "Oda Sayısı",
+      value: property.rooms,
+    },
+    property.buildingAge !== null && {
+      label: "Bina Yaşı",
+      value: formatBuildingAge(property.buildingAge),
+    },
+    (property.floorNumber !== null || property.totalFloors !== null) && {
+      label: "Kat Bilgisi",
+      value: formatFloor(property.floorNumber, property.totalFloors),
+    },
+    property.heatingType && {
+      label: "Isıtma",
+      value: property.heatingType,
+    },
+    {
+      label: "İlan Tipi",
+      value: translateListingType(property.listingType),
+    },
+  ].filter<any>(Boolean as any);
 
   return (
     <div className="row">
-      {columns.map((column, columnIndex) => (
-        <div
-          key={columnIndex}
-          className={`col-md-6 col-xl-4${
-            columnIndex === 1 ? " offset-xl-2" : ""
-          }`}
-        >
-          {column.map((detail, index) => (
-            <div key={index} className="d-flex justify-content-between">
-              <div className="pd-list">
-                <p className="fw600 mb10 ff-heading dark-color">
-                  {detail.label}
-                </p>
-              </div>
-              <div className="pd-list">
-                <p className="text mb10">{detail.value}</p>
-              </div>
+        {details.map((detail, index) => (
+          <div key={index} className="d-flex justify-content-between">
+            <div className="pd-list">
+              <p className="fw600 mb10 ff-heading dark-color">
+                {detail.label}
+              </p>
             </div>
-          ))}
-        </div>
-      ))}
+            <div className="pd-list">
+              <p className="text mb10">{detail.value}</p>
+            </div>
+          </div>
+        ))}
     </div>
   );
 };

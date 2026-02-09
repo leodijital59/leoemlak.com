@@ -1,10 +1,9 @@
 import Image from "@/components/common/Image";
-import { Link } from "@tanstack/react-router";
 
 const ContactWithAgent = () => {
   return (
     <>
-      <div className="agent-single d-sm-flex align-items-center pb25">
+      <div className="agent-single d-sm-flex align-items-center">
         <div className="single-img mb30-sm">
           <Image
             width={90}
@@ -16,27 +15,13 @@ const ContactWithAgent = () => {
         </div>
         <div className="single-contant ml20 ml0-xs">
           <h6 className="title mb-1">Arlene McCoy</h6>
-          <div className="agent-meta mb10 d-md-flex align-items-center">
-            <a className="text fz15" href="#">
+          <div className="agent-meta d-md-flex align-items-center">
+            <a className="text fz15" href="tel:(920) 012-3421">
               <i className="flaticon-call pe-1" />
               (920) 012-3421
             </a>
           </div>
-          <Link
-            href="/agent-single/3"
-            className="text-decoration-underline fw600"
-          >
-            View Listings
-          </Link>
         </div>
-      </div>
-      {/* End agent-single */}
-
-      <div className="d-grid">
-        <Link href="/agent-single/3" className="ud-btn btn-white2">
-          Contact Agent
-          <i className="fal fa-arrow-right-long" />
-        </Link>
       </div>
     </>
   );

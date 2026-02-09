@@ -19,7 +19,7 @@ CREATE TABLE "properties" (
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"title" varchar(500) NOT NULL,
-	"description" text NOT NULL,
+	"description" text,
 	"category_id" uuid NOT NULL,
 	"listing_type" "listing_type" NOT NULL,
 	"listing_status" "listing_status" DEFAULT 'active' NOT NULL,

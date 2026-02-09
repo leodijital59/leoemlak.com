@@ -1,43 +1,34 @@
-import listings from "@/data/listings";
+import type { PropertyData } from '@/types/property-display'
+import { formatBuildingAge } from '@/lib/formatters'
 
+type Props = {
+  property: PropertyData
+}
 
-const OverView = ({id}) => {
-  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
+const OverView = ({ property }: Props) => {
   const overviewData = [
-    {
+    property.rooms !== null && {
       icon: "flaticon-bed",
-      label: "Bedroom",
-      value: data.bed,
+      label: "Oda Sayısı",
+      value: property.rooms,
     },
-    {
+    property.bathrooms !== null && {
       icon: "flaticon-shower",
-      label: "Bath",
-      value: data.bath,
+      label: "Banyo",
+      value: property.bathrooms,
     },
-    {
+    property.buildingAge !== null && {
       icon: "flaticon-event",
-      label: "Year Built",
-      value: data.yearBuilding,
+      label: "Bina Yaşı",
+      value: formatBuildingAge(property.buildingAge),
     },
-    {
-      icon: "flaticon-garage",
-      label: "Garage",
-      value: "2",
-      xs: true,
-    },
-    {
+    (property.grossArea || property.netArea) && {
       icon: "flaticon-expand",
-      label: "Sqft",
-      value: data.sqft,
+      label: "Alan",
+      value: `${property.grossArea || property.netArea} m²`,
       xs: true,
     },
-    {
-      icon: "flaticon-home-1",
-      label: "Property Type",
-      value: data.propertyType,
-    },
-  ];
-
+  ].filter(Boolean);
 
   return (
     <>

@@ -526,7 +526,6 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
     }, [selectedFeatures, availableFeatures, categoryFeatureIds]);
 
     const handleFormSubmit: SubmitHandler<PropertyFormValues> = async (formData: PropertyFormValues) => {
-        console.log(formData)
         setIsSubmitting(true);
 
         try {
@@ -913,6 +912,8 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                                 <MapEventListener
                                                     onLocationClick={coords => {
                                                         setMarkerPosition(coords);
+                                                        form.setValue('latitude', coords.lat);
+                                                        form.setValue('longitude', coords.lng);
                                                         setTimeout(handleReverseGeocode, 2000, coords.lat, coords.lng);
                                                         if (mapRef.current) {
                                                             mapRef.current.flyTo({

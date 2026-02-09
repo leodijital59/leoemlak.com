@@ -1,12 +1,25 @@
-import ModalVideo from "@/components/common/ModalVideo";
 import { useState } from "react";
+import ModalVideo from "@/components/common/ModalVideo";
+import { extractYouTubeId } from "@/lib/formatters";
 
-const PropertyVideo = () => {
+type Props = {
+  videoUrl: string | null
+}
+
+const PropertyVideo = ({ videoUrl }: Props) => {
   const [isOpen, setOpen] = useState(false);
 
+  // Extract YouTube ID from URL
+  const videoId = videoUrl ? extractYouTubeId(videoUrl) : null;
+
+  // Don't render if no video URL or invalid YouTube ID
+  if (!videoId) {
+    return null;
+  }
+
   return (
-    <>
-      <ModalVideo setIsOpen={setOpen} isOpen={isOpen} videoId="7EHnQ0VM4KY" />
+    <div className="row">
+      <ModalVideo setIsOpen={setOpen} isOpen={isOpen} videoId={videoId} />
       <div className="col-md-12">
         <div className="property_video bdrs12 w-100">
           <button
@@ -18,7 +31,7 @@ const PropertyVideo = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

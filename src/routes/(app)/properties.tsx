@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import PropertyFiltering from '@/components/listing/grid-view/grid-default/PropertyFiltering'
 
-export const Route = createFileRoute('/(app)/listings')({
+export const Route = createFileRoute('/(app)/properties')({
     component: ListingsPage,
     ssr: "data-only",
 })

@@ -3,26 +3,41 @@ import { Gallery, Item } from "react-photoswipe-gallery";
 import "photoswipe/dist/photoswipe.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
+import type { PropertyImage } from "@/types/property-display";
+import type { Swiper as SwiperType } from 'swiper';
 import Image from "@/components/common/Image";
-import "photoswipe/dist/photoswipe.css";
-import listings from "@/data/listings";
 
-const images = [
-  "/images/listings/listing-single-6-1.jpg",
-  "/images/listings/listing-single-6-2.jpg",
-  "/images/listings/listing-single-6-3.jpg",
-  "/images/listings/listing-single-6-4.jpg",
-];
+type Props = {
+  images: PropertyImage[]
+}
 
-const PropertyGallery = ({ id }) => {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const data = listings.filter((elm: any) => elm.id == id)[0] || listings[0];
+const PropertyGallery = ({ images }: Props) => {
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+
+  // Sort images: main image first, then by order
+  const sortedImages = [...images].sort((a, b) => {
+    if (a.isMainImage) return -1;
+    if (b.isMainImage) return 1;
+    return a.order - b.order;
+  });
+
+  // Show placeholder if no images
+  if (!images || images.length === 0) {
+    return (
+      <div className="ps-v6-slider nav_none mt30">
+        <div className="text-center p-5 bg-light bdrs12">
+          <p className="text-muted">No images available</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="ps-v6-slider nav_none mt30">
         <Gallery>
           <Swiper
-            loop={true}
+            loop={sortedImages.length > 1}
             spaceBetween={10}
             navigation={{
               prevEl: ".prev-btn",
@@ -35,11 +50,11 @@ const PropertyGallery = ({ id }) => {
             modules={[FreeMode, Navigation, Thumbs]}
             className="mySwiper2 position-relative sp-img-content"
           >
-            {images.map((item, i) => (
-              <SwiperSlide key={i}>
+            {sortedImages.map((item) => (
+              <SwiperSlide key={item.id}>
                 <Item
-                  original={item}
-                  thumbnail={item}
+                  original={item.url}
+                  thumbnail={item.url}
                   width={1206}
                   height={671}
                 >
@@ -49,7 +64,7 @@ const PropertyGallery = ({ id }) => {
                       height={671}
                       ref={ref}
                       onClick={open}
-                      src={item}
+                      src={item.url}
                       alt="gallery"
                       className="w-100 h-auto bdrs12 pointer"
                     />
@@ -57,39 +72,41 @@ const PropertyGallery = ({ id }) => {
                 </Item>
 
                 <button className="all-tag popup-img border-0 pe-none">
-                  See All 74 Photos
+                  See All {images.length} Photos
                 </button>
               </SwiperSlide>
             ))}
           </Swiper>
         </Gallery>
 
-        <div className="row">
-          <div className="col-lg-5 col-md-7">
-            <Swiper
-              onSwiper={setThumbsSwiper}
-              loop={true}
-              spaceBetween={10}
-              slidesPerView={4}
-              freeMode={true}
-              watchSlidesProgress={true}
-              modules={[FreeMode, Navigation, Thumbs]}
-              className="mySwiper mt20"
-            >
-              {images.map((item, i) => (
-                <SwiperSlide key={i}>
-                  <Image
-                    height={90}
-                    width={83}
-                    src={item}
-                    alt="image"
-                    className="w-100 bdrs12 cover pointer"
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+        {sortedImages.length > 1 && (
+          <div className="row">
+            <div className="col-3 col-lg-12">
+              <Swiper
+                onSwiper={setThumbsSwiper}
+                loop={true}
+                spaceBetween={16}
+                slidesPerView={8}
+                freeMode={true}
+                watchSlidesProgress={true}
+                modules={[FreeMode, Navigation, Thumbs]}
+                className="mySwiper mt20"
+              >
+                {sortedImages.map((item) => (
+                  <SwiperSlide key={item.id}>
+                    <Image
+                      height={90}
+                      width={83}
+                      src={item.url}
+                      alt="thumbnail"
+                      className="w-100 bdrs12 cover pointer"
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

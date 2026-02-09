@@ -168,7 +168,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "category_id": {
           "name": "category_id",

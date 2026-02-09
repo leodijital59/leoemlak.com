@@ -1,26 +1,35 @@
+import type { PropertyFeature } from '@/types/property-display'
 
-const PropertyFeaturesAminites = () => {
-  const featuresAmenitiesData = [
-    ["Air Conditioning", "Barbeque", "Dryer", "Gym"],
-    ["Lawn", "Microwave", "Outdoor Shower", "Refrigerator"],
-    ["Swimming Pool", "TV Cable", "Washer", "WiFi6"],
-  ];
+type Props = {
+  features: PropertyFeature[]
+}
+
+const PropertyFeaturesAminites = ({ features }: Props) => {
+  // Show message if no features
+  if (features.length === 0) {
+    return (
+      <div className="col-12">
+        <p className="text-muted">Bu ilan için özellik bilgisi bulunmamaktadır.</p>
+      </div>
+    )
+  }
 
   return (
-    <>
-      {featuresAmenitiesData.map((row, rowIndex) => (
-        <div key={rowIndex} className="col-sm-6 col-md-4">
-          <div className="pd-list">
-            {row.map((item, index) => (
-              <p key={index} className="text mb10">
-                <i className="fas fa-circle fz6 align-middle pe-2" />
-                {item}
-              </p>
-            ))}
-          </div>
+    <div className="row px-3">
+      {features.map((feature) => (
+        <div
+          key={feature.featureId}
+          className="col-6 col-sm-4 text position-relative"
+          style={!feature.value ? { color: '#aaa', paddingLeft: "1.25rem" } : { paddingLeft: "1.25rem" }}
+        >
+          {feature.value && <i
+            className="fas fa-check-circle align-middle position-absolute start-0 top-0"
+            style={{color: '#28a745' }}
+          />}
+          {feature.featureName}
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

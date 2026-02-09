@@ -4,8 +4,8 @@ export default [
     path: "/",
   },
   {
-    label: "Listings",
-    path: "/listings",
+    label: "Properties",
+    path: "/properties",
   },
   {
     label: "Property",
