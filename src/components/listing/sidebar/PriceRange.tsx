@@ -1,43 +1,53 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "rc-slider";
 
-const PriceRange = ({ filterFunctions }) => {
-  const [price, setPrice] = useState([20, 70987]);
+interface PriceRangeProps {
+  priceMin?: number;
+  priceMax?: number;
+  onChange: (values: { priceMin?: number; priceMax?: number }) => void;
+}
 
-  // price range handler
+const MIN = 0;
+const MAX = 50_000_000;
 
-  // price range handler
-  const handleOnChange = (value) => {
-    setPrice(value);
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat("tr-TR").format(value);
 
-    filterFunctions?.handlepriceRange([value[0] || 0, value[1]]);
+const PriceRange = ({ priceMin, priceMax, onChange }: PriceRangeProps) => {
+  const [range, setRange] = useState<[number, number]>([
+    priceMin ?? MIN,
+    priceMax ?? MAX,
+  ]);
+
+  useEffect(() => {
+    setRange([priceMin ?? MIN, priceMax ?? MAX]);
+  }, [priceMin, priceMax]);
+
+  const handleChangeComplete = (value: number | number[]) => {
+    const [min, max] = value as [number, number];
+    onChange({
+      priceMin: min > MIN ? min : undefined,
+      priceMax: max < MAX ? max : undefined,
+    });
   };
 
   return (
-    <>
-      <div className="range-wrapper">
-        <Slider
-          range={{
-            editable: true,
-            minCount: 0,
-            maxCount: 10000
-          }}
-          max={100000}
-          min={0}
-          defaultValue={[
-            filterFunctions?.priceRange[0],
-            filterFunctions?.priceRange[1],
-          ]}
-          onChange={(value) => handleOnChange(value)}
-          id="slider"
-        />
-        <div className="d-flex align-items-center">
-          <span id="slider-range-value1">${price[0]}</span>
-          <i className="fa-sharp fa-solid fa-minus mx-2 dark-color icon" />
-          <span id="slider-range-value2">${price[1]}</span>
-        </div>
+    <div className="range-wrapper">
+      <Slider
+        range
+        max={MAX}
+        min={MIN}
+        step={100_000}
+        value={range}
+        onChange={(value) => setRange(value as [number, number])}
+        onChangeComplete={handleChangeComplete}
+      />
+      <div className="d-flex align-items-center">
+        <span>{formatPrice(range[0])} ₺</span>
+        <i className="fa-sharp fa-solid fa-minus mx-2 dark-color icon" />
+        <span>{formatPrice(range[1])} ₺</span>
       </div>
-    </>
+    </div>
   );
 };
 

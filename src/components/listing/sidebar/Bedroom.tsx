@@ -1,28 +1,33 @@
-'use client'
+import { useId } from "react";
 
+interface BedroomProps {
+  value?: number;
+  onChange: (value: number | undefined) => void;
+}
 
-const Bedroom = ({filterFunctions}) => {
-  const options = [
-    { id: "any", label: "any",value:0, defaultChecked: true },
-    { id: "oneplus", label: "1+",value:1, },
-    { id: "twoplus", label: "2+" ,value:2,},
-    { id: "threeplus", label: "3+",value:3, },
-    { id: "fourplus", label: "4+",value:4, },
-    { id: "fiveplus", label: "5+",value:5, },
-  ];
+const options = [
+  { label: "Hepsi", value: undefined as number | undefined },
+  { label: "1+", value: 1 },
+  { label: "2+", value: 2 },
+  { label: "3+", value: 3 },
+  { label: "4+", value: 4 },
+  { label: "5+", value: 5 },
+];
+
+const Bedroom = ({ value, onChange }: BedroomProps) => {
+  const id = useId();
 
   return (
     <>
       {options.map((option) => (
-        <div className="selection" key={option.id}>
+        <div className="selection" key={option.label}>
           <input
-            id={option.id}
-           
             type="radio"
-            onChange={(e)=>filterFunctions?.handlebedrooms(option.value)}
-            checked={filterFunctions?.bedrooms == option.value}
+            id={`${id}-bed-${option.label}`}
+            checked={value === option.value}
+            onChange={() => onChange(option.value)}
           />
-          <label htmlFor={option.id}>{option.label}</label>
+          <label htmlFor={`${id}-bed-${option.label}`}>{option.label}</label>
         </div>
       ))}
     </>

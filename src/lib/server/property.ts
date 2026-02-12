@@ -1,10 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { del, put } from "@vercel/blob";
-import { desc, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, ilike, lte, sql } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
+import type { SQL } from "drizzle-orm";
+import type { PropertySearchParams } from "@/lib/validations/property-search";
 import db from "@/db";
 import { categoriesTable, propertiesTable, propertyFeaturesTable, propertyImagesTable, propertyPropertyFeaturesTable } from "@/schema";
 import { propertyFormSchema } from "@/lib/validations/property";
+import { propertySearchSchema } from "@/lib/validations/property-search";
 
 export const createProperty = createServerFn({ method: "POST" })
     .inputValidator((data: FormData) => data)
@@ -350,4 +353,153 @@ export const deletePropertyImage = createServerFn({ method: "POST" })
         } catch {
             throw notFound();
         }
+    });
+
+const PAGE_SIZE = 12;
+
+export const searchProperties = createServerFn({ method: "GET" })
+    .inputValidator((data: PropertySearchParams) => propertySearchSchema.parse(data))
+    .handler(async ({ data: params }) => {
+        const conditions: SQL[] = [eq(propertiesTable.listingStatus, "active")];
+
+        if (params.q) {
+            conditions.push(ilike(propertiesTable.title, `%${params.q}%`));
+        }
+        if (params.listingType) {
+            conditions.push(eq(propertiesTable.listingType, params.listingType));
+        }
+        if (params.categoryId) {
+            conditions.push(eq(propertiesTable.categoryId, params.categoryId));
+        }
+        if (params.priceMin) {
+            conditions.push(gte(sql`${propertiesTable.price}::numeric`, params.priceMin));
+        }
+        if (params.priceMax) {
+            conditions.push(lte(sql`${propertiesTable.price}::numeric`, params.priceMax));
+        }
+        if (params.rooms) {
+            conditions.push(gte(propertiesTable.rooms, params.rooms));
+        }
+        if (params.bathrooms) {
+            conditions.push(gte(propertiesTable.bathrooms, params.bathrooms));
+        }
+        if (params.province) {
+            conditions.push(eq(propertiesTable.province, params.province));
+        }
+        if (params.district) {
+            conditions.push(eq(propertiesTable.district, params.district));
+        }
+        if (params.neighborhood) {
+            conditions.push(eq(propertiesTable.neighborhood, params.neighborhood));
+        }
+        if (params.grossAreaMin) {
+            conditions.push(gte(propertiesTable.grossArea, params.grossAreaMin));
+        }
+        if (params.grossAreaMax) {
+            conditions.push(lte(propertiesTable.grossArea, params.grossAreaMax));
+        }
+
+        const whereClause = and(...conditions);
+
+        // Sort
+        let orderByClause;
+        switch (params.sort) {
+            case "price_asc":
+                orderByClause = asc(sql`${propertiesTable.price}::numeric`);
+                break;
+            case "price_desc":
+                orderByClause = desc(sql`${propertiesTable.price}::numeric`);
+                break;
+            default:
+                orderByClause = desc(propertiesTable.createdAt);
+        }
+
+        const page = params.page ?? 1;
+        const offset = (page - 1) * PAGE_SIZE;
+
+        // Get total count
+        const [{ total }] = await db
+            .select({ total: count() })
+            .from(propertiesTable)
+            .where(whereClause);
+
+        // Get properties with images and category
+        const results = await db
+            .select({
+                property: propertiesTable,
+                image: propertyImagesTable,
+                category: categoriesTable,
+            })
+            .from(propertiesTable)
+            .leftJoin(propertyImagesTable, eq(propertiesTable.id, propertyImagesTable.propertyId))
+            .leftJoin(categoriesTable, eq(propertiesTable.categoryId, categoriesTable.id))
+            .where(whereClause)
+            .orderBy(orderByClause)
+            .limit(PAGE_SIZE)
+            .offset(offset);
+
+        // Group images by property
+        const propertiesMap = new Map<string, {
+            property: typeof propertiesTable.$inferSelect;
+            images: (typeof propertyImagesTable.$inferSelect)[];
+            category: typeof categoriesTable.$inferSelect | null;
+        }>();
+
+        for (const row of results) {
+            const propertyId = row.property.id;
+            if (!propertiesMap.has(propertyId)) {
+                propertiesMap.set(propertyId, {
+                    property: row.property,
+                    images: [],
+                    category: row.category,
+                });
+            }
+            if (row.image) {
+                propertiesMap.get(propertyId)!.images.push(row.image);
+            }
+        }
+
+        const totalPages = Math.ceil(total / PAGE_SIZE);
+
+        return {
+            properties: Array.from(propertiesMap.values()),
+            total,
+            page,
+            pageSize: PAGE_SIZE,
+            totalPages,
+        };
+    });
+
+export const getDistinctLocations = createServerFn({ method: "GET" })
+    .handler(async () => {
+        const provinces = await db
+            .selectDistinct({ province: propertiesTable.province })
+            .from(propertiesTable)
+            .where(eq(propertiesTable.listingStatus, "active"))
+            .orderBy(asc(propertiesTable.province));
+
+        const districts = await db
+            .selectDistinct({
+                province: propertiesTable.province,
+                district: propertiesTable.district,
+            })
+            .from(propertiesTable)
+            .where(eq(propertiesTable.listingStatus, "active"))
+            .orderBy(asc(propertiesTable.province), asc(propertiesTable.district));
+
+        const neighborhoods = await db
+            .selectDistinct({
+                province: propertiesTable.province,
+                district: propertiesTable.district,
+                neighborhood: propertiesTable.neighborhood,
+            })
+            .from(propertiesTable)
+            .where(eq(propertiesTable.listingStatus, "active"))
+            .orderBy(asc(propertiesTable.province), asc(propertiesTable.district), asc(propertiesTable.neighborhood));
+
+        return {
+            provinces: provinces.map((p) => p.province),
+            districts: districts.map((d) => ({ province: d.province, district: d.district })),
+            neighborhoods: neighborhoods.map((n) => ({ province: n.province, district: n.district, neighborhood: n.neighborhood })),
+        };
     });

@@ -1,40 +1,62 @@
-import { createFileRoute } from '@tanstack/react-router'
-import PropertyFiltering from '@/components/listing/grid-view/grid-default/PropertyFiltering'
+import { createFileRoute } from "@tanstack/react-router";
+import { zodSearchValidator } from "@tanstack/router-zod-adapter";
+import { propertySearchSchema } from "@/lib/validations/property-search";
+import { getDistinctLocations, searchProperties } from "@/lib/server/property";
+import { getCategories } from "@/lib/server/category";
+import PropertyListingPage from "@/components/listing/PropertyListingPage";
 
-export const Route = createFileRoute('/(app)/properties')({
-    component: ListingsPage,
-    ssr: "data-only",
-})
+export const Route = createFileRoute("/(app)/properties")({
+  validateSearch: zodSearchValidator(propertySearchSchema),
+  loaderDeps: ({ search }) => search,
+  loader: async ({ deps }) => {
+    const [searchResult, categories, locations] = await Promise.all([
+      searchProperties({ data: deps }),
+      getCategories(),
+      getDistinctLocations(),
+    ]);
+    return { searchResult, categories, locations };
+  },
+  component: ListingsPage,
+  ssr: "data-only",
+});
 
 function ListingsPage() {
-    return (
-        <>
-            <section className="breadcumb-section bgc-f7">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="breadcumb-style1">
-                                <h2 className="title">New York Homes for Sale</h2>
-                                <div className="breadcumb-list">
-                                    <a href="#">Home</a>
-                                    <a href="#">For Rent</a>
-                                </div>
-                                <a
-                                    className="filter-btn-left mobile-filter-btn d-block d-lg-none"
-                                    data-bs-toggle="offcanvas"
-                                    href="#listingSidebarFilter"
-                                    role="button"
-                                    aria-controls="listingSidebarFilter"
-                                >
-                                    <span className="flaticon-settings" /> Filter
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+  const { searchResult, categories, locations } = Route.useLoaderData();
+  const search = Route.useSearch();
 
-            <PropertyFiltering />
-        </>
-    )
+  return (
+    <>
+      <section className="breadcumb-section bgc-f7">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-12">
+              <div className="breadcumb-style1">
+                <h2 className="title">İlanlar</h2>
+                <div className="breadcumb-list">
+                  <a href="/">Ana Sayfa</a>
+                  <a href="/properties">İlanlar</a>
+                </div>
+                <a
+                  className="filter-btn-left mobile-filter-btn d-block d-lg-none"
+                  data-bs-toggle="offcanvas"
+                  href="#listingSidebarFilter"
+                  role="button"
+                  aria-controls="listingSidebarFilter"
+                >
+                  <span className="flaticon-settings" /> Filtrele
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <PropertyListingPage
+        searchResult={searchResult}
+        categories={categories}
+        locations={locations}
+        search={search}
+      />
+    </>
+  );
 }

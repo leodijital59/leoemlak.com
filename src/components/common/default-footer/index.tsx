@@ -24,7 +24,6 @@ const Footer = () => {
                 />
               </Link>
               <ContactMeta />
-              <AppWidget />
               <div className="social-widget">
                 <h6 className="text-white mb20">Follow us on social media</h6>
                 <Social />
@@ -35,8 +34,7 @@ const Footer = () => {
 
           <div className="col-lg-7">
             <div className="footer-widget mb-4 mb-lg-5">
-              <Subscribe />
-              <div className="row justify-content-between">
+              <div className="row justify-content-end">
                 <MenuWidget />
               </div>
             </div>

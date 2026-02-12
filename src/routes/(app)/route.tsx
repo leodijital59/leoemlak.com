@@ -1,4 +1,4 @@
-import {Outlet, createFileRoute} from '@tanstack/react-router'
+import {Outlet, createFileRoute, useRouterState} from '@tanstack/react-router'
 import Header from "@/components/home/home-v1/Header.tsx";
 import MobileMenu from "@/components/common/mobile-menu";
 import Footer from "@/components/common/default-footer";
@@ -13,14 +13,26 @@ export const Route = createFileRoute('/(app)')({
     })
 })
 
+const Loading = () => {
+    return (
+        <div className="d-flex justify-content-center align-items-center" style={{ height: '100dvh' }}>
+            <div className="spinner-border" style={{ color: "var(--primary-color)" }} role="status">
+                <span className="visually-hidden">Yükleniyor...</span>
+            </div>
+        </div>
+    )
+}
+
 function AppLayoutComponent() {
+    const isLoading = useRouterState({ select: (s) => s.isLoading })
+
     return (
         <div className="wrapper ovh">
             <Header/>
 
             <MobileMenu/>
 
-            <Outlet />
+            {isLoading ? <Loading /> : <Outlet />}
 
             <section className="footer-style1 pt60 pb-0">
                 <Footer/>

@@ -8,7 +8,6 @@ import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/about')({
   component: RouteComponent,
-  ssr: "data-only",
 })
 
 function RouteComponent() {

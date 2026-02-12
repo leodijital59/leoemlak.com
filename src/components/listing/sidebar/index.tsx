@@ -1,141 +1,136 @@
-'use client'
-
 import SearchBox from "./SearchBox";
-import ListingStatus from "./ListingStatus";
-import PropertyType from "./PropertyType";
-import PriceSlider from "./PriceRange";
+import ListingType from "./ListingType";
+import CategoryFilter from "./CategoryFilter";
+import PriceRange from "./PriceRange";
 import Bedroom from "./Bedroom";
 import Bathroom from "./Bathroom";
-import Location from "./Location";
-import SquareFeet from "./SquareFeet";
-import YearBuilt from "./YearBuilt";
-import OtherFeatures from "./OtherFeatures";
+import ProvinceFilter from "./ProvinceFilter";
+import AreaRange from "./AreaRange";
+import type { PropertySearchParams } from "@/lib/validations/property-search";
 
-const ListingSidebar = ({filterFunctions}) => {
-  return (
-    <div className="list-sidebar-style1">
-      <div className="widget-wrapper">
-        <h6 className="list-title">Find your home</h6>
-        <SearchBox filterFunctions={filterFunctions} />
-      </div>
-      {/* End .widget-wrapper */}
+interface Category {
+    id: string;
+    name: string;
+    parentId: string | null;
+}
 
-      <div className="widget-wrapper">
-        <h6 className="list-title">Listing Status</h6>
-        <div className="radio-element">
-          <ListingStatus filterFunctions={filterFunctions} />
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
+interface ListingSidebarProps {
+    categories: Category[];
+    locations: {
+        provinces: string[];
+        districts: { province: string; district: string }[];
+        neighborhoods: { province: string; district: string; neighborhood: string }[];
+    };
+    search: PropertySearchParams;
+    setFilters: (updates: Partial<PropertySearchParams>) => void;
+    resetFilters: () => void;
+}
 
-      <div className="widget-wrapper">
-        <h6 className="list-title">Property Type</h6>
-        <div className="checkbox-style1">
-          <PropertyType filterFunctions={filterFunctions} />
-        </div>
-      </div>
-      
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper">
-        <h6 className="list-title">Price Range</h6>
-        {/* Range Slider Desktop Version */}
-        <div className="range-slider-style1">
-          <PriceSlider filterFunctions={filterFunctions} />
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper">
-        <h6 className="list-title">Bedrooms</h6>
-        <div className="d-flex">
-          <Bedroom filterFunctions={filterFunctions} />
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper">
-        <h6 className="list-title">Bathrooms</h6>
-        <div className="d-flex">
-          <Bathroom filterFunctions={filterFunctions}  />
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper advance-feature-modal">
-        <h6 className="list-title">Location</h6>
-        <div className="form-style2 input-group">
-          <Location filterFunctions={filterFunctions} />
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper">
-        <h6 className="list-title">Square Feet</h6>
-        <SquareFeet filterFunctions={filterFunctions}/>
-      </div>
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper">
-        <h6 className="list-title">Year Built</h6>
-        <YearBuilt filterFunctions={filterFunctions}/>
-      </div>
-      {/* End .widget-wrapper */}
-
-      <div className="widget-wrapper">
-        <div className="feature-accordion">
-          <div className="accordion" id="accordionExample">
-            <div className="accordion-item border-none">
-              <h2 className="accordion-header" id="headingOne">
-                <button
-                  className="accordion-button border-none p-0 after-none feature-button"
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target="#collapseOne"
-                  aria-expanded="true"
-                  aria-controls="collapseOne"
-                >
-                  <span className="flaticon-settings" /> Other Features
-                </button>
-              </h2>
-              <div
-                id="collapseOne"
-                className="accordion-collapse collapse"
-                aria-labelledby="headingOne"
-                data-bs-parent="#accordionExample"
-              >
-                <div className="accordion-body p-0 mt15">
-                  <OtherFeatures filterFunctions={filterFunctions} />
-                </div>
-              </div>
+const ListingSidebar = ({
+                            categories,
+                            locations,
+                            search,
+                            setFilters,
+                            resetFilters,
+                        }: ListingSidebarProps) => {
+    return (
+        <div className="list-sidebar-style1">
+            <div className="widget-wrapper">
+                <h6 className="list-title">Arama</h6>
+                <SearchBox
+                    value={search.q}
+                    onChange={(q) => setFilters({ q })}
+                />
             </div>
-          </div>
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
 
-      <div className="widget-wrapper mb20">
-        <div className="btn-area d-grid align-items-center">
-          <button className="ud-btn btn-thm">
-            <span className="flaticon-search align-text-top pr10" />
-            Search
-          </button>
-        </div>
-      </div>
-      {/* End .widget-wrapper */}
+            <div className="widget-wrapper">
+                <h6 className="list-title">İlan Türü</h6>
+                <div className="radio-element">
+                    <ListingType
+                        value={search.listingType}
+                        onChange={(listingType) => setFilters({ listingType })}
+                    />
+                </div>
+            </div>
 
-      <div className="reset-area d-flex align-items-center justify-content-between">
-        <div onClick={()=>filterFunctions.resetFilter()} className="reset-button cursor" href="#">
-          <span className="flaticon-turn-back" />
-          <u>Reset all filters</u>
+            <div className="widget-wrapper">
+                <h6 className="list-title">Kategori</h6>
+                <div className="radio-element">
+                    <CategoryFilter
+                        categories={categories}
+                        value={search.categoryId}
+                        onChange={(categoryId) => setFilters({ categoryId })}
+                    />
+                </div>
+            </div>
+
+            <div className="widget-wrapper">
+                <h6 className="list-title">Adres</h6>
+                <div className="form-style2">
+                    <ProvinceFilter
+                        locations={locations}
+                        province={search.province}
+                        district={search.district}
+                        neighborhood={search.neighborhood}
+                        onChange={(values) => setFilters(values)}
+                    />
+                </div>
+            </div>
+
+            <div className="widget-wrapper">
+                <h6 className="list-title">Fiyat Aralığı</h6>
+                <div className="range-slider-style1">
+                    <PriceRange
+                        priceMin={search.priceMin}
+                        priceMax={search.priceMax}
+                        onChange={(values) => setFilters(values)}
+                    />
+                </div>
+            </div>
+
+            <div className="widget-wrapper">
+                <h6 className="list-title">Oda Sayısı</h6>
+                <div className="d-flex">
+                    <Bedroom
+                        value={search.rooms}
+                        onChange={(rooms) => setFilters({ rooms })}
+                    />
+                </div>
+            </div>
+
+            <div className="widget-wrapper">
+                <h6 className="list-title">Banyo Sayısı</h6>
+                <div className="d-flex">
+                    <Bathroom
+                        value={search.bathrooms}
+                        onChange={(bathrooms) => setFilters({ bathrooms })}
+                    />
+                </div>
+            </div>
+
+            <div className="widget-wrapper">
+                <h6 className="list-title">Brüt Alan (m²)</h6>
+                <AreaRange
+                    grossAreaMin={search.grossAreaMin}
+                    grossAreaMax={search.grossAreaMax}
+                    onChange={(values) => setFilters(values)}
+                />
+            </div>
+
+            <div className="widget-wrapper mb20">
+                <div className="reset-area d-flex align-items-center justify-content-between">
+                    <div
+                        onClick={resetFilters}
+                        className="reset-button cursor"
+                        style={{ cursor: "pointer" }}
+                    >
+                        <span className="flaticon-turn-back" />
+                        <u>Filtreleri Temizle</u>
+                    </div>
+                </div>
+            </div>
         </div>
-        <a className="reset-button" href="#">
-          <span className="flaticon-favourite" />
-          <u>Save Search</u>
-        </a>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ListingSidebar;

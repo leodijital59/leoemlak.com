@@ -14,7 +14,6 @@ import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/')({
   component: Home,
-  ssr: "data-only",
 })
 
 function Home() {

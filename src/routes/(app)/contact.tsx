@@ -5,7 +5,6 @@ import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/contact')({
     component: RouteComponent,
-    ssr: "data-only",
 })
 
 function RouteComponent() {

@@ -8,10 +8,6 @@ export default [
     path: "/properties",
   },
   {
-    label: "Property",
-    path: "/property/1",
-  },
-  {
     label: "About",
     path: "/about",
   },

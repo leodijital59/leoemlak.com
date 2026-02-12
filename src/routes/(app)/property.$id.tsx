@@ -34,7 +34,7 @@ function PropertyDetailPage() {
           </div>
         </section>
 
-        <section className="pt30 pb90 bgc-white">
+        <section className="pt30 pb0 bgc-white">
           <div className="container">
             <div className="row wrap gx-5">
               <div className="col-lg-8 order-last order-lg-first">

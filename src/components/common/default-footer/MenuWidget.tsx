@@ -22,15 +22,6 @@ const MenuWidget = () => {
         { label: "FAQs", href: "#" },
       ],
     },
-    {
-      title: "Discover",
-      links: [
-        { label: "Miami", href: "#" },
-        { label: "Los Angeles", href: "#" },
-        { label: "Chicago", href: "#" },
-        { label: "New York", href: "#" },
-      ],
-    },
   ];
 
   return (

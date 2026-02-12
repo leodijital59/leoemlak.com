@@ -1,17 +1,34 @@
+import { useEffect, useState } from "react";
 
-'use client'
+interface SearchBoxProps {
+  value?: string;
+  onChange: (value: string | undefined) => void;
+}
 
+const SearchBox = ({ value, onChange }: SearchBoxProps) => {
+  const [query, setQuery] = useState(value ?? "");
 
-const SearchBox = ({filterFunctions}) => {
+  useEffect(() => {
+    setQuery(value ?? "");
+  }, [value]);
+
+  const handleSubmit = () => {
+    onChange(query.trim() || undefined);
+  };
+
   return (
     <div className="search_area">
       <input
         type="text"
         className="form-control"
-        placeholder="What are you looking for?"
-        onChange={(e)=>filterFunctions?.setSearchQuery(e.target.value)}
+        placeholder="Arama..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") handleSubmit();
+        }}
       />
-      <label>
+      <label onClick={handleSubmit} style={{ cursor: "pointer" }}>
         <span className="flaticon-search" />
       </label>
     </div>

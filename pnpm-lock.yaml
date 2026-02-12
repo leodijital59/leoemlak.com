@@ -86,6 +86,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tanstack/router-zod-adapter':
+        specifier: ^1.81.5
+        version: 1.81.5(@tanstack/react-router@1.145.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(zod@4.3.5)
       '@udecode/cn':
         specifier: ^52.0.11
         version: 52.0.11(@types/react@19.2.7)(class-variance-authority@0.7.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(tailwind-merge@3.4.0)
@@ -3184,6 +3187,13 @@ packages:
   '@tanstack/router-utils@1.143.11':
     resolution: {integrity: sha512-N24G4LpfyK8dOlnP8BvNdkuxg1xQljkyl6PcrdiPSA301pOjatRT1y8wuCCJZKVVD8gkd0MpCZ0VEjRMGILOtA==}
     engines: {node: '>=12'}
+
+  '@tanstack/router-zod-adapter@1.81.5':
+    resolution: {integrity: sha512-oJp3QaCI5YwW7H46iuivC8pJLmYboXa1OztncRZNmfVBX69FZ7DodfxdrwNzceGpN3sXZT/f0t4sV05dKsneHg==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      '@tanstack/react-router': '>=1.43.2'
+      zod: '>=3'
 
   '@tanstack/start-client-core@1.145.11':
     resolution: {integrity: sha512-+rIu66DRdvO+Xow6mDDJhgF4uxfjXi9GZBja5/iGVRhzBJMYFpAfR/Js5Zotjyr1SVEm6JQXO6Yu4vu4867xmA==}
@@ -9092,6 +9102,11 @@ snapshots:
       tinyglobby: 0.2.15
     transitivePeerDependencies:
       - supports-color
+
+  '@tanstack/router-zod-adapter@1.81.5(@tanstack/react-router@1.145.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(zod@4.3.5)':
+    dependencies:
+      '@tanstack/react-router': 1.145.11(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      zod: 4.3.5
 
   '@tanstack/start-client-core@1.145.11':
     dependencies:

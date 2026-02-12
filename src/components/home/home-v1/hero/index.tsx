@@ -1,5 +1,6 @@
 import HeroContent from "./HeroContent";
 import AdvanceFilterModal from "@/components/common/advance-filter";
+import {ClientOnly} from "@tanstack/react-router";
 
 const Hero = () => {
   return (
@@ -23,7 +24,9 @@ const Hero = () => {
           aria-labelledby="advanceSeachModalLabel"
           aria-hidden="true"
         >
-          <AdvanceFilterModal />
+          <ClientOnly>
+            <AdvanceFilterModal />
+          </ClientOnly>
         </div>
       </div>
       {/* <!-- Advance Feature Modal End --> */}
