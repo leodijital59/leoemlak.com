@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import {ClientOnly, createFileRoute} from "@tanstack/react-router";
 import { zodSearchValidator } from "@tanstack/router-zod-adapter";
 import { propertySearchSchema } from "@/lib/validations/property-search";
 import { getDistinctLocations, searchProperties } from "@/lib/server/property";
@@ -17,7 +17,6 @@ export const Route = createFileRoute("/(app)/properties")({
     return { searchResult, categories, locations };
   },
   component: ListingsPage,
-  ssr: "data-only",
 });
 
 function ListingsPage() {
@@ -51,12 +50,14 @@ function ListingsPage() {
         </div>
       </section>
 
-      <PropertyListingPage
-        searchResult={searchResult}
-        categories={categories}
-        locations={locations}
-        search={search}
-      />
+      <ClientOnly>
+        <PropertyListingPage
+            searchResult={searchResult}
+            categories={categories}
+            locations={locations}
+            search={search}
+        />
+      </ClientOnly>
     </>
   );
 }

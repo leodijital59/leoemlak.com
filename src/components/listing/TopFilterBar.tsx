@@ -18,7 +18,7 @@ const TopFilterBar = ({ total, sort, onSortChange }: TopFilterBarProps) => {
       </div>
       <div className="col-sm-6">
         <div className="page_control_shorting d-flex align-items-center justify-content-center justify-content-sm-end">
-          <div className="pcs_dropdown">
+          <div className="pcs_dropdown pr10 d-flex align-items-center gap-2">
             <span>Sırala:</span>
             <select
               className="form-select"

@@ -25,6 +25,10 @@ const customStyles = {
         ? "#eb675312"
         : undefined,
   }),
+  container: (styles: Record<string, unknown>) => ({
+    ...styles,
+    zIndex: 4
+  })
 };
 
 const ProvinceFilter = ({
@@ -93,7 +97,7 @@ const ProvinceFilter = ({
               ? { value: district, label: district }
               : districtOptions[0]
           }
-          className="select-custom filterSelect"
+          className="select-custom filterSelect z-3"
           classNamePrefix="select"
           placeholder="İlçe seçiniz..."
           onChange={(opt) =>
@@ -114,7 +118,7 @@ const ProvinceFilter = ({
               ? { value: neighborhood, label: neighborhood }
               : neighborhoodOptions[0]
           }
-          className="select-custom filterSelect"
+          className="select-custom filterSelect z-2"
           classNamePrefix="select"
           placeholder="Mahalle seçiniz..."
           onChange={(opt) =>
