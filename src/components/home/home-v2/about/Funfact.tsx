@@ -1,7 +1,5 @@
-
 import { useEffect, useRef, useState } from "react";
 import CountUp from "react-countup";
-import { useInView } from "react-intersection-observer";
 import { Link } from "@tanstack/react-router";
 
 const Funfact = () => {
@@ -26,7 +24,7 @@ const Funfact = () => {
           <p className="text mb-0">{fact.text}</p>
         </div>
       ))}
-      <Link href="#" className="ud-btn btn-thm">
+      <Link to="/" className="ud-btn btn-thm">
         See More
         <i className="fal fa-arrow-right-long" />
       </Link>

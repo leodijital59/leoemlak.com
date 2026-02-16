@@ -1,5 +1,5 @@
 import {Outlet, createFileRoute} from '@tanstack/react-router'
-import Header from "@/components/home/home-v1/Header.tsx";
+import Header from "@/components/home/home-v2/Header.tsx";
 import MobileMenu from "@/components/common/mobile-menu";
 import Footer from "@/components/common/default-footer";
 import css from '@/styles/main.scss?url';
@@ -22,7 +22,7 @@ function AppLayoutComponent() {
 
             <Outlet />
 
-            <section className="footer-style1 pt60 pb-0">
+            <section className="footer-style1 at-home2 pb-0">
                 <Footer/>
             </section>
         </div>

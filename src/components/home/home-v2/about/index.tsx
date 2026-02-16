@@ -1,11 +1,11 @@
 import Funfact from "./Funfact";
 import ProductSingle from "./ProductSingle";
-import Image from "@/components/common/Image";
 import VideoBox from "./VideoBox";
+import Image from "@/components/common/Image";
 
 const About = () => {
   return (
-    <div className="row mt80 mt0-md">
+    <div className="row">
       <div className="col-md-6 col-xl-6">
         <div className="position-relative">
           <div className="img-box-7">

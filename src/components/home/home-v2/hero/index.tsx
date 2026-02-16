@@ -1,9 +1,10 @@
-import AdvanceFilterModal from "@/components/common/advance-filter";
+import {ClientOnly} from "@tanstack/react-router";
 import HeroContent from "./HeroContent";
+import AdvanceFilterModal from "@/components/common/advance-filter";
 
 const Hero = () => {
   return (
-    <>
+    <ClientOnly>
       <div className="inner-banner-style2 text-center position-relative">
         <HeroContent />
         <h2 className="hero-title" data-aos="fade-up" data-aos-delay="150">
@@ -28,7 +29,7 @@ const Hero = () => {
         </div>
       </div>
       {/* <!-- Advance Feature Modal End --> */}
-    </>
+    </ClientOnly>
   );
 };
 

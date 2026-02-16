@@ -1,4 +1,4 @@
-import {Link} from "@tanstack/react-router";
+import {ClientOnly, Link} from "@tanstack/react-router";
 import Image from "@/components/common/Image";
 
 const CallToActions = () => {
@@ -25,37 +25,39 @@ const CallToActions = () => {
         </div>
         {/* End image spinner */}
 
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-lg-7 col-xl-6 " data-aos="fade-right">
-              <div className="cta-style1">
-                <h2 className="cta-title">Need help? Talk to our expert.</h2>
-                <p className="cta-text mb-0">
-                  Talk to our experts or Browse through more properties.
-                </p>
+        <ClientOnly>
+          <div className="container">
+            <div className="row align-items-center">
+              <div className="col-lg-7 col-xl-6 " data-aos="fade-right">
+                <div className="cta-style1">
+                  <h2 className="cta-title">Need help? Talk to our expert.</h2>
+                  <p className="cta-text mb-0">
+                    Talk to our experts or Browse through more properties.
+                  </p>
+                </div>
               </div>
-            </div>
-            {/* End .col-lg-7 */}
+              {/* End .col-lg-7 */}
 
-            <div className="col-lg-5 col-xl-6 " data-aos="fade-left">
-              <div className="cta-btns-style1 d-block d-sm-flex align-items-center justify-content-lg-end">
-                <Link
-                  to="/"
-                  className="ud-btn btn-transparent mr30 mr0-xs"
-                >
-                  Contact Us
-                  <i className="fal fa-arrow-right-long" />
-                </Link>
-                <Link to="/" className="ud-btn btn-dark">
-                  <span className="flaticon-call vam pe-2" />
-                  920 851 9087
-                </Link>
+              <div className="col-lg-5 col-xl-6 " data-aos="fade-left">
+                <div className="cta-btns-style1 d-block d-sm-flex align-items-center justify-content-lg-end">
+                  <Link
+                    to="/"
+                    className="ud-btn btn-transparent mr30 mr0-xs"
+                  >
+                    Contact Us
+                    <i className="fal fa-arrow-right-long" />
+                  </Link>
+                  <Link to="/" className="ud-btn btn-dark">
+                    <span className="flaticon-call vam pe-2" />
+                    920 851 9087
+                  </Link>
+                </div>
               </div>
+              {/* End col-lg-5 */}
             </div>
-            {/* End col-lg-5 */}
+            {/* End .row */}
           </div>
-          {/* End .row */}
-        </div>
+        </ClientOnly>
       </div>
     </section>
   );

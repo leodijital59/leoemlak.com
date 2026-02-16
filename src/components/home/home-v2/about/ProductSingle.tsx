@@ -1,5 +1,5 @@
-import products from "@/data/listings";
 import { Link } from "@tanstack/react-router";
+import products from "@/data/listings";
 
 const ProductSingle = () => {
   return (
@@ -8,7 +8,7 @@ const ProductSingle = () => {
         <div className="listing-style1 mini-style bounce-y" key={product.id}>
           <div className="list-content">
             <h6 className="list-title">
-              <Link  href={`/single-v1/${product.id}`}>{product.title}</Link>
+              <Link to="/properties">{product.title}</Link>
             </h6>
             <p className="list-text">{product.location}</p>
             <div className="list-meta d-flex align-items-center">
@@ -25,7 +25,7 @@ const ProductSingle = () => {
                 {product.sqft} sqft
               </a>
             </div>
-            <Link  href={`/single-v1/${product.id}`} className="btn mt15 fz15">
+            <Link to="/properties" className="btn mt15 fz15">
               View House
               <i className="fal fa-arrow-right-long" />
             </Link>

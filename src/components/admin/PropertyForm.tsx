@@ -873,7 +873,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                         <div className="h-[400px] w-full rounded-lg border overflow-hidden">
                                             <MapComp
                                                 ref={mapRef}
-                                                center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35,39.3]}
+                                                center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35, 39]}
                                                 zoom={markerPosition ? 14 : 5}
                                             >
                                                 {markerPosition && <MapMarker

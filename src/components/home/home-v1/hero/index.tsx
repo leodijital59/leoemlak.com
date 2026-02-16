@@ -1,6 +1,6 @@
+import {ClientOnly} from "@tanstack/react-router";
 import HeroContent from "./HeroContent";
 import AdvanceFilterModal from "@/components/common/advance-filter";
-import {ClientOnly} from "@tanstack/react-router";
 
 const Hero = () => {
   return (

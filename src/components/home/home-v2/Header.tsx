@@ -1,10 +1,9 @@
-
+import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import MainMenu from "@/components/common/MainMenu";
 import SidebarPanel from "@/components/common/sidebar-panel";
 import LoginSignupModal from "@/components/common/login-signup-modal";
 import Image from "@/components/common/Image";
-import { Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
@@ -37,7 +36,7 @@ const Header = () => {
               <div className="col-auto">
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="logos mr40">
-                    <Link className="header-logo logo1" href="/">
+                    <Link className="header-logo logo1" to="/">
                       <Image
                         width={138}
                         height={44}
@@ -45,7 +44,7 @@ const Header = () => {
                         alt="Header Logo"
                       />
                     </Link>
-                    <Link className="header-logo logo2" href="/">
+                    <Link className="header-logo logo2" to="/">
                       <Image
                         width={138}
                         height={44}
@@ -70,46 +69,6 @@ const Header = () => {
                   >
                     <i className="far fa-phone fz16 me-2"></i>{" "}
                     <span className="d-none d-xl-block">2 911 098 7654</span>
-                  </a>
-                  <a
-                    href="#"
-                    className="login-info d-flex align-items-center"
-                    data-bs-toggle="modal"
-                    data-bs-target="#loginSignupModal"
-                    role="button"
-                  >
-                    <i className="far fa-user-circle fz16 me-2" />{" "}
-                    <span className="d-none d-xl-block">Login / Register</span>
-                  </a>
-                  <Link
-                    className="ud-btn add-property menu-btn bdrs60 mx-2 mx-xl-4"
-                    href="/dashboard-add-property"
-                  >
-                    Add Property
-                    <i className="fal fa-arrow-right-long" />
-                  </Link>
-                  <a
-                    className="sidemenu-btn filter-btn-right"
-                    href="#"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#SidebarPanel"
-                    aria-controls="SidebarPanelLabel"
-                  >
-                    <Image
-                      width={25}
-                      height={9}
-                      className="img-1"
-                      src="/images/icon/nav-icon-white.svg"
-                      alt="humberger menu"
-                    />
-
-                    <Image
-                      width={25}
-                      height={9}
-                      className="img-2"
-                      src="/images/icon/nav-icon-dark.svg"
-                      alt="humberger menu"
-                    />
                   </a>
                 </div>
               </div>

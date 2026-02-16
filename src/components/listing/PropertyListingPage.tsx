@@ -1,7 +1,10 @@
+import { useState } from "react";
 import ListingSidebar from "./sidebar";
 import PropertyCard from "./PropertyCard";
+import PropertyMapView from "./PropertyMapView";
 import TopFilterBar from "./TopFilterBar";
 import Pagination from "./Pagination";
+import type { ViewMode } from "./TopFilterBar";
 import type { PropertySearchParams } from "@/lib/validations/property-search";
 import { usePropertyFilters } from "@/lib/client/use-property-filters";
 
@@ -30,6 +33,8 @@ interface PropertyResult {
     rooms: number | null;
     bathrooms: number | null;
     grossArea: number | null;
+    latitude: string | null;
+    longitude: string | null;
   };
   images: PropertyImage[];
   category: { id: string; name: string } | null;
@@ -61,6 +66,7 @@ const PropertyListingPage = ({
   search,
 }: PropertyListingPageProps) => {
   const { setFilters, resetFilters } = usePropertyFilters(search);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
   const sidebarContent = (
     <ListingSidebar
@@ -113,36 +119,46 @@ const PropertyListingPage = ({
               total={searchResult.total}
               sort={search.sort}
               onSortChange={(sort) => setFilters({ sort: sort as PropertySearchParams["sort"] })}
+              viewMode={viewMode}
+              onViewModeChange={setViewMode}
             />
 
-            <div className="row mt15">
-              {searchResult.properties.length > 0 ? (
-                searchResult.properties.map((item) => (
-                  <PropertyCard
-                    key={item.property.id}
-                    property={item.property}
-                    images={item.images}
-                    category={item.category}
-                  />
-                ))
-              ) : (
-                <div className="col-12">
-                  <div className="alert alert-warning text-center">
-                    Aramanıza uygun ilan bulunamadı. Filtreleri değiştirmeyi deneyin.
-                  </div>
+            {viewMode === "grid" ? (
+              <>
+                <div className="row mt15">
+                  {searchResult.properties.length > 0 ? (
+                    searchResult.properties.map((item) => (
+                      <PropertyCard
+                        key={item.property.id}
+                        property={item.property}
+                        images={item.images}
+                        category={item.category}
+                      />
+                    ))
+                  ) : (
+                    <div className="col-12">
+                      <div className="alert alert-warning text-center">
+                        Aramanıza uygun ilan bulunamadı. Filtreleri değiştirmeyi deneyin.
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <div className="row">
-              <Pagination
-                page={searchResult.page}
-                totalPages={searchResult.totalPages}
-                onPageChange={(page) =>
-                  setFilters({ page: page === 1 ? undefined : page })
-                }
-              />
-            </div>
+                <div className="row">
+                  <Pagination
+                    page={searchResult.page}
+                    totalPages={searchResult.totalPages}
+                    onPageChange={(page) =>
+                      setFilters({ page: page === 1 ? undefined : page })
+                    }
+                  />
+                </div>
+              </>
+            ) : (
+              <div className="mt15">
+                <PropertyMapView properties={searchResult.properties} />
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
-import apartmentType from "@/data/apartmentType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 
 import { Link } from "@tanstack/react-router";
+import apartmentType from "@/data/apartmentType";
 
 const ApartmentType = () => {
   return (
@@ -30,7 +30,7 @@ const ApartmentType = () => {
       {apartmentType.map((type) => (
         <SwiperSlide key={type.id}>
           <div className="item">
-            <Link href="/grid-full-3-col">
+            <Link to="/">
               <div className="iconbox-style4">
                 <span className={`icon ${type.icon}`} />
                 <div className="iconbox-content">

@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import Image from "@/components/common/Image";
 import { listingTypeOptions } from "@/lib/validations/property";
+import { formatPrice } from "@/lib/format";
 
 interface PropertyImage {
   id: string;
@@ -25,13 +26,6 @@ interface PropertyCardProps {
   images: PropertyImage[];
   category: { id: string; name: string } | null;
 }
-
-const formatPrice = (price: string) =>
-  new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-    maximumFractionDigits: 0,
-  }).format(Number(price));
 
 const getListingTypeLabel = (type: "sold" | "rented") =>
   listingTypeOptions.find((o) => o.value === type)?.label ?? type;

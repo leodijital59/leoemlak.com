@@ -52,7 +52,7 @@ const PopularListings = ({ data = listings }) => {
                 </div>
                 <div className="list-content">
                   <h6 className="list-title">
-                    <Link href={`/single-v2/${listing.id}`}>
+                    <Link to="/">
                       {listing.title}
                     </Link>
                   </h6>
