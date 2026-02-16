@@ -18,6 +18,7 @@ export function usePropertyFilters(currentSearch: PropertySearchParams) {
     const cleaned: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(merged)) {
       if (value !== undefined && value !== null && value !== "") {
+        if (typeof value === "object" && !Array.isArray(value) && Object.keys(value).length === 0) continue;
         cleaned[key] = value;
       }
     }

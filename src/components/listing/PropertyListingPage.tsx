@@ -48,6 +48,11 @@ interface SearchResult {
   totalPages: number;
 }
 
+interface Feature {
+  id: string;
+  name: string;
+}
+
 interface PropertyListingPageProps {
   searchResult: SearchResult;
   categories: Category[];
@@ -56,6 +61,7 @@ interface PropertyListingPageProps {
     districts: { province: string; district: string }[];
     neighborhoods: { province: string; district: string; neighborhood: string }[];
   };
+  features: Feature[];
   search: PropertySearchParams;
 }
 
@@ -63,6 +69,7 @@ const PropertyListingPage = ({
   searchResult,
   categories,
   locations,
+  features,
   search,
 }: PropertyListingPageProps) => {
   const { setFilters, resetFilters } = usePropertyFilters(search);
@@ -72,6 +79,7 @@ const PropertyListingPage = ({
     <ListingSidebar
       categories={categories}
       locations={locations}
+      features={features}
       search={search}
       setFilters={setFilters}
       resetFilters={resetFilters}

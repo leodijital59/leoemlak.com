@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { del, put } from "@vercel/blob";
-import { and, asc, count, desc, eq, gte, ilike, lte, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, exists, gte, ilike, lte, sql } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
 import type { SQL } from "drizzle-orm";
 import type { PropertySearchParams } from "@/lib/validations/property-search";
@@ -398,6 +398,26 @@ export const searchProperties = createServerFn({ method: "GET" })
         if (params.grossAreaMax) {
             conditions.push(lte(propertiesTable.grossArea, params.grossAreaMax));
         }
+        if (params.features) {
+            const featureIds = Object.entries(params.features)
+                .filter(([, v]) => v)
+                .map(([id]) => id);
+            for (const featureId of featureIds) {
+                conditions.push(
+                    exists(
+                        db.select({ one: sql`1` })
+                            .from(propertyPropertyFeaturesTable)
+                            .where(
+                                and(
+                                    eq(propertyPropertyFeaturesTable.propertyId, propertiesTable.id),
+                                    eq(propertyPropertyFeaturesTable.featureId, featureId),
+                                    eq(propertyPropertyFeaturesTable.value, true),
+                                )
+                            )
+                    )
+                );
+            }
+        }
 
         const whereClause = and(...conditions);
 
@@ -468,6 +488,33 @@ export const searchProperties = createServerFn({ method: "GET" })
             pageSize: PAGE_SIZE,
             totalPages,
         };
+    });
+
+export const getActivePropertyFeatures = createServerFn({ method: "GET" })
+    .handler(async () => {
+        const features = await db
+            .selectDistinct({
+                id: propertyFeaturesTable.id,
+                name: propertyFeaturesTable.name,
+            })
+            .from(propertyFeaturesTable)
+            .innerJoin(
+                propertyPropertyFeaturesTable,
+                and(
+                    eq(propertyPropertyFeaturesTable.featureId, propertyFeaturesTable.id),
+                    eq(propertyPropertyFeaturesTable.value, true),
+                )
+            )
+            .innerJoin(
+                propertiesTable,
+                and(
+                    eq(propertyPropertyFeaturesTable.propertyId, propertiesTable.id),
+                    eq(propertiesTable.listingStatus, "active"),
+                )
+            )
+            .orderBy(asc(propertyFeaturesTable.name));
+
+        return features;
     });
 
 export const getDistinctLocations = createServerFn({ method: "GET" })

@@ -1,7 +1,7 @@
 import {ClientOnly, createFileRoute} from "@tanstack/react-router";
 import { zodSearchValidator } from "@tanstack/router-zod-adapter";
 import { propertySearchSchema } from "@/lib/validations/property-search";
-import { getDistinctLocations, searchProperties } from "@/lib/server/property";
+import { getActivePropertyFeatures, getDistinctLocations, searchProperties } from "@/lib/server/property";
 import { getCategories } from "@/lib/server/category";
 import PropertyListingPage from "@/components/listing/PropertyListingPage";
 import css from '@/styles/admin.css?url';
@@ -10,12 +10,13 @@ export const Route = createFileRoute("/(app)/properties")({
   validateSearch: zodSearchValidator(propertySearchSchema),
   loaderDeps: ({ search }) => search,
   loader: async ({ deps }) => {
-    const [searchResult, categories, locations] = await Promise.all([
+    const [searchResult, categories, locations, features] = await Promise.all([
       searchProperties({ data: deps }),
       getCategories(),
       getDistinctLocations(),
+      getActivePropertyFeatures(),
     ]);
-    return { searchResult, categories, locations };
+    return { searchResult, categories, locations, features };
   },
   component: ListingsPage,
   head: () => ({
@@ -26,7 +27,7 @@ export const Route = createFileRoute("/(app)/properties")({
 });
 
 function ListingsPage() {
-  const { searchResult, categories, locations } = Route.useLoaderData();
+  const { searchResult, categories, locations, features } = Route.useLoaderData();
   const search = Route.useSearch();
 
   return (
@@ -61,6 +62,7 @@ function ListingsPage() {
             searchResult={searchResult}
             categories={categories}
             locations={locations}
+            features={features}
             search={search}
         />
       </ClientOnly>

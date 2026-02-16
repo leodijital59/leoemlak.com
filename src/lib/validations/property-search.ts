@@ -19,6 +19,7 @@ export const propertySearchSchema = z.object({
   neighborhood: z.string().optional().catch(undefined),
   grossAreaMin: z.coerce.number().int().positive().optional().catch(undefined),
   grossAreaMax: z.coerce.number().int().positive().optional().catch(undefined),
+  features: z.record(z.uuid(), z.coerce.boolean()).optional().catch(undefined),
   sort: z.enum(["newest", "price_asc", "price_desc"]).optional().catch(undefined),
   page: z.coerce.number().int().positive().optional().catch(undefined),
 });

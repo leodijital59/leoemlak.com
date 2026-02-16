@@ -12,15 +12,6 @@ const AdvanceFilterModal = () => {
     setShowSelect(true);
   }, []);
   const navigate = useNavigate();
-  const catOptions = [
-    { value: "Banking", label: "Apartments" },
-    { value: "Bungalow", label: "Bungalow" },
-    { value: "Houses", label: "Houses" },
-    { value: "Loft", label: "Loft" },
-    { value: "Office", label: "Office" },
-    { value: "Townhome", label: "Townhome" },
-    { value: "Villa", label: "Villa" },
-  ];
   const locationOptions = [
     { value: "All Cities", label: "All Cities" },
     { value: "California", label: "California" },
@@ -71,43 +62,6 @@ const AdvanceFilterModal = () => {
                 </div>
               </div>
             </div>
-          </div>
-          {/* End .row */}
-
-          <div className="row">
-            <div className="col-sm-6">
-              <div className="widget-wrapper">
-                <h6 className="list-title">Type</h6>
-                <div className="form-style2 input-group">
-                  {showSelect && (
-                    <Select
-                      defaultValue={[catOptions[1]]}
-                      name="colors"
-                      options={catOptions}
-                      styles={customStyles}
-                      className="select-custom"
-                      classNamePrefix="select"
-                      required
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-            {/* End .col-6 */}
-
-            <div className="col-sm-6">
-              <div className="widget-wrapper">
-                <h6 className="list-title">Property ID</h6>
-                <div className="form-style2">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="RT04949213"
-                  />
-                </div>
-              </div>
-            </div>
-            {/* End .col-6 */}
           </div>
           {/* End .row */}
 

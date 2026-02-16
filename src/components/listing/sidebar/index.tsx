@@ -6,12 +6,18 @@ import Bedroom from "./Bedroom";
 import Bathroom from "./Bathroom";
 import ProvinceFilter from "./ProvinceFilter";
 import AreaRange from "./AreaRange";
+import FeatureFilter from "./FeatureFilter";
 import type { PropertySearchParams } from "@/lib/validations/property-search";
 
 interface Category {
     id: string;
     name: string;
     parentId: string | null;
+}
+
+interface Feature {
+    id: string;
+    name: string;
 }
 
 interface ListingSidebarProps {
@@ -21,6 +27,7 @@ interface ListingSidebarProps {
         districts: { province: string; district: string }[];
         neighborhoods: { province: string; district: string; neighborhood: string }[];
     };
+    features: Feature[];
     search: PropertySearchParams;
     setFilters: (updates: Partial<PropertySearchParams>) => void;
     resetFilters: () => void;
@@ -29,6 +36,7 @@ interface ListingSidebarProps {
 const ListingSidebar = ({
                             categories,
                             locations,
+                            features,
                             search,
                             setFilters,
                             resetFilters,
@@ -116,6 +124,19 @@ const ListingSidebar = ({
                     onChange={(values) => setFilters(values)}
                 />
             </div>
+
+            {features.length > 0 && (
+                <div className="widget-wrapper">
+                    <h6 className="list-title">Özellikler</h6>
+                    <div className="checkbox-style1">
+                        <FeatureFilter
+                            features={features}
+                            value={search.features}
+                            onChange={(features) => setFilters({ features })}
+                        />
+                    </div>
+                </div>
+            )}
 
             <div className="widget-wrapper mb20">
                 <div className="reset-area d-flex align-items-center justify-content-between">

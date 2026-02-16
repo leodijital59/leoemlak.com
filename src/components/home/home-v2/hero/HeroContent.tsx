@@ -4,16 +4,15 @@ import SelectDropdown from "./SelectDropdown";
 
 const HeroContent = () => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("buy");
+  const [activeTab, setActiveTab] = useState("sold");
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 
   const tabs = [
-    { id: "buy", label: "Buy" },
-    { id: "rent", label: "Rent" },
-    { id: "sold", label: "Sold" },
+    { id: "sold", label: "Satılık" },
+    { id: "rented", label: "Kiralık" },
   ];
 
   return (
