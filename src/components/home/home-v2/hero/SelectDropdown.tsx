@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 
-const SelectDropdown = () => {
+interface SelectDropdownProps {
+  categories: { id: string; name: string; parentId: string | null }[];
+  value: string | undefined;
+  onChange: (categoryId: string | undefined) => void;
+}
+
+const SelectDropdown = ({ categories, value, onChange }: SelectDropdownProps) => {
   const catOptions = [
-    { value: "Apartments", label: "Apartments" },
-    { value: "Bungalow", label: "Bungalow" },
-    { value: "Houses", label: "Houses" },
-    { value: "Loft", label: "Loft" },
-    { value: "Office", label: "Office" },
-    { value: "Townhome", label: "Townhome" },
-    { value: "Villa", label: "Villa" },
+    { value: "", label: "Tüm Kategoriler" },
+    ...categories.map((cat) => ({ value: cat.id, label: cat.name })),
   ];
   const [showSelect, setShowSelect] = useState(false);
   useEffect(() => {
@@ -32,14 +33,14 @@ const SelectDropdown = () => {
     <>
       {showSelect && (
         <Select
-          defaultValue={[catOptions[0]]}
-          name="colors"
+          value={catOptions.find((o) => o.value === (value ?? "")) ?? catOptions[0]}
+          name="category"
           options={catOptions}
           styles={customStyles}
           className="text-start select-borderless"
           classNamePrefix="select"
-          required
           isSearchable={false}
+          onChange={(option) => onChange(option?.value || undefined)}
         />
       )}
     </>

@@ -1,17 +1,40 @@
+import { useState } from "react";
 import {ClientOnly} from "@tanstack/react-router";
 import HeroContent from "./HeroContent";
 import AdvanceFilterModal from "@/components/common/advance-filter";
 
-const Hero = () => {
+interface HeroProps {
+  categories: { id: string; name: string; parentId: string | null }[];
+  locations: {
+    provinces: string[];
+    districts: { province: string; district: string }[];
+    neighborhoods: { province: string; district: string; neighborhood: string }[];
+  };
+  features: { id: string; name: string }[];
+}
+
+const Hero = ({ categories, locations, features }: HeroProps) => {
+  const [listingType, setListingType] = useState<"sold" | "rented">("sold");
+  const [q, setQ] = useState("");
+  const [categoryId, setCategoryId] = useState<string | undefined>();
+
   return (
     <ClientOnly>
       <div className="inner-banner-style2 text-center position-relative">
-        <HeroContent />
+        <HeroContent
+          categories={categories}
+          listingType={listingType}
+          onListingTypeChange={setListingType}
+          q={q}
+          onQChange={setQ}
+          categoryId={categoryId}
+          onCategoryIdChange={setCategoryId}
+        />
         <h2 className="hero-title" data-aos="fade-up" data-aos-delay="150">
           Find Your Dream Home
         </h2>
         <p className="hero-text fz15" data-aos="fade-up" data-aos-delay="250">
-          Let’s find a home that’s perfect for you
+          Let's find a home that's perfect for you
         </p>
       </div>
       {/* End Hero content */}
@@ -25,7 +48,13 @@ const Hero = () => {
           aria-labelledby="advanceSeachModalLabel"
           aria-hidden="true"
         >
-          <AdvanceFilterModal />
+          <AdvanceFilterModal
+            locations={locations}
+            features={features}
+            listingType={listingType}
+            q={q}
+            categoryId={categoryId}
+          />
         </div>
       </div>
       {/* <!-- Advance Feature Modal End --> */}

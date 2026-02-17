@@ -1,39 +1,70 @@
-import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
-import PriceRange from "./PriceRange";
-import Bedroom from "./Bedroom";
-import Bathroom from "./Bathroom";
-import Amenities from "./Amenities";
+import PriceRange from "@/components/listing/sidebar/PriceRange";
+import Bedroom from "@/components/listing/sidebar/Bedroom";
+import Bathroom from "@/components/listing/sidebar/Bathroom";
+import AreaRange from "@/components/listing/sidebar/AreaRange";
+import ProvinceFilter from "@/components/listing/sidebar/ProvinceFilter";
+import FeatureFilter from "@/components/listing/sidebar/FeatureFilter";
 
-const AdvanceFilterModal = () => {
-  const [showSelect, setShowSelect] = useState(false);
-  useEffect(() => {
-    setShowSelect(true);
-  }, []);
+interface AdvanceFilterModalProps {
+  locations: {
+    provinces: string[];
+    districts: { province: string; district: string }[];
+    neighborhoods: { province: string; district: string; neighborhood: string }[];
+  };
+  features: { id: string; name: string }[];
+  listingType: "sold" | "rented";
+  q: string;
+  categoryId: string | undefined;
+}
+
+const AdvanceFilterModal = ({ locations, features, listingType, q, categoryId }: AdvanceFilterModalProps) => {
   const navigate = useNavigate();
-  const locationOptions = [
-    { value: "All Cities", label: "All Cities" },
-    { value: "California", label: "California" },
-    { value: "Los Angeles", label: "Los Angeles" },
-    { value: "New Jersey", label: "New Jersey" },
-    { value: "New York", label: "New York" },
-    { value: "San Diego", label: "San Diego" },
-    { value: "San Francisco", label: "San Francisco" },
-    { value: "Texas", label: "Texas" },
-  ];
 
-  const customStyles = {
-    option: (baseStyles: any, state: { isSelected: boolean; isFocused: boolean; }) => {
-      return {
-        ...baseStyles,
-        backgroundColor: state.isSelected
-          ? "#eb6753"
-          : state.isFocused
-          ? "#eb675312"
-          : undefined,
-      };
-    },
+  const [priceMin, setPriceMin] = useState<number | undefined>();
+  const [priceMax, setPriceMax] = useState<number | undefined>();
+  const [rooms, setRooms] = useState<number | undefined>();
+  const [bathrooms, setBathrooms] = useState<number | undefined>();
+  const [grossAreaMin, setGrossAreaMin] = useState<number | undefined>();
+  const [grossAreaMax, setGrossAreaMax] = useState<number | undefined>();
+  const [province, setProvince] = useState<string | undefined>();
+  const [district, setDistrict] = useState<string | undefined>();
+  const [neighborhood, setNeighborhood] = useState<string | undefined>();
+  const [selectedFeatures, setSelectedFeatures] = useState<Record<string, boolean> | undefined>();
+
+  const handleSearch = () => {
+    navigate({
+      to: "/properties",
+      search: {
+        listingType,
+        q: q.trim() || undefined,
+        categoryId,
+        priceMin,
+        priceMax,
+        rooms,
+        bathrooms,
+        grossAreaMin,
+        grossAreaMax,
+        province,
+        district,
+        neighborhood,
+        features: selectedFeatures,
+      },
+    });
+  };
+
+  const handleReset = () => {
+    setPriceMin(undefined);
+    setPriceMax(undefined);
+    setRooms(undefined);
+    setBathrooms(undefined);
+    setGrossAreaMin(undefined);
+    setGrossAreaMax(undefined);
+    setProvince(undefined);
+    setDistrict(undefined);
+    setNeighborhood(undefined);
+    setSelectedFeatures(undefined);
   };
 
   return (
@@ -41,7 +72,7 @@ const AdvanceFilterModal = () => {
       <div className="modal-content">
         <div className="modal-header pl30 pr30">
           <h5 className="modal-title" id="exampleModalLabel">
-            More Filter
+            Detaylı Filtre
           </h5>
           <button
             type="button"
@@ -56,9 +87,16 @@ const AdvanceFilterModal = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="widget-wrapper">
-                <h6 className="list-title mb20">Price Range</h6>
+                <h6 className="list-title mb20">Fiyat Aralığı</h6>
                 <div className="range-slider-style modal-version">
-                  <PriceRange />
+                  <PriceRange
+                    priceMin={priceMin}
+                    priceMax={priceMax}
+                    onChange={(values) => {
+                      setPriceMin(values.priceMin);
+                      setPriceMax(values.priceMax);
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -68,9 +106,9 @@ const AdvanceFilterModal = () => {
           <div className="row">
             <div className="col-sm-6">
               <div className="widget-wrapper">
-                <h6 className="list-title">Bedrooms</h6>
+                <h6 className="list-title">Oda Sayısı</h6>
                 <div className="d-flex">
-                  <Bedroom />
+                  <Bedroom value={rooms} onChange={setRooms} />
                 </div>
               </div>
             </div>
@@ -78,9 +116,9 @@ const AdvanceFilterModal = () => {
 
             <div className="col-sm-6">
               <div className="widget-wrapper">
-                <h6 className="list-title">Bathrooms</h6>
+                <h6 className="list-title">Banyo Sayısı</h6>
                 <div className="d-flex">
-                  <Bathroom />
+                  <Bathroom value={bathrooms} onChange={setBathrooms} />
                 </div>
               </div>
             </div>
@@ -91,19 +129,19 @@ const AdvanceFilterModal = () => {
           <div className="row">
             <div className="col-sm-6">
               <div className="widget-wrapper">
-                <h6 className="list-title">Location</h6>
-                <div className="form-style2 input-group">
-                  {showSelect && (
-                    <Select
-                      defaultValue={[locationOptions[0]]}
-                      name="colors"
-                      styles={customStyles}
-                      options={locationOptions}
-                      className="select-custom"
-                      classNamePrefix="select"
-                      required
-                    />
-                  )}
+                <h6 className="list-title">Adres</h6>
+                <div className="form-style2">
+                  <ProvinceFilter
+                    locations={locations}
+                    province={province}
+                    district={district}
+                    neighborhood={neighborhood}
+                    onChange={(values) => {
+                      setProvince(values.province);
+                      setDistrict(values.district);
+                      setNeighborhood(values.neighborhood);
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -111,57 +149,52 @@ const AdvanceFilterModal = () => {
 
             <div className="col-sm-6">
               <div className="widget-wrapper">
-                <h6 className="list-title">Square Feet</h6>
-                <div className="space-area">
-                  <div className="d-flex align-items-center justify-content-between">
-                    <div className="form-style1">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Min."
-                      />
-                    </div>
-                    <span className="dark-color">-</span>
-                    <div className="form-style1">
-                      <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Max"
-                      />
-                    </div>
-                  </div>
-                </div>
+                <h6 className="list-title">Alan (m²)</h6>
+                <AreaRange
+                  grossAreaMin={grossAreaMin}
+                  grossAreaMax={grossAreaMax}
+                  onChange={(values) => {
+                    setGrossAreaMin(values.grossAreaMin);
+                    setGrossAreaMax(values.grossAreaMax);
+                  }}
+                />
               </div>
             </div>
             {/* End .col-md-6 */}
           </div>
           {/* End .row */}
 
-          <div className="row">
-            <div className="col-lg-12">
-              <div className="widget-wrapper mb0">
-                <h6 className="list-title mb10">Amenities</h6>
+          {features.length > 0 && (
+            <div className="row">
+              <div className="col-lg-12">
+                <div className="widget-wrapper mb0">
+                  <h6 className="list-title mb10">Özellikler</h6>
+                </div>
               </div>
+              <FeatureFilter
+                features={features}
+                value={selectedFeatures}
+                onChange={setSelectedFeatures}
+              />
             </div>
-            <Amenities />
-          </div>
+          )}
         </div>
         {/* End modal body */}
 
         <div className="modal-footer justify-content-between">
-          <button className="reset-button">
+          <button className="reset-button" onClick={handleReset}>
             <span className="flaticon-turn-back" />
-            <u>Reset all filters</u>
+            <u>Filtreleri Sıfırla</u>
           </button>
           <div className="btn-area">
             <button
               data-bs-dismiss="modal"
               type="submit"
               className="ud-btn btn-thm"
-              onClick={() => navigate({ to: "/" })}
+              onClick={handleSearch}
             >
-              <span className="flaticon-search align-text-top pr10" />
-              Search
+              <span className="flaticon-search pr10" />
+              Ara
             </button>
           </div>
         </div>

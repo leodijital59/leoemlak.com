@@ -4,12 +4,23 @@ import ApartmentType from "@/components/home/home-v2/ApartmentType";
 import About from "@/components/home/home-v2/about";
 import Cta from "@/components/home/home-v2/Cta";
 import ExploreCities from "@/components/home/home-v2/ExploreCities";
+import { getCategories } from "@/lib/server/category";
+import { getDistinctLocations, getActivePropertyFeatures } from "@/lib/server/property";
 
 export const Route = createFileRoute('/(app)/')({
+    loader: async () => {
+        const [categories, locations, features] = await Promise.all([
+            getCategories(),
+            getDistinctLocations(),
+            getActivePropertyFeatures(),
+        ]);
+        return { categories, locations, features };
+    },
     component: Home,
 })
 
 function Home() {
+    const { categories, locations, features } = Route.useLoaderData();
     return (
         <>
             {/* Home Banner Style V2 */}
@@ -19,7 +30,7 @@ function Home() {
                         <div className="home2-hero-banner bdrs12"></div>
                         <div className="row">
                             <div className="col-xl-10 mx-auto">
-                                <Hero />
+                                <Hero categories={categories} locations={locations} features={features} />
                             </div>
                         </div>
                     </div>
