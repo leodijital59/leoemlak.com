@@ -4,7 +4,7 @@ import { propertySearchSchema } from "@/lib/validations/property-search";
 import { getActivePropertyFeatures, getDistinctLocations, searchProperties } from "@/lib/server/property";
 import { getCategories } from "@/lib/server/category";
 import PropertyListingPage from "@/components/listing/PropertyListingPage";
-import css from '@/styles/admin.css?url';
+import css from '@/styles/map.css?url';
 
 export const Route = createFileRoute("/(app)/properties")({
   validateSearch: zodSearchValidator(propertySearchSchema),

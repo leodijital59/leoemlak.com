@@ -22,6 +22,8 @@ interface PropertyCardProps {
     rooms: number | null;
     bathrooms: number | null;
     grossArea: number | null;
+    latitude: string | null;
+    longitude: string | null;
   };
   images: PropertyImage[];
   category: { id: string; name: string } | null;

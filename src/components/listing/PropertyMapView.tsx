@@ -1,35 +1,20 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Link } from "@tanstack/react-router";
+import {BedDouble, Building, Grid2x2, MapPin} from "lucide-react";
+import type {MapRef} from "@/components/ui/map";
+import type {PropertyData, PropertyImage} from "@/types/property-display";
 import {
   Map,
   MapControls,
   MapMarker,
   MarkerContent,
-  MarkerPopup,
-  type MapRef,
+  MarkerPopup
 } from "@/components/ui/map";
 import { formatPrice } from "@/lib/format";
-import { listingTypeOptions } from "@/lib/validations/property";
-
-interface PropertyImage {
-  id: string;
-  url: string;
-  order: number;
-  isMainImage: boolean;
-}
+import {formatArea, formatFloor} from "@/lib/formatters.ts";
 
 interface MapProperty {
-  property: {
-    id: string;
-    title: string;
-    price: string;
-    listingType: "sold" | "rented";
-    province: string;
-    district: string;
-    neighborhood: string;
-    latitude: string | null;
-    longitude: string | null;
-  };
+  property: PropertyData;
   images: PropertyImage[];
   category: { id: string; name: string } | null;
 }
@@ -37,9 +22,6 @@ interface MapProperty {
 interface PropertyMapViewProps {
   properties: MapProperty[];
 }
-
-const getListingTypeLabel = (type: "sold" | "rented") =>
-  listingTypeOptions.find((o) => o.value === type)?.label ?? type;
 
 const PropertyMapView = ({ properties }: PropertyMapViewProps) => {
   const mapRef = useRef<MapRef>(null);
@@ -128,7 +110,57 @@ const PropertyMapView = ({ properties }: PropertyMapViewProps) => {
                     }}
                   />
                 </MarkerContent>
-                <MarkerPopup closeButton>
+                <MarkerPopup className="p-0 w-62">
+                  <Link
+                      to="/property/$id"
+                      params={{ id: item.property.id }}
+                      target="_blank"
+                  >
+                    {mainImage && (<div className="relative h-32 overflow-hidden rounded-t-md">
+                      <img
+                          src={mainImage.url}
+                          alt={item.property.title}
+                          style={{
+                            width: "100%",
+                            objectFit: "fill",
+                          }}
+                      />
+                    </div>)}
+                    <div className="space-y-2 p-3">
+                      <div className="font-semibold text-sm text-foreground leading-none">
+                        {item.property.title}
+                      </div>
+                      <div className="flex items-center gap-1 text-xs leading-none">
+                        <MapPin className="size-2.5" />
+                        <span className="capitalize">{String(item.property.neighborhood).toLocaleLowerCase('tr')}</span>
+                      </div>
+                      {(item.property.rooms != null || item.property.grossArea != null) && (
+                          <div className="flex gap-4">
+                            {item.property.rooms != null && (
+                                <div className="flex items-center gap-1 text-xs leading-none">
+                                  <BedDouble className="size-2.5" />
+                                  <span>{item.property.rooms} + {item.property.bathrooms}</span>
+                                </div>
+                            )}
+                            {item.property.grossArea != null && (
+                                <div className="flex items-center gap-1 text-xs leading-none">
+                                  <Grid2x2 className="size-2.5" /> {formatArea(item.property.grossArea)} (Brüt)
+                                </div>
+                            )}
+                          </div>
+                      )}
+                      {(item.property.floorNumber !== null || item.property.totalFloors !== null) && (
+                        <div className="flex items-center gap-1 text-xs leading-none">
+                          <Building className="size-2.5" /> {formatFloor(item.property.floorNumber, item.property.totalFloors)}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-1.5 text-sm leading-none">
+                        {formatPrice(item.property.price)}
+                      </div>
+                    </div>
+                  </Link>
+                </MarkerPopup>
+                {/*<MarkerPopup closeButton>
                   <div style={{ width: "240px", fontFamily: "inherit" }}>
                     {mainImage && (
                       <img
@@ -196,21 +228,9 @@ const PropertyMapView = ({ properties }: PropertyMapViewProps) => {
                       >
                         {getListingTypeLabel(item.property.listingType)}
                       </span>
-                      <Link
-                        to="/property/$id"
-                        params={{ id: item.property.id }}
-                        style={{
-                          fontSize: "12px",
-                          color: "#2563eb",
-                          textDecoration: "none",
-                          fontWeight: 500,
-                        }}
-                      >
-                        Detaylar &rarr;
-                      </Link>
                     </div>
                   </div>
-                </MarkerPopup>
+                </MarkerPopup>*/}
               </MapMarker>
             );
           })}

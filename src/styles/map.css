@@ -1,0 +1,57 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+
+:root {
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
+    --border: oklch(0.922 0 0);
+    --muted-foreground: oklch(0.556 0 0);
+    --ring: oklch(0.708 0 0);
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-border: var(--border);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-ring: var(--ring);
+}
+
+/* Harita içindeki button'lar için hedefli preflight reset.
+   Sadece .maplibregl-map ve .maplibregl-popup içine scoped,
+   Bootstrap button'larını etkilemez.
+   !important ile unlayered Bootstrap'ın üstüne çıkar. */
+.maplibregl-map button,
+.maplibregl-popup button {
+    appearance: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: 0 solid !important;
+    font: inherit !important;
+    color: inherit !important;
+    cursor: pointer !important;
+    border-radius: 0 !important;
+    line-height: inherit !important;
+}
+
+.maplibregl-popup-content {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+}
+
+.maplibregl-popup-tip {
+    display: none !important;
+}
