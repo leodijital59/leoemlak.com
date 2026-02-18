@@ -32,6 +32,7 @@ const AdvanceFilterModal = ({ locations, features, listingType, q, categoryId }:
   const [district, setDistrict] = useState<string | undefined>();
   const [neighborhood, setNeighborhood] = useState<string | undefined>();
   const [selectedFeatures, setSelectedFeatures] = useState<Record<string, boolean> | undefined>();
+  const [featuresOpen, setFeaturesOpen] = useState(false);
 
   const handleSearch = () => {
     navigate({
@@ -168,14 +169,31 @@ const AdvanceFilterModal = ({ locations, features, listingType, q, categoryId }:
             <div className="row">
               <div className="col-lg-12">
                 <div className="widget-wrapper mb0">
-                  <h6 className="list-title mb10">Özellikler</h6>
+                  <button
+                    type="button"
+                    className="list-title mb10 d-flex justify-content-between align-items-center w-100 border-0 bg-transparent p-0"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setFeaturesOpen((o) => !o)}
+                  >
+                    <h6>Özellikler</h6>
+                    <i
+                      className="far fa-chevron-down"
+                      style={{
+                        transition: "transform 0.2s",
+                        transform: featuresOpen ? "rotate(0deg)" : "rotate(-90deg)",
+                        fontSize: "12px",
+                      }}
+                    />
+                  </button>
+                  {featuresOpen && (
+                    <FeatureFilter
+                        features={features}
+                        value={selectedFeatures}
+                        onChange={setSelectedFeatures}
+                    />
+                  )}
                 </div>
               </div>
-              <FeatureFilter
-                features={features}
-                value={selectedFeatures}
-                onChange={setSelectedFeatures}
-              />
             </div>
           )}
         </div>

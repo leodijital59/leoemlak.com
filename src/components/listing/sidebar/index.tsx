@@ -1,3 +1,4 @@
+import { useState } from "react";
 import SearchBox from "./SearchBox";
 import ListingType from "./ListingType";
 import CategoryFilter from "./CategoryFilter";
@@ -41,6 +42,8 @@ const ListingSidebar = ({
                             setFilters,
                             resetFilters,
                         }: ListingSidebarProps) => {
+    const [featuresOpen, setFeaturesOpen] = useState(false);
+
     return (
         <div className="list-sidebar-style1">
             <div className="widget-wrapper">
@@ -127,14 +130,31 @@ const ListingSidebar = ({
 
             {features.length > 0 && (
                 <div className="widget-wrapper">
-                    <h6 className="list-title">Özellikler</h6>
-                    <div className="checkbox-style1">
-                        <FeatureFilter
-                            features={features}
-                            value={search.features}
-                            onChange={(features) => setFilters({ features })}
+                    <button
+                        type="button"
+                        className="list-title mb10 d-flex justify-content-between align-items-center w-100 border-0 bg-transparent p-0"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setFeaturesOpen((o) => !o)}
+                    >
+                        <h6>Özellikler</h6>
+                        <i
+                            className="far fa-chevron-down"
+                            style={{
+                                transition: "transform 0.2s",
+                                transform: featuresOpen ? "rotate(0deg)" : "rotate(-90deg)",
+                                fontSize: "12px",
+                            }}
                         />
-                    </div>
+                    </button>
+                    {featuresOpen && (
+                        <div className="checkbox-style1 mt-2">
+                            <FeatureFilter
+                                features={features}
+                                value={search.features}
+                                onChange={(features) => setFilters({ features })}
+                            />
+                        </div>
+                    )}
                 </div>
             )}
 

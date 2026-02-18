@@ -13,15 +13,17 @@ export const Route = createFileRoute('/(app)/about')({
 function RouteComponent() {
   return (
       <>
-        <section className="breadcumb-section2 p-0">
-          <div className="container">
-            <div className="row">
-              <div className="col-lg-12">
-                <div className="breadcumb-style1">
-                  <h2 className="title">About Us</h2>
-                  <div className="breadcumb-list">
-                    <Link to="/">Home</Link>
-                    <Link to="/about">About</Link>
+        <section className="home-banner-style2 p0 pt0-md pt90">
+          <div className="breadcumb-section2">
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-12">
+                  <div className="breadcumb-style1">
+                    <h2 className="title">About Us</h2>
+                    <div className="breadcumb-list">
+                      <Link to="/">Home</Link>
+                      <Link to="/about">About</Link>
+                    </div>
                   </div>
                 </div>
               </div>

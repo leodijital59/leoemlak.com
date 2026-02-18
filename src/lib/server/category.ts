@@ -1,9 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, count, eq } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
 import type {CategoryFormValues} from "@/lib/validations/category";
 import db from "@/db";
-import { categoriesTable, categoryFeaturesTable, propertyFeaturesTable } from "@/schema";
+import { categoriesTable, categoryFeaturesTable, propertiesTable, propertyFeaturesTable } from "@/schema";
 import { categoryFormSchema  } from "@/lib/validations/category";
 
 export interface CategoryTreeItem {
@@ -19,6 +19,27 @@ export const getCategories = createServerFn({ method: "GET" })
         return db
             .select()
             .from(categoriesTable)
+            .orderBy(asc(categoriesTable.name));
+    });
+
+export const getCategoriesWithActiveCount = createServerFn({ method: "GET" })
+    .handler(async () => {
+        return db
+            .select({
+                id: categoriesTable.id,
+                name: categoriesTable.name,
+                parentId: categoriesTable.parentId,
+                activeCount: count(propertiesTable.id),
+            })
+            .from(categoriesTable)
+            .leftJoin(
+                propertiesTable,
+                and(
+                    eq(categoriesTable.id, propertiesTable.categoryId),
+                    eq(propertiesTable.listingStatus, 'active')
+                )
+            )
+            .groupBy(categoriesTable.id, categoriesTable.name, categoriesTable.parentId)
             .orderBy(asc(categoriesTable.name));
     });
 

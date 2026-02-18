@@ -32,6 +32,8 @@ function ListingsPage() {
 
   return (
     <>
+      <section className="home-banner-style2 p0 pt0-md pt90"></section>
+
       <section className="breadcumb-section bgc-f7">
         <div className="container">
           <div className="row">

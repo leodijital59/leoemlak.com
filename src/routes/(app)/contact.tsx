@@ -10,6 +10,8 @@ export const Route = createFileRoute('/(app)/contact')({
 function RouteComponent() {
     return (
         <>
+            <section className="home-banner-style2 p0 pt0-md pt90"></section>
+
             <section className="p-0">
                 <iframe
                     className="home8-map contact-page"

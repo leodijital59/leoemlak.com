@@ -37,9 +37,7 @@ const Hero = ({ categories, locations, features }: HeroProps) => {
           Let's find a home that's perfect for you
         </p>
       </div>
-      {/* End Hero content */}
 
-      {/* <!-- Advance Feature Modal Start --> */}
       <div className="advance-feature-modal">
         <div
           className="modal fade"
@@ -57,7 +55,6 @@ const Hero = ({ categories, locations, features }: HeroProps) => {
           />
         </div>
       </div>
-      {/* <!-- Advance Feature Modal End --> */}
     </ClientOnly>
   );
 };

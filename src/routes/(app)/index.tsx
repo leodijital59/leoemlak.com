@@ -4,26 +4,26 @@ import ApartmentType from "@/components/home/home-v2/ApartmentType";
 import About from "@/components/home/home-v2/about";
 import Cta from "@/components/home/home-v2/Cta";
 import ExploreCities from "@/components/home/home-v2/ExploreCities";
-import { getCategories } from "@/lib/server/category";
-import { getDistinctLocations, getActivePropertyFeatures } from "@/lib/server/property";
+import { getCategories, getCategoriesWithActiveCount } from "@/lib/server/category";
+import { getActivePropertyFeatures, getDistinctLocations } from "@/lib/server/property";
 
 export const Route = createFileRoute('/(app)/')({
     loader: async () => {
-        const [categories, locations, features] = await Promise.all([
+        const [categories, locations, features, categoriesWithCount] = await Promise.all([
             getCategories(),
             getDistinctLocations(),
             getActivePropertyFeatures(),
+            getCategoriesWithActiveCount(),
         ]);
-        return { categories, locations, features };
+        return { categories, locations, features, categoriesWithCount };
     },
     component: Home,
 })
 
 function Home() {
-    const { categories, locations, features } = Route.useLoaderData();
+    const { categories, locations, features, categoriesWithCount } = Route.useLoaderData();
     return (
         <>
-            {/* Home Banner Style V2 */}
             <section className="home-banner-style2 p0">
                 <div className="home-style2">
                     <div className="container maxw1600">
@@ -34,26 +34,21 @@ function Home() {
                             </div>
                         </div>
                     </div>
-                    {/* End .container */}
                 </div>
             </section>
-            {/* End Home Banner Style V2 */}
 
-            {/* Explore Apartment */}
             <section className="pb90 pb30-md">
                 <div className="container">
                     <ClientOnly>
                         <div className="row justify-content-center" data-aos="fade">
                             <div className="col-lg-12">
-                                <ApartmentType />
+                                <ApartmentType categories={categoriesWithCount} />
                             </div>
                         </div>
                     </ClientOnly>
                 </div>
             </section>
-            {/* End Explore Apartment */}
 
-            {/* Property Cities */}
             <section className="pt0 pb90 pb50-md">
                 <div className="container">
                     <ClientOnly>
@@ -102,19 +97,14 @@ function Home() {
                     </ClientOnly>
                 </div>
             </section>
-            {/* End property cities */}
 
-            {/* About Us */}
             <section className="about-us">
                 <div className="container">
                     <About />
                 </div>
             </section>
-            {/* End About Us */}
 
-            {/* Our CTA */}
             <Cta />
-            {/* End Our CTA */}
         </>
     )
 }
