@@ -57,11 +57,16 @@ src/
 ├── lib/
 │   ├── server/       # Server-side business logic (createServerFn handlers)
 │   ├── validations/  # Zod schemas for form validation
-│   └── client/       # Client-side utilities
+│   ├── client/       # Client-side utilities (use-property-filters.ts, user.ts)
+│   ├── utils.ts      # cn() and general utilities
+│   └── format.ts     # Data formatting helpers
+├── hooks/            # Custom React hooks
+├── types/            # TypeScript type definitions
+├── data/             # Static data (location lists)
 ├── schema.ts         # Drizzle ORM database schema
 ├── db.ts             # Database connection (Neon)
 ├── auth.ts           # Auth client configuration
-└── router.tsx        # TanStack Router configuration
+└── router.tsx        # TanStack Router configuration (custom search param serialization)
 ```
 
 ### Database Schema (src/schema.ts)
@@ -87,10 +92,12 @@ Configured in tsconfig.json and vite.config.ts:
 - Use `cn()` utility from `@/lib/utils` for conditional classes
 
 ### Environment Variables
-Required in `.env`:
+Required in `.env` (see `.env.example`):
 - `DATABASE_URL` - PostgreSQL connection string (Neon)
 - `VITE_NEON_AUTH_URL` - Neon Auth URL (client-side)
 - `NEON_AUTH_BASE_URL` - Neon Auth base URL (server-side)
+- `BLOB_READ_WRITE_TOKEN` - Vercel Blob Storage token for image uploads
+- `VITE_APP_NAME` - Application display name (client-side)
 
 ## Key Patterns
 
@@ -109,6 +116,8 @@ All admin forms follow this pattern:
 4. Submit to server function via `createServerFn()`
 5. Handle success/error states with toast notifications
 
+**Important**: Admin forms that include file uploads use `FormData` submission (not JSON). Image files and metadata are passed separately; features are submitted as `{featureId, value}` pairs.
+
 ### Adding New Routes
 Create files in `src/routes/` following TanStack Router conventions:
 - `index.tsx` - Index route for directory
@@ -117,6 +126,8 @@ Create files in `src/routes/` following TanStack Router conventions:
 - `$.tsx` - Catch-all route
 
 Route tree auto-regenerates on file changes.
+
+`router.tsx` overrides `stringifySearch`/`parseSearch` to handle nested objects in URL params (e.g., `features[id1]=true&features[id2]=false`). Property search filters are managed client-side via `src/lib/client/use-property-filters.ts`.
 
 ### Admin Authentication
 Admin routes (`/admin/*`) are protected by `NeonAuthUIProvider`. Use `<SignedIn>` and `<SignedOut>` components for conditional rendering.
@@ -145,3 +156,7 @@ Use `EditorField` component from `src/components/admin/EditorField.tsx`:
 5. Commit both schema.ts and migration files
 
 **Important**: Never delete old migration files. Always create new migrations for schema changes.
+
+## Testing
+
+There is no test suite in this project. Use `pnpm typecheck` and `pnpm lint` for code quality checks.
