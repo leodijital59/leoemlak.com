@@ -1,4 +1,5 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
+import {formatCapitilized} from '@/lib/format'
 import NearbySimilarProperty from '@/components/property/property-single-style/common/NearbySimilarProperty'
 import PropertyAddress from '@/components/property/property-single-style/common/PropertyAddress'
 import PropertyDetails from '@/components/property/property-single-style/common/PropertyDetails'
@@ -8,6 +9,8 @@ import PropertyVideo from '@/components/property/property-single-style/common/Pr
 import ProperytyDescriptions from '@/components/property/property-single-style/common/ProperytyDescriptions'
 import PropertyGallery from '@/components/property/property-single-style/single-v8/PropertyGallery'
 import { getPropertyById } from '@/lib/server/property'
+import NotFound from "@/components/NotFound.tsx";
+import {formatAddress} from "@/lib/formatters.ts";
 
 export const Route = createFileRoute('/(app)/property/$id')({
   component: PropertyDetailPage,
@@ -18,6 +21,66 @@ export const Route = createFileRoute('/(app)/property/$id')({
       throw notFound()
     }
   },
+  notFoundComponent: NotFound,
+  head: ({ loaderData }) => {
+    if (!loaderData) return { meta: [] }
+
+    const { property, images } = loaderData
+    const mainImage = images.find((img) => img.isMainImage) ?? images[0]
+
+    const listingLabel = property.listingType === 'sold' ? 'Satılık' : 'Kiralık'
+    const locationParts = formatAddress(property.province, property.district, property.neighborhood)
+
+    const title = `${property.title} | ${formatCapitilized(property.province)} ${formatCapitilized(property.district)}`
+    const description = `${listingLabel} ${property.title} - ${locationParts}`
+    const appName = import.meta.env.VITE_APP_NAME as string
+
+    const jsonLd: Record<string, unknown> = {
+      '@context': 'https://schema.org',
+      '@type': 'RealEstateListing',
+      name: property.title,
+      description,
+      image: images.map((img) => img.url),
+      offers: {
+        '@type': 'Offer',
+        price: property.price,
+        priceCurrency: 'TRY',
+      },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: formatCapitilized(property.neighborhood),
+        addressLocality: formatCapitilized(property.district),
+        addressRegion: formatCapitilized(property.province),
+        addressCountry: 'TR',
+      },
+    }
+
+    if (property.grossArea) {
+      jsonLd.floorSize = { '@type': 'QuantitativeValue', value: property.grossArea, unitCode: 'MTK' }
+    }
+    if (property.rooms) jsonLd.numberOfRooms = property.rooms
+    if (property.bathrooms) jsonLd.numberOfBathroomsTotal = property.bathrooms
+
+    return {
+      meta: [
+        { title: `${title} | ${appName}` },
+        { name: 'description', content: description },
+        { name: 'robots', content: 'max-image-preview:large' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: description },
+        ...(mainImage ? [{ property: 'og:image', content: mainImage.url }] : []),
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: description },
+        ...(mainImage ? [{ name: 'twitter:image', content: mainImage.url }] : []),
+      ],
+      scripts: [{
+        type: 'application/ld+json',
+        children: JSON.stringify(jsonLd),
+      }],
+    }
+  },
 })
 
 function PropertyDetailPage() {
@@ -25,6 +88,8 @@ function PropertyDetailPage() {
 
   return (
       <>
+        <section className="home-banner-style2 p0 pt0-md pt90"></section>
+
         <section className="pt60 pb60 bgc-f7">
           <div className="container">
             <div className="row">

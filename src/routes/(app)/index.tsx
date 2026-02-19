@@ -8,6 +8,22 @@ import { getCategories, getCategoriesWithActiveCount } from "@/lib/server/catego
 import { getActivePropertyFeatures, getDistinctLocations } from "@/lib/server/property";
 
 export const Route = createFileRoute('/(app)/')({
+    staticData: {
+        title: 'Ana Sayfa',
+        description: 'Türkiye\'nin en güvenilir emlak platformu. Satılık ve kiralık daireler, villalar, arsalar ve daha fazlası.',
+    },
+    head: () => ({
+        scripts: [{
+            type: 'application/ld+json',
+            children: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: import.meta.env.VITE_APP_NAME,
+                inLanguage: 'tr-TR',
+                description: 'Türkiye\'nin en güvenilir emlak platformu. Satılık ve kiralık daireler, villalar, arsalar ve daha fazlası.',
+            }),
+        }],
+    }),
     loader: async () => {
         const [categories, locations, features, categoriesWithCount] = await Promise.all([
             getCategories(),

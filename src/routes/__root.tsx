@@ -9,38 +9,45 @@ import ScrollToTop from '@/components/common/ScrollTop'
 declare module "@tanstack/react-router" {
   interface StaticDataRouteOption {
     title?: string;
+    description?: string;
   }
 }
 
 export const Route = createRootRoute({
-  head: ({ matches }) => ({
-    meta: [
-      { charSet: "utf-8" },
-      {
-        name: "viewport",
-        content: "width=device-width, initial-scale=1",
-      },
-      { title: [import.meta.env.VITE_APP_NAME, matches.at(-1)?.staticData.title].filter(Boolean).join(' | ') }
-    ],
-    links: [
-      {
-        rel: 'preconnect',
-        href: 'https://fonts.googleapis.com',
-      },
-      {
-        rel: 'preconnect',
-        href: 'https://fonts.gstatic.com',
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap',
-      },
-    ],
-  }),
+  head: ({ matches }) => {
+    const lastMatch = matches.at(-1);
+    const title = [import.meta.env.VITE_APP_NAME, lastMatch?.staticData.title].filter(Boolean).join(' | ');
+    const description = lastMatch?.staticData.description;
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1",
+        },
+        { title },
+        ...(description ? [{ name: "description", content: description }] : []),
+      ],
+      links: [
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.googleapis.com',
+        },
+        {
+          rel: 'preconnect',
+          href: 'https://fonts.gstatic.com',
+        },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap',
+        },
+      ],
+    };
+  },
   component: RootComponent,
   errorComponent: ({ error }) => {
     return <ErrorComponent error={error} />
-  }
+  },
 })
 
 function RootComponent() {
@@ -68,7 +75,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <html lang="en">
+    <html lang="tr">
       <head>
         <HeadContent />
       </head>

@@ -7,6 +7,22 @@ import Partner from "@/components/common/Partner";
 import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/about')({
+  staticData: {
+    title: 'Hakkımızda',
+    description: 'LeoEmlak hakkında daha fazla bilgi edinin. Misyonumuz, vizyonumuz ve gayrimenkul sektöründeki yerimiz.',
+  },
+  head: () => ({
+    scripts: [{
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: import.meta.env.VITE_APP_NAME,
+        inLanguage: 'tr-TR',
+        description: 'LeoEmlak hakkında daha fazla bilgi edinin. Misyonumuz, vizyonumuz ve gayrimenkul sektöründeki yerimiz.',
+      }),
+    }],
+  }),
   component: RouteComponent,
 })
 

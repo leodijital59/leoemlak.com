@@ -1,3 +1,5 @@
+import { formatCapitilized } from "@/lib/format";
+
 /**
  * Format numeric price as Turkish Lira with thousands separator
  */
@@ -69,7 +71,13 @@ export function formatAddress(
   district: string,
   neighborhood: string
 ): string {
-  return `${neighborhood}, ${district}, ${province}`
+  return [
+    formatCapitilized(neighborhood),
+    formatCapitilized(district),
+    formatCapitilized(province)
+  ]
+  .filter(Boolean)
+  .join(", ")
 }
 
 /**
@@ -77,7 +85,7 @@ export function formatAddress(
  */
 export function formatFloor(
   floorNumber: number | null | undefined,
-  totalFloors: number | null | undefined
+  totalFloors: number | null | undefined = undefined
 ): string {
   if (!floorNumber && !totalFloors) return '-'
   if (!totalFloors) return `${floorNumber}. Kat`

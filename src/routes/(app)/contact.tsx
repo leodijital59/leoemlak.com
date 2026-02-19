@@ -4,6 +4,22 @@ import Office from "@/components/pages/contact/Office";
 import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/contact')({
+    staticData: {
+        title: 'İletişim',
+        description: 'Bizimle iletişime geçin. Sorularınız, ofis lokasyonlarımız ve iletişim bilgilerimiz için.',
+    },
+    head: () => ({
+        scripts: [{
+            type: 'application/ld+json',
+            children: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'ContactPage',
+                name: `İletişim - ${import.meta.env.VITE_APP_NAME}`,
+                inLanguage: 'tr-TR',
+                description: 'Bizimle iletişime geçin. Sorularınız, ofis lokasyonlarımız ve iletişim bilgilerimiz için.',
+            }),
+        }],
+    }),
     component: RouteComponent,
 })
 

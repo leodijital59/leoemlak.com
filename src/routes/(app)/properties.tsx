@@ -5,6 +5,7 @@ import { getActivePropertyFeatures, getDistinctLocations, searchProperties } fro
 import { getCategories } from "@/lib/server/category";
 import PropertyListingPage from "@/components/listing/PropertyListingPage";
 import css from '@/styles/map.css?url';
+import {formatCapitilized} from "@/lib/format.ts";
 
 export const Route = createFileRoute("/(app)/properties")({
   validateSearch: zodSearchValidator(propertySearchSchema),
@@ -19,11 +20,31 @@ export const Route = createFileRoute("/(app)/properties")({
     return { searchResult, categories, locations, features };
   },
   component: ListingsPage,
-  head: () => ({
-    links: [
-      { rel: 'stylesheet', href: css }
-    ]
-  })
+  staticData: {
+    description: 'Türkiye genelinde satılık ve kiralık gayrimenkul ilanları. Daire, villa, arsa ve işyeri ilanları.',
+  },
+  head: ({ match, loaderData }) => {
+    const { listingType, categoryId, province, district, neighborhood } = match.search
+    const appName = import.meta.env.VITE_APP_NAME as string
+    const listingLabel = listingType ? (listingType === 'sold' ? 'Satılık' : 'Kiralık') : null
+    const category = loaderData?.categories.find(item => item.id === categoryId)
+    const adresses = [
+      province ? formatCapitilized(province) : null,
+      district ? formatCapitilized(district) : null,
+      neighborhood ? formatCapitilized(neighborhood) : null
+    ].filter(Boolean)
+
+    return {
+      meta: [
+        {
+          title: `${[...adresses, listingLabel, category?.name, `İlanlar${category?.name || adresses.length > 0 ? 'ı' : ''}`].filter(Boolean).join(' ')} | ${appName}`,
+        }
+      ],
+      links: [
+        { rel: 'stylesheet', href: css }
+      ]
+    }
+  }
 });
 
 function ListingsPage() {

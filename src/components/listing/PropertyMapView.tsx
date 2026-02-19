@@ -10,7 +10,7 @@ import {
   MarkerContent,
   MarkerPopup
 } from "@/components/ui/map";
-import { formatPrice } from "@/lib/format";
+import {formatCapitilized, formatPrice} from "@/lib/format";
 import {formatArea, formatFloor} from "@/lib/formatters.ts";
 
 interface MapProperty {
@@ -132,14 +132,19 @@ const PropertyMapView = ({ properties }: PropertyMapViewProps) => {
                       </div>
                       <div className="flex items-center gap-1 text-xs leading-none">
                         <MapPin className="size-2.5" />
-                        <span className="capitalize">{String(item.property.neighborhood).toLocaleLowerCase('tr')}</span>
+                        <span>{formatCapitilized(item.property.neighborhood)}</span>
                       </div>
                       {(item.property.rooms != null || item.property.grossArea != null) && (
-                          <div className="flex gap-4">
+                          <div className="flex gap-3">
                             {item.property.rooms != null && (
                                 <div className="flex items-center gap-1 text-xs leading-none">
                                   <BedDouble className="size-2.5" />
-                                  <span>{item.property.rooms} + {item.property.bathrooms}</span>
+                                  <span>{item.property.rooms}+{item.property.bathrooms}</span>
+                                </div>
+                            )}
+                            {item.property.floorNumber !== null && (
+                                <div className="flex items-center gap-1 text-xs leading-none">
+                                  <Building className="size-2.5" /> {formatFloor(item.property.floorNumber)}
                                 </div>
                             )}
                             {item.property.grossArea != null && (
@@ -149,88 +154,12 @@ const PropertyMapView = ({ properties }: PropertyMapViewProps) => {
                             )}
                           </div>
                       )}
-                      {(item.property.floorNumber !== null || item.property.totalFloors !== null) && (
-                        <div className="flex items-center gap-1 text-xs leading-none">
-                          <Building className="size-2.5" /> {formatFloor(item.property.floorNumber, item.property.totalFloors)}
-                        </div>
-                      )}
                       <div className="flex items-center gap-1.5 text-sm leading-none">
                         {formatPrice(item.property.price)}
                       </div>
                     </div>
                   </Link>
                 </MarkerPopup>
-                {/*<MarkerPopup closeButton>
-                  <div style={{ width: "240px", fontFamily: "inherit" }}>
-                    {mainImage && (
-                      <img
-                        src={mainImage.url}
-                        alt={item.property.title}
-                        style={{
-                          width: "100%",
-                          height: "140px",
-                          objectFit: "cover",
-                          borderRadius: "4px",
-                          marginBottom: "8px",
-                        }}
-                      />
-                    )}
-                    <div
-                      style={{
-                        fontSize: "14px",
-                        fontWeight: 600,
-                        marginBottom: "4px",
-                        lineHeight: 1.3,
-                      }}
-                    >
-                      {item.property.title}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "15px",
-                        fontWeight: 700,
-                        color: "#e74c3c",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {formatPrice(item.property.price)}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "12px",
-                        color: "#666",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {[
-                        item.property.neighborhood,
-                        item.property.district,
-                        item.property.province,
-                      ]
-                        .filter(Boolean)
-                        .join(", ")}
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginTop: "8px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          backgroundColor: "#f0f0f0",
-                          padding: "2px 8px",
-                          borderRadius: "4px",
-                        }}
-                      >
-                        {getListingTypeLabel(item.property.listingType)}
-                      </span>
-                    </div>
-                  </div>
-                </MarkerPopup>*/}
               </MapMarker>
             );
           })}

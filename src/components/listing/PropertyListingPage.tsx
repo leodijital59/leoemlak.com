@@ -6,6 +6,7 @@ import TopFilterBar from "./TopFilterBar";
 import Pagination from "./Pagination";
 import type { ViewMode } from "./TopFilterBar";
 import type { PropertySearchParams } from "@/lib/validations/property-search";
+import type { PropertyData } from "@/types/property-display";
 import { usePropertyFilters } from "@/lib/client/use-property-filters";
 
 interface Category {
@@ -22,20 +23,7 @@ interface PropertyImage {
 }
 
 interface PropertyResult {
-  property: {
-    id: string;
-    title: string;
-    price: string;
-    listingType: "sold" | "rented";
-    province: string;
-    district: string;
-    neighborhood: string;
-    rooms: number | null;
-    bathrooms: number | null;
-    grossArea: number | null;
-    latitude: string | null;
-    longitude: string | null;
-  };
+  property: PropertyData;
   images: PropertyImage[];
   category: { id: string; name: string } | null;
 }

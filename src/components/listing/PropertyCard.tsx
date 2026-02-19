@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router";
+import type { PropertyData } from "@/types/property-display";
 import Image from "@/components/common/Image";
 import { listingTypeOptions } from "@/lib/validations/property";
-import { formatPrice } from "@/lib/format";
+import {formatCapitilized, formatPrice} from "@/lib/format";
+import {formatAddress, formatArea, formatFloor} from "@/lib/formatters.ts";
 
 interface PropertyImage {
   id: string;
@@ -11,20 +13,7 @@ interface PropertyImage {
 }
 
 interface PropertyCardProps {
-  property: {
-    id: string;
-    title: string;
-    price: string;
-    listingType: "sold" | "rented";
-    province: string;
-    district: string;
-    neighborhood: string;
-    rooms: number | null;
-    bathrooms: number | null;
-    grossArea: number | null;
-    latitude: string | null;
-    longitude: string | null;
-  };
+  property: PropertyData;
   images: PropertyImage[];
   category: { id: string; name: string } | null;
 }
@@ -37,76 +26,60 @@ const PropertyCard = ({ property, images, category }: PropertyCardProps) => {
 
   return (
     <div className="col-sm-6 col-lg-6">
-      <div className="listing-style1">
-        <div className="list-thumb">
-          {mainImage ? (
-            <Image
-              src={mainImage.url}
-              width={382}
-              height={248}
-              alt={property.title}
-              className="w-100"
-            />
-          ) : (
-            <div
-              className="w-100 d-flex align-items-center justify-content-center bg-light"
-              style={{ height: 248 }}
-            >
-              <span className="text-muted">Görsel Yok</span>
+      <Link to="/property/$id" params={{ id: property.id }}>
+        <div className="listing-style1">
+          <div className="list-thumb">
+            {mainImage ? (
+              <Image
+                src={mainImage.url}
+                width={382}
+                height={248}
+                alt={property.title}
+                className="w-100"
+              />
+            ) : (
+              <div
+                className="w-100 d-flex align-items-center justify-content-center bg-light"
+                style={{ height: 248 }}
+              >
+                <span className="text-muted">Görsel Yok</span>
+              </div>
+            )}
+            <div className="sale-sticker-wrap">
+              <div className="list-tag fz12">
+                {getListingTypeLabel(property.listingType)}
+              </div>
             </div>
-          )}
-          <div className="sale-sticker-wrap">
-            <div className="list-tag fz12">
-              {getListingTypeLabel(property.listingType)}
+            <div className="list-price">
+              {formatPrice(property.price)}
             </div>
           </div>
-          <div className="list-price">
-            {formatPrice(property.price)}
-          </div>
-        </div>
 
-        <div className="list-content">
-          <h6 className="list-title">
-            <Link to="/property/$id" params={{ id: property.id }}>
+          <div className="list-content">
+            <h6 className="list-title">
               {property.title}
-            </Link>
-          </h6>
-          <p className="list-text">
-            {[property.neighborhood, property.district, property.province]
-              .filter(Boolean)
-              .join(", ")}
-          </p>
+            </h6>
+            <p className="list-text mb5">
+              {formatAddress(property.province, property.district, property.neighborhood)}
+            </p>
 
-          <div className="list-meta d-flex align-items-center">
-            {property.rooms != null && (
-              <a>
-                <span className="flaticon-bed" /> {property.rooms} Oda
-              </a>
-            )}
-            {property.bathrooms != null && (
-              <a>
-                <span className="flaticon-shower" /> {property.bathrooms} Banyo
-              </a>
-            )}
-            {property.grossArea != null && (
-              <a>
-                <span className="flaticon-expand" /> {property.grossArea} m²
-              </a>
-            )}
-          </div>
-
-          <hr />
-
-          <div className="list-meta2 d-flex justify-content-between align-items-center">
-            <span className="for-what">
-              {getListingTypeLabel(property.listingType)}
-            </span>
-            {category && (
-              <span className="text-muted fz13">{category.name}</span>
-            )}
+            <div className="list-meta d-flex align-items-center *:mr-2! *:pr-2 divide-x divide-black/10">
+              {category && (
+                <span>{category.name}</span>
+              )}
+              {(property.rooms != null && property.bathrooms != null) && (
+                <span>{property.rooms}+{property.bathrooms}</span>
+              )}
+              {property.floorNumber != null && (
+                <span>{formatFloor(property.floorNumber)}</span>
+              )}
+              {property.grossArea != null && (
+                <span>{formatArea(property.grossArea)} (Brüt)</span>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };
