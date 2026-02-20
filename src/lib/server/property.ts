@@ -517,6 +517,82 @@ export const getActivePropertyFeatures = createServerFn({ method: "GET" })
         return features;
     });
 
+export const getDashboardStats = createServerFn({ method: "GET" })
+    .handler(async () => {
+        // Total properties count
+        const [{ total: totalProperties }] = await db
+            .select({ total: count() })
+            .from(propertiesTable);
+
+        // Active properties count
+        const [{ total: activeProperties }] = await db
+            .select({ total: count() })
+            .from(propertiesTable)
+            .where(eq(propertiesTable.listingStatus, "active"));
+
+        // Categories count
+        const [{ total: totalCategories }] = await db
+            .select({ total: count() })
+            .from(categoriesTable);
+
+        // Features count
+        const [{ total: totalFeatures }] = await db
+            .select({ total: count() })
+            .from(propertyFeaturesTable);
+
+        // Properties per category
+        const byCategory = await db
+            .select({
+                categoryName: categoriesTable.name,
+                count: count(),
+            })
+            .from(propertiesTable)
+            .innerJoin(categoriesTable, eq(propertiesTable.categoryId, categoriesTable.id))
+            .groupBy(categoriesTable.name)
+            .orderBy(desc(count()));
+
+        // Recent 5 properties with category and main image
+        const recentResults = await db
+            .select({
+                property: propertiesTable,
+                categoryName: categoriesTable.name,
+                imageUrl: propertyImagesTable.url,
+                isMainImage: propertyImagesTable.isMainImage,
+            })
+            .from(propertiesTable)
+            .leftJoin(categoriesTable, eq(propertiesTable.categoryId, categoriesTable.id))
+            .leftJoin(
+                propertyImagesTable,
+                and(
+                    eq(propertiesTable.id, propertyImagesTable.propertyId),
+                    eq(propertyImagesTable.isMainImage, true),
+                )
+            )
+            .orderBy(desc(propertiesTable.createdAt))
+            .limit(5);
+
+        const recentProperties = recentResults.map((row) => ({
+            id: row.property.id,
+            title: row.property.title,
+            categoryName: row.categoryName,
+            province: row.property.province,
+            district: row.property.district,
+            price: row.property.price,
+            listingStatus: row.property.listingStatus,
+            createdAt: row.property.createdAt,
+            imageUrl: row.imageUrl,
+        }));
+
+        return {
+            totalProperties,
+            activeProperties,
+            totalCategories,
+            totalFeatures,
+            byCategory,
+            recentProperties,
+        };
+    });
+
 export const getDistinctLocations = createServerFn({ method: "GET" })
     .handler(async () => {
         const provinces = await db
