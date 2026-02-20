@@ -7,11 +7,11 @@ import { authClient } from '@/auth';
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
 import {SiteHeader} from "@/components/site-header";
+import {HeaderActionsProvider} from "@/components/header-actions";
 import css from '@/styles/admin.css?url';
 
 export const Route = createFileRoute('/admin')({
     component: RouteComponent,
-    ssr: false,
     head: () => ({
         meta: [{ name: 'robots', content: 'noindex, nofollow' }],
         links: [{ rel: 'stylesheet', href: css }]
@@ -42,6 +42,7 @@ function RouteComponent() {
             Link={({ href, ...props }) => <Link to={href} {...props} />}
         >
             <SignedIn>
+                <HeaderActionsProvider>
                 <SidebarProvider
                     style={
                         {
@@ -60,6 +61,7 @@ function RouteComponent() {
                         </div>
                     </SidebarInset>
                 </SidebarProvider>
+                </HeaderActionsProvider>
             </SignedIn>
             <SignedOut>
                 <RedirectToSignIn />

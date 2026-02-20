@@ -6,6 +6,7 @@ import {
 } from "@tabler/icons-react";
 
 import type {CategoryTreeItem} from "@/lib/server/category";
+import { HeaderActionsSlot } from "@/components/header-actions";
 import {  getCategoryTree } from "@/lib/server/category";
 import {
     Table,
@@ -85,18 +86,14 @@ function CategoriesListPage() {
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">Kategoriler</h1>
-                </div>
-                <Button asChild>
+            <HeaderActionsSlot>
+                <Button asChild size="sm">
                     <Link to="/admin/categories/create">
                         <IconPlus className="size-4" />
                         Kategori Ekle
                     </Link>
                 </Button>
-            </div>
+            </HeaderActionsSlot>
 
             {/* Table */}
             <div className="rounded-lg border">

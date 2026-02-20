@@ -5,6 +5,7 @@ import {
     IconPlus,
     IconSearch,
 } from "@tabler/icons-react";
+import { HeaderActionsSlot } from "@/components/header-actions";
 
 import { getProperties } from "@/lib/server/property";
 import { listingStatusOptions } from "@/lib/validations/property";
@@ -75,18 +76,14 @@ function PropertiesListPage() {
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">İlanlar</h1>
-                </div>
-                <Button asChild>
+            <HeaderActionsSlot>
+                <Button asChild size="sm">
                     <Link to="/admin/properties/create">
                         <IconPlus className="size-4" />
                         İlan Ekle
                     </Link>
                 </Button>
-            </div>
+            </HeaderActionsSlot>
 
             {/* Search */}
             <div className="flex items-center gap-4">

@@ -56,7 +56,8 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {EditorField} from "@/components/admin/EditorField.tsx";
+import { EditorField } from "@/components/admin/EditorField";
+import { HeaderActionsSlot } from "@/components/header-actions";
 
 export interface PropertyFormInitialData extends PropertyFormValues {
     id: string;
@@ -596,18 +597,13 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
         ? (isSubmitting ? "Kaydediliyor..." : "İlanı Kaydet")
         : (isSubmitting ? "Kaydediliyor..." : "Değişiklikleri Kaydet");
 
-    const pageTitle = mode === "create" ? "İlan Ekle" : "İlanı Düzenle";
-
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">{pageTitle}</h1>
-                </div>
+            <HeaderActionsSlot>
                 {(mode === "edit" && onDelete) && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <Button variant="destructive" disabled={isDeleting}>
+                            <Button size="sm" variant="destructive" disabled={isDeleting}>
                                 <IconTrash className="size-4"/>
                                 {isDeleting ? "Siliniyor..." : "İlanı Sil"}
                             </Button>
@@ -632,7 +628,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                         </AlertDialogContent>
                     </AlertDialog>
                 )}
-            </div>
+            </HeaderActionsSlot>
 
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleFormSubmit)}>

@@ -2,6 +2,7 @@ import {Link, createFileRoute} from "@tanstack/react-router";
 import {useEffect, useState} from "react";
 import {IconEdit, IconLoader2, IconPlus, IconSearch} from "@tabler/icons-react";
 import type {BetterAuthUser} from "@/lib/client/user";
+import { HeaderActionsSlot } from "@/components/header-actions";
 import {listUsers} from "@/lib/client/user";
 import {Card, CardContent, CardHeader,} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
@@ -81,20 +82,18 @@ function UsersPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Kullanıcılar</h1>
-          <p className="text-muted-foreground">
-            Toplam {filteredUsers.length} kullanıcı
-          </p>
-        </div>
-        <Button asChild>
+      <HeaderActionsSlot>
+        <Button asChild size="sm">
           <Link to="/admin/users/create">
             <IconPlus className="mr-2 h-4 w-4" />
             Kullanıcı Ekle
           </Link>
         </Button>
-      </div>
+      </HeaderActionsSlot>
+
+      <p className="text-muted-foreground">
+        Toplam {filteredUsers.length} kullanıcı
+      </p>
 
       <Card>
         <CardHeader>

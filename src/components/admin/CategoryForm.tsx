@@ -42,6 +42,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { createFeature, getFeatures } from "@/lib/server/feature";
 import { getCategoryFeatures } from "@/lib/server/category";
+import { HeaderActionsSlot } from "@/components/header-actions";
 
 export interface CategoryFormInitialData extends CategoryFormValues {
     id: string;
@@ -216,7 +217,6 @@ export function CategoryForm({
         }
     };
 
-    const pageTitle = mode === "create" ? "Kategori Ekle" : "Kategori Düzenle";
     const submitButtonText =
         mode === "create"
             ? isSubmitting
@@ -228,14 +228,11 @@ export function CategoryForm({
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">{pageTitle}</h1>
-                </div>
-                {mode === "edit" && onDelete && (
+            <HeaderActionsSlot>
+                {(mode === "edit" && onDelete) && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
-                            <Button variant="destructive" disabled={isDeleting}>
+                            <Button size="sm" variant="destructive" disabled={isDeleting}>
                                 <IconTrash className="size-4" />
                                 {isDeleting ? "Siliniyor..." : "Kategoriyi Sil"}
                             </Button>
@@ -263,7 +260,7 @@ export function CategoryForm({
                         </AlertDialogContent>
                     </AlertDialog>
                 )}
-            </div>
+            </HeaderActionsSlot>
 
             <Form {...form}>
                 <form

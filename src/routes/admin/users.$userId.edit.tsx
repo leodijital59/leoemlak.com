@@ -111,13 +111,6 @@ function EditUserPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Kullanıcı Düzenle</h1>
-        <p className="text-muted-foreground">
-          Kullanıcı bilgilerini güncelleyin veya yasaklayın
-        </p>
-      </div>
-
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle>Kullanıcı Bilgileri</CardTitle>

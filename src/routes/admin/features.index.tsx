@@ -3,6 +3,7 @@ import {
     IconEdit,
     IconPlus,
 } from "@tabler/icons-react";
+import { HeaderActionsSlot } from "@/components/header-actions";
 
 import { getFeatures } from "@/lib/server/feature";
 import {
@@ -30,18 +31,14 @@ function FeaturesListPage() {
 
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6">
-            {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold">Özellikler</h1>
-                </div>
-                <Button asChild>
+            <HeaderActionsSlot>
+                <Button asChild size="sm">
                     <Link to="/admin/features/create">
                         <IconPlus className="size-4" />
                         Özellik Ekle
                     </Link>
                 </Button>
-            </div>
+            </HeaderActionsSlot>
 
             {/* Table */}
             <div className="rounded-lg border">
