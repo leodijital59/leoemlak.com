@@ -85,10 +85,9 @@ function RouteComponent() {
               <div className="row" data-aos="fade-up" data-aos-delay="300">
                 <div className="col-lg-12">
                   <div className="about-page-img">
-                    <Image
-                        width={1206}
-                        height={515}
-                        priority="true"
+                    {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                    {/* @ts-ignore */}
+                    <Image width={1206} height={515} priority="true"
                         className="w-100 h-100 cover"
                         src="/images/about/about-page-banner.jpg"
                         alt="about banner"

@@ -37,8 +37,7 @@ const Partner = () => {
                 <Image
                   width={122}
                   height={24}
-                  style={{ objectFit: "contain" }}
-                  className="wa m-auto"
+                  className="wa m-auto object-fit-contain"
                   src={`/images/partners/${imageName}`}
                   alt={imageName}
                 />

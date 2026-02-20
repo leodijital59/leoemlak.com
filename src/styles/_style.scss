@@ -220,8 +220,11 @@ li {
 .footer-style1 {
     background-color: var(--headings-color);
 }
-.footer-style1.at-home2 {
+.footer-style1.at-home2:not(.homepage) {
     padding-top: 80px;
+}
+.footer-style1.at-home2:is(.homepage) {
+    padding-top: 200px;
 }
 .footer-style1.at-home4 {
     background-color: #ffffff;

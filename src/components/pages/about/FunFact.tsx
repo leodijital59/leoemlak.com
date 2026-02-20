@@ -46,7 +46,7 @@ const FunFact = () => {
   );
 };
 
-const CounterWithAnimation = ({ end }) => {
+const CounterWithAnimation = ({ end }: any) => {
   const countRef = useRef(null);
   const [inView, setInView] = useState(false);
 

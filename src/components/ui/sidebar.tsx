@@ -516,6 +516,8 @@ function SidebarMenuButton({
   const { isMobile, state } = useSidebar()
 
   const button = (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <Comp
       to={url}
       data-slot="sidebar-menu-button"

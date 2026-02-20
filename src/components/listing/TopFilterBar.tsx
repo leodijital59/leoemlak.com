@@ -1,5 +1,5 @@
 import { sortOptions } from "@/lib/validations/property-search";
-import {cn} from "@udecode/cn";
+import { cn } from "@/lib/utils";
 
 type ViewMode = "grid" | "map";
 

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import {BedDouble, Building, Grid2x2, MapPin} from "lucide-react";
 import type {MapRef} from "@/components/ui/map";
-import type {PropertyData, PropertyImage} from "@/types/property-display";
+import type {PropertyImage, PropertyResult} from "@/types/property-display";
 import {
   Map,
   MapControls,
@@ -13,14 +13,8 @@ import {
 import {formatCapitilized, formatPrice} from "@/lib/format";
 import {formatArea, formatFloor} from "@/lib/formatters.ts";
 
-interface MapProperty {
-  property: PropertyData;
-  images: PropertyImage[];
-  category: { id: string; name: string } | null;
-}
-
 interface PropertyMapViewProps {
-  properties: MapProperty[];
+  properties: PropertyResult[];
 }
 
 const PropertyMapView = ({ properties }: PropertyMapViewProps) => {

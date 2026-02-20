@@ -42,11 +42,6 @@ const sehirIdToName = new Map<string, string>(
   sehirler.map((s) => [s.sehir_id, s.sehir_adi])
 );
 
-// Build ilce_id to ilce_adi map for lookups
-const ilceIdToName = new Map<string, string>(
-  ilceler.map((i) => [i.ilce_id, i.ilce_adi])
-);
-
 // Group districts by province (sehir_adi -> ilce_adi[])
 export const districtsByProvince: Record<string, string[]> = ilceler.reduce(
   (acc, ilce) => {

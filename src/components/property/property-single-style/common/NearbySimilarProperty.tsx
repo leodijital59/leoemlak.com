@@ -1,8 +1,8 @@
-import listings from "@/data/listings";
-import Image from "@/components/common/Image";
 import { Link } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import listings from "@/data/listings";
+import Image from "@/components/common/Image";
 
 const NearbySimilarProperty = () => {
   return (
@@ -60,7 +60,7 @@ const NearbySimilarProperty = () => {
                 </div>
                 <div className="list-content">
                   <h6 className="list-title">
-                    <Link href={`/single-v1/${listing.id}`}>
+                    <Link to="/">
                       {listing.title}
                     </Link>
                   </h6>

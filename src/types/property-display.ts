@@ -15,3 +15,9 @@ export type PropertyDetailData = {
   images: PropertyImage[]
   features: PropertyFeature[]
 }
+
+export interface PropertyResult {
+  property: PropertyData;
+  images: PropertyImage[];
+  category: { id: string; name: string } | null;
+}

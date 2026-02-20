@@ -22,7 +22,7 @@ const PropertyGallery = ({ images }: Props) => {
   });
 
   // Show placeholder if no images
-  if (!images || images.length === 0) {
+  if (images.length === 0) {
     return (
       <div className="ps-v6-slider nav_none mt30">
         <div className="text-center p-5 bg-light bdrs12">
@@ -58,11 +58,10 @@ const PropertyGallery = ({ images }: Props) => {
                   width={1206}
                   height={671}
                 >
-                  {({ ref, open }) => (
+                  {({ open }) => (
                     <Image
                       width={1206}
                       height={671}
-                      ref={ref}
                       onClick={open}
                       src={item.url}
                       alt="gallery"

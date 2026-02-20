@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { PropertyData } from "@/types/property-display";
 import Image from "@/components/common/Image";
 import { listingTypeOptions } from "@/lib/validations/property";
-import {formatCapitilized, formatPrice} from "@/lib/format";
+import {formatPrice} from "@/lib/format";
 import {formatAddress, formatArea, formatFloor} from "@/lib/formatters.ts";
 
 interface PropertyImage {

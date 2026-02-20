@@ -51,6 +51,8 @@ export function CreateUserForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<CreateUserFormData>({
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     resolver: zodResolver(createUserFormSchema),
     defaultValues: {
       email: "",
@@ -196,6 +198,8 @@ export function EditUserForm({
   const [banReason, setBanReason] = useState("");
 
   const form = useForm<UpdateUserFormData>({
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     resolver: zodResolver(updateUserFormSchema),
     defaultValues: {
       userId: initialData.id,

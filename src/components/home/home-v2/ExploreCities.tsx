@@ -1,7 +1,7 @@
-import Image from "@/components/common/Image";
 import { Link } from "@tanstack/react-router";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import Image from "@/components/common/Image";
 
 const ExploreCities = () => {
   const cities = [
@@ -75,7 +75,7 @@ const ExploreCities = () => {
         {cities.map((city) => (
           <SwiperSlide key={city.id}>
             <div className="item">
-              <Link href="/header-map-style">
+              <Link to="/">
                 <div className="feature-style2 mb30">
                   <div className="feature-img">
                     <Image

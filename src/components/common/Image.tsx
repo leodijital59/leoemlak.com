@@ -3,6 +3,6 @@ import type {ImageProps} from '@unpic/react';
 
 export default function Image(props: ImageProps) {
   return (
-    <UnpicImage {...props} />
+    <UnpicImage priority {...props} />
   )
 }

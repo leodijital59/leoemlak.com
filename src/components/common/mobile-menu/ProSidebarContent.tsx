@@ -28,13 +28,13 @@ const ProSidebarContent = () => {
                     isParentActive(subItem.subMenu, path) ? "active" : ""
                   }
                 >
-                  {subItem.subMenu.map((nestedItem: any, nestedIndex: number) => (
+                  {subItem.subMenu.map((nestedItem, nestedIndex) => (
                     <MenuItem
                       key={nestedIndex}
                       component={
                         <Link
-                          className={nestedItem.path == path ? "active" : ""}
-                          to={nestedItem.path}
+                          className={nestedItem.href == path ? "active" : ""}
+                          to={nestedItem.href}
                         />
                       }
                     >
@@ -47,8 +47,8 @@ const ProSidebarContent = () => {
                   key={subIndex}
                   component={
                     <Link
-                      className={subItem.path == path ? "active" : ""}
-                      to={subItem.path}
+                      className={subItem.href == path ? "active" : ""}
+                      to={subItem.href}
                     />
                   }
                 >
@@ -62,8 +62,8 @@ const ProSidebarContent = () => {
                 key={index}
                 component={
                     <Link
-                        className={item.path == path ? "active" : ""}
-                        to={item.path}
+                        className={item.href == path ? "active" : ""}
+                        to={item.href}
                     />
                 }
             >

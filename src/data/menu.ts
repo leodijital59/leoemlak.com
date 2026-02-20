@@ -1,18 +1,20 @@
+import {NavItem} from "@/types";
+
 export default [
   {
     label: "Ana Sayfa",
-    path: "/",
+    href: "/",
   },
   {
     label: "İlanlar",
-    path: "/properties",
+    href: "/properties",
   },
   {
     label: "Hakkımızda",
-    path: "/about",
+    href: "/about",
   },
   {
     label: "İletişim",
-    path: "/contact",
+    href: "/contact",
   }
-];
+] as NavItem[];

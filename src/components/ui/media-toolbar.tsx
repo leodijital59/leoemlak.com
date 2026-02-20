@@ -20,7 +20,6 @@ import {
     useSelected,
 } from 'platejs/react';
 
-import { CaptionButton } from './caption';
 import type { WithRequiredKey } from 'platejs';
 import { Button, buttonVariants } from '@/components/ui/button';
 import {
@@ -62,7 +61,6 @@ export function MediaToolbar({
         if (!open && isEditing) {
             FloatingMediaStore.set('isEditing', false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
 
     const element = useElement();
@@ -97,10 +95,6 @@ export function MediaToolbar({
                         >
                             Edit link
                         </FloatingMediaPrimitive.EditButton>
-
-                        <CaptionButton size="sm" variant="ghost">
-                            Caption
-                        </CaptionButton>
 
                         <Separator orientation="vertical" className="mx-1 h-6" />
 

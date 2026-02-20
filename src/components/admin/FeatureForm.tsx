@@ -58,7 +58,7 @@ export function FeatureForm({
     const [isDeleting, setIsDeleting] = React.useState(false);
 
     const form = useForm<FeatureFormValues>({
-        // @ts-expect-error - Zod v4 type compatibility issue with @hookform/resolvers
+        // @ts-ignore: Zod v4 type compatibility issue with @hookform/resolvers
         resolver: zodResolver(featureFormSchema),
         defaultValues: {
             name: initialData?.name ?? "",

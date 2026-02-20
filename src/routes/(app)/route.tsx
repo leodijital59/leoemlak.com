@@ -1,8 +1,9 @@
-import {Outlet, createFileRoute} from '@tanstack/react-router'
+import {Outlet, createFileRoute, useLocation} from '@tanstack/react-router'
 import Header from "@/components/home/home-v2/Header.tsx";
 import MobileMenu from "@/components/common/mobile-menu";
 import Footer from "@/components/common/default-footer";
 import css from '@/styles/main.scss?url';
+import {cn} from "@/lib/utils";
 
 export const Route = createFileRoute('/(app)')({
     component: AppLayoutComponent,
@@ -14,6 +15,10 @@ export const Route = createFileRoute('/(app)')({
 })
 
 function AppLayoutComponent() {
+    const pathname = useLocation({
+        select: state => state.pathname
+    })
+
     return (
         <div className="wrapper ovh">
             <Header/>
@@ -22,7 +27,9 @@ function AppLayoutComponent() {
 
             <Outlet />
 
-            <section className="footer-style1 at-home2 pb-0">
+            <section className={cn("footer-style1 at-home2 pb-0", {
+                "homepage": pathname === "/"
+            })}>
                 <Footer/>
             </section>
         </div>

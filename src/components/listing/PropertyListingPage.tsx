@@ -6,26 +6,13 @@ import TopFilterBar from "./TopFilterBar";
 import Pagination from "./Pagination";
 import type { ViewMode } from "./TopFilterBar";
 import type { PropertySearchParams } from "@/lib/validations/property-search";
-import type { PropertyData } from "@/types/property-display";
+import type {PropertyResult} from "@/types/property-display";
 import { usePropertyFilters } from "@/lib/client/use-property-filters";
 
 interface Category {
   id: string;
   name: string;
   parentId: string | null;
-}
-
-interface PropertyImage {
-  id: string;
-  url: string;
-  order: number;
-  isMainImage: boolean;
-}
-
-interface PropertyResult {
-  property: PropertyData;
-  images: PropertyImage[];
-  category: { id: string; name: string } | null;
 }
 
 interface SearchResult {

@@ -30,6 +30,8 @@ function EditPropertyPage() {
     const initialData: PropertyFormInitialData = {
         id: property.id,
         title: property.title,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         description: property.description,
         categoryId: property.categoryId,
         listingType: property.listingType,

@@ -1,3 +1,4 @@
+import type {CSSProperties} from "react";
 
 interface ModalVideoProps {
   videoId?: string
@@ -58,7 +59,7 @@ const overlayStyle = {
   alignItems: "center",
   zIndex: 1008,
   transition: "0.4s",
-};
+} as CSSProperties;
 
 const modalStyle = {
   position: "relative",
@@ -68,7 +69,7 @@ const modalStyle = {
   borderRadius: "4px",
   overflow: "hidden",
   boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.2)",
-};
+} as CSSProperties;
 
 const closeButtonStyle = {
   position: "absolute",
@@ -80,14 +81,14 @@ const closeButtonStyle = {
   color: "#fff",
   cursor: "pointer",
   zIndex: 1001,
-};
+} as CSSProperties;
 
 const responsiveIframeContainerStyle = {
   position: "relative",
   paddingBottom: "56.25%", // 16:9 aspect ratio
   height: 0,
   overflow: "hidden",
-};
+} as CSSProperties;
 
 const iframeStyle = {
   position: "absolute",
@@ -95,6 +96,6 @@ const iframeStyle = {
   left: 0,
   width: "100%",
   height: "100%",
-};
+} as CSSProperties;
 
 export default ModalVideo;

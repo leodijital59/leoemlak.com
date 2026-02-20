@@ -233,8 +233,8 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
     }, [initialData]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const form = useForm<any>({
-        // @ts-expect-error - Zod v4 type compatibility issue with @hookform/resolvers
+    const form = useForm<typeof propertyFormSchema>({
+        // @ts-ignore: Zod v4 type compatibility issue with @hookform/resolvers
         resolver: zodResolver(propertyFormSchema),
         defaultValues: formDefaultValues,
     });

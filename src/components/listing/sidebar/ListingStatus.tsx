@@ -1,7 +1,7 @@
 'use client'
 
 
-const ListingStatus = ({filterFunctions}) => {
+const ListingStatus = ({filterFunctions}: any) => {
   const options = [
     { id: "flexRadioDefault3", label: "All" , defaultChecked: true },
     { id: "flexRadioDefault1", label: "Buy" },
@@ -15,18 +15,18 @@ const ListingStatus = ({filterFunctions}) => {
         <div
           className="form-check d-flex align-items-center mb10"
           key={option.id}
-         
+
         >
           <input
             className="form-check-input"
             type="radio"
             checked={filterFunctions?.listingStatus == option.label}
-            
+
             onChange={()=>filterFunctions.handlelistingStatus(option.label)}
-           
-            
-   
-            
+
+
+
+
           />
           <label className="form-check-label" htmlFor={option.id}>
             {option.label}
