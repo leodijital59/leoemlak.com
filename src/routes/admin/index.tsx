@@ -7,7 +7,7 @@ export const Route = createFileRoute('/admin/')({
   component: AdminDashboardPage,
   ssr: "data-only",
   staticData: {
-    title: "Dashboard",
+    title: "Giriş",
   }
 });
 

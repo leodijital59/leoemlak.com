@@ -31,7 +31,7 @@ const navigation: {
 } = {
   main: [
     {
-      title: "Dashboard",
+      title: "Giriş",
       url: "/admin",
       icon: IconDashboard,
     },

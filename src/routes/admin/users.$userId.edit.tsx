@@ -1,15 +1,19 @@
 import {createFileRoute, useNavigate} from "@tanstack/react-router";
 import {toast} from "sonner";
 import {useEffect, useState} from "react";
-import type {UpdateUserFormData} from "@/lib/validations/user";
-import {EditUserForm} from "@/components/admin/UserForm";
-import {banUser, getUserById, unbanUser, updateUser, type BetterAuthUser} from "@/lib/client/user";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
 import {IconLoader2} from "@tabler/icons-react";
+import type {UpdateUserFormData} from "@/lib/validations/user";
+import type {BetterAuthUser} from "@/lib/client/user";
+import {EditUserForm} from "@/components/admin/UserForm";
+import {banUser, getUserById, unbanUser, updateUser} from "@/lib/client/user";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
 export const Route = createFileRoute("/admin/users/$userId/edit")({
   component: EditUserPage,
+  staticData: {
+    title: "Kullanıcı Düzenle",
+  },
 });
 
 function EditUserPage() {

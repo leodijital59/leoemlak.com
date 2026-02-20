@@ -9,6 +9,9 @@ import { PropertyForm } from "@/components/admin/PropertyForm";
 
 export const Route = createFileRoute("/admin/properties/$propertyId/edit")({
     component: EditPropertyPage,
+    staticData: {
+        title: "İlan Düzenle",
+    },
     loader: async ({ params }) => {
         const [{ property, images, features }, categories, allFeatures] = await Promise.all([
             getPropertyById({ data: params.propertyId }),
@@ -47,12 +50,6 @@ function EditPropertyPage() {
         totalFloors: property.totalFloors ?? null,
         floorNumber: property.floorNumber ?? null,
         heatingType: property.heatingType ?? null,
-        hasBalconies: property.hasBalconies ?? false,
-        hasElevator: property.hasElevator ?? false,
-        hasParking: property.hasParking ?? false,
-        hasSecurity: property.hasSecurity ?? false,
-        isFurnished: property.isFurnished ?? false,
-        isWithinSite: property.isWithinSite ?? false,
         videoUrl: property.videoUrl ?? undefined,
         images: images.map((img) => ({
             id: img.id,

@@ -13,6 +13,9 @@ import {
 
 export const Route = createFileRoute("/admin/users/create")({
   component: CreateUserPage,
+  staticData: {
+    title: "Kullanıcı Ekle",
+  },
 });
 
 function CreateUserPage() {

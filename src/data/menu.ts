@@ -1,18 +1,18 @@
 export default [
   {
-    label: "Home",
+    label: "Ana Sayfa",
     path: "/",
   },
   {
-    label: "Properties",
+    label: "İlanlar",
     path: "/properties",
   },
   {
-    label: "About",
+    label: "Hakkımızda",
     path: "/about",
   },
   {
-    label: "Contact",
+    label: "İletişim",
     path: "/contact",
   }
 ];

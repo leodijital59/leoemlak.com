@@ -29,7 +29,7 @@ export const propertyFormSchema = z.object({
   // Temel Bilgiler
   title: z.string().min(3, "Başlık en az 3 karakter olmalıdır"),
   description: z.string().min(10, "Açıklama en az 10 karakter olmalıdır"),
-  categoryId: z.string().uuid({ message: "Kategori seçiniz" }),
+  categoryId: z.uuid({ message: "Kategori seçiniz" }),
   listingType: z.enum(listingTypes, { message: "İlan türü seçiniz" }),
   listingStatus: z.enum(listingStatuses).default("active"),
 

@@ -13,9 +13,8 @@ export const Route = createFileRoute('/admin')({
     component: RouteComponent,
     ssr: false,
     head: () => ({
-        links: [
-            { rel: 'stylesheet', href: css }
-        ]
+        meta: [{ name: 'robots', content: 'noindex, nofollow' }],
+        links: [{ rel: 'stylesheet', href: css }]
     })
 })
 
