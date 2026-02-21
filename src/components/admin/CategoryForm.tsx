@@ -144,7 +144,6 @@ export function CategoryForm({
     }, [categories, mode, initialData]);
 
     const form = useForm<CategoryFormValues>({
-        // @ts-ignore: Zod v4 type compatibility issue with @hookform/resolvers
         resolver: zodResolver(categoryFormSchema),
         defaultValues: {
             name: initialData?.name ?? "",

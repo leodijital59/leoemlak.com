@@ -31,32 +31,32 @@ export const propertyFormSchema = z.object({
   description: z.string().min(10, "Açıklama en az 10 karakter olmalıdır"),
   categoryId: z.uuid({ message: "Kategori seçiniz" }),
   listingType: z.enum(listingTypes, { message: "İlan türü seçiniz" }),
-  listingStatus: z.enum(listingStatuses).default("active"),
+  listingStatus: z.enum(listingStatuses),
 
   // Fiyat
-  price: z.coerce.number().positive("Fiyat pozitif bir sayı olmalıdır"),
-  pricePerSqm: z.coerce.number().positive().optional().nullable(),
+  price: z.number().positive("Fiyat pozitif bir sayı olmalıdır"),
+  pricePerSqm: z.number().positive().optional().nullable(),
 
   // Konum
   province: z.string().min(1, "İl zorunludur"),
   district: z.string().min(1, "İlçe zorunludur"),
   neighborhood: z.string().min(1, "Mahalle zorunludur"),
-  latitude: z.coerce.number().optional().nullable(),
-  longitude: z.coerce.number().optional().nullable(),
+  latitude: z.number().optional().nullable(),
+  longitude: z.number().optional().nullable(),
 
   // Metrekare
-  grossArea: z.coerce.number().int().positive().optional().nullable(),
-  netArea: z.coerce.number().int().positive().optional().nullable(),
-  landArea: z.coerce.number().int().positive().optional().nullable(),
+  grossArea: z.number().int().positive().optional().nullable(),
+  netArea: z.number().int().positive().optional().nullable(),
+  landArea: z.number().int().positive().optional().nullable(),
 
   // Oda
-  rooms: z.coerce.number().int().positive().optional().nullable(),
-  bathrooms: z.coerce.number().int().positive().optional().nullable(),
+  rooms: z.number().int().positive().optional().nullable(),
+  bathrooms: z.number().int().positive().optional().nullable(),
 
   // Bina
-  buildingAge: z.coerce.number().int().positive().optional().nullable(),
-  totalFloors: z.coerce.number().int().positive().optional().nullable(),
-  floorNumber: z.coerce.number().int().optional().nullable(),
+  buildingAge: z.number().int().positive().optional().nullable(),
+  totalFloors: z.number().int().positive().optional().nullable(),
+  floorNumber: z.number().int().optional().nullable(),
   heatingType: z.enum(heatingTypes).optional().nullable(),
 
   // Medya

@@ -7,13 +7,14 @@ import {useEffect} from "react";
 import type { SubmitHandler } from "react-hook-form";
 import type { ExistingImage, ImageItem } from "@/components/admin/ImageUpload";
 import type {PropertyFormValues} from "@/lib/validations/property";
+import type {PropertyFeature, PropertyImage} from "@/types/property-display";
 import { createFeature } from "@/lib/server/feature";
 import { getCategoryFeatures } from "@/lib/server/category";
 import {
     heatingTypeOptions,
     listingStatusOptions,
     listingTypeOptions,
-    propertyFormSchema,
+    propertyFormSchema
 } from "@/lib/validations/property";
 import {
     Form,
@@ -61,16 +62,8 @@ import { HeaderActionsSlot } from "@/components/header-actions";
 
 export interface PropertyFormInitialData extends PropertyFormValues {
     id: string;
-    images: {
-        id: string;
-        url: string;
-        isMainImage: boolean;
-        order: number;
-    }[];
-    propertyFeatures?: {
-        featureId: string;
-        value: boolean;
-    }[];
+    images: PropertyImage[];
+    propertyFeatures?: PropertyFeature[];
 }
 
 export interface CategoryOption {
@@ -153,8 +146,8 @@ const defaultValues = {
     title: "",
     description: JSON.stringify([{ type: "p", children: [{ text: "" }] }]),
     categoryId: undefined as string | undefined,
-    listingType: undefined as string | undefined,
-    listingStatus: "active",
+    listingType: "sold" as "sold" | "rented",
+    listingStatus: "active" as "active" | "passive",
     price: undefined as number | undefined,
     pricePerSqm: undefined as number | undefined,
     province: "",
@@ -170,13 +163,7 @@ const defaultValues = {
     buildingAge: undefined as number | undefined,
     totalFloors: undefined as number | undefined,
     floorNumber: undefined as number | undefined,
-    heatingType: undefined as string | undefined,
-    hasBalconies: false,
-    hasElevator: false,
-    hasParking: false,
-    hasSecurity: false,
-    isFurnished: false,
-    isWithinSite: false,
+    heatingType: undefined as "Yok" | "Soba" | "Dogalgaz" | "Klima" | "Merkezi" | "Kombi" | "Yerden" | "Elektrik" | null | undefined,
     videoUrl: undefined as string | undefined,
 };
 
@@ -232,9 +219,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
         };
     }, [initialData]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const form = useForm<typeof propertyFormSchema>({
-        // @ts-ignore: Zod v4 type compatibility issue with @hookform/resolvers
+    const form = useForm<PropertyFormValues>({
         resolver: zodResolver(propertyFormSchema),
         defaultValues: formDefaultValues,
     });
@@ -1266,6 +1251,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                                     <Input
                                                         placeholder="https://youtube.com/watch?v=..."
                                                         {...field}
+                                                        value={field.value ?? ""}
                                                     />
                                                 </FormControl>
                                                 <FormMessage />

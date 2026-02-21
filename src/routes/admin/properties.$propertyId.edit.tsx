@@ -30,9 +30,7 @@ function EditPropertyPage() {
     const initialData: PropertyFormInitialData = {
         id: property.id,
         title: property.title,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        description: property.description,
+        description: property.description ?? "",
         categoryId: property.categoryId,
         listingType: property.listingType,
         listingStatus: property.listingStatus,
@@ -58,10 +56,12 @@ function EditPropertyPage() {
             url: img.url,
             isMainImage: img.isMainImage,
             order: img.order,
+            propertyId: property.id,
         })),
         propertyFeatures: features.map((f) => ({
             featureId: f.featureId,
             value: f.value,
+            featureName: f.featureName,
         })),
     };
 
