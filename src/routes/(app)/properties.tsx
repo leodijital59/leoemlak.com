@@ -19,6 +19,7 @@ export const Route = createFileRoute("/(app)/properties")({
     ]);
     return { searchResult, categories, locations, features };
   },
+  staleTime: 900_000,
   component: ListingsPage,
   staticData: {
     description: 'Türkiye genelinde satılık ve kiralık gayrimenkul ilanları. Daire, villa, arsa ve işyeri ilanları.',

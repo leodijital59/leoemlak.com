@@ -13,6 +13,7 @@ import NotFound from "@/components/NotFound.tsx";
 import {formatAddress} from "@/lib/formatters.ts";
 
 export const Route = createFileRoute('/(app)/property/$id')({
+  staleTime: 900_000,
   component: PropertyDetailPage,
   loader: async ({ params }) => {
     try {
