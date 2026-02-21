@@ -5,6 +5,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import Aos from 'aos'
 import { useEffect } from 'react'
 import ScrollToTop from '@/components/common/ScrollTop'
+import { Analytics } from '@vercel/analytics/react'
 
 declare module "@tanstack/react-router" {
   interface StaticDataRouteOption {
@@ -102,6 +103,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             ]}
         />
         <ScrollToTop />
+        <Analytics />
         <Scripts />
       </body>
     </html>
