@@ -4,8 +4,8 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Aos from 'aos'
 import { useEffect } from 'react'
-import ScrollToTop from '@/components/common/ScrollTop'
 import { Analytics } from '@vercel/analytics/react'
+import ScrollToTop from '@/components/common/ScrollTop'
 
 declare module "@tanstack/react-router" {
   interface StaticDataRouteOption {
