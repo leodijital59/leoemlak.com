@@ -58,11 +58,12 @@ const PropertyGallery = ({ images }: Props) => {
                   width={1206}
                   height={671}
                 >
-                  {({ open }) => (
+                  {({ ref, open }) => (
                     <Image
                       width={1206}
                       height={671}
                       onClick={open}
+                      ref={ref}
                       src={item.url}
                       alt="gallery"
                       className="w-100 h-auto bdrs12 pointer"
