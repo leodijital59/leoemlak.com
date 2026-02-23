@@ -1,10 +1,8 @@
-'use client';
-
-import { TextAlignPlugin } from '@platejs/basic-styles/react';
+import { BaseTextAlignPlugin } from '@platejs/basic-styles';
 import { KEYS } from 'platejs';
 
-export const AlignKit = [
-  TextAlignPlugin.configure({
+export const BaseAlignKit = [
+  BaseTextAlignPlugin.configure({
     inject: {
       nodeProps: {
         defaultNodeValue: 'start',

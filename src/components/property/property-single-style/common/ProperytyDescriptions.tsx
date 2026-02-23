@@ -1,5 +1,6 @@
 import {createSlateEditor} from "platejs";
 import {PlateStatic} from "platejs/static";
+import {BaseEditorKit} from "@/components/editor/editor-base-kit";
 
 type Props = {
   description: string
@@ -8,14 +9,12 @@ type Props = {
 const ProperytyDescriptions = ({ description }: Props) => {
 
   const editor = createSlateEditor({
-    plugins: [], // Add your base plugins
+    plugins: BaseEditorKit,
     value: JSON.parse(description),
   });
 
   return (
-    <div className="text mb10">
-      <PlateStatic editor={editor}/>
-    </div>
+    <PlateStatic editor={editor} />
   );
 };
 

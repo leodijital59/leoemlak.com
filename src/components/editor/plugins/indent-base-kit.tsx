@@ -1,10 +1,8 @@
-'use client';
-
-import { IndentPlugin } from '@platejs/indent/react';
+import { BaseIndentPlugin } from '@platejs/indent';
 import { KEYS } from 'platejs';
 
-export const IndentKit = [
-  IndentPlugin.configure({
+export const BaseIndentKit = [
+  BaseIndentPlugin.configure({
     inject: {
       targetPlugins: [
         ...KEYS.heading,
@@ -12,7 +10,6 @@ export const IndentKit = [
         KEYS.blockquote,
         KEYS.codeBlock,
         KEYS.toggle,
-        KEYS.img,
       ],
     },
     options: {

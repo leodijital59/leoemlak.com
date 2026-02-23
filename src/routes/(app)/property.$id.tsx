@@ -9,8 +9,9 @@ import PropertyVideo from '@/components/property/property-single-style/common/Pr
 import ProperytyDescriptions from '@/components/property/property-single-style/common/ProperytyDescriptions'
 import PropertyGallery from '@/components/property/property-single-style/single-v8/PropertyGallery'
 import { getPropertyById } from '@/lib/server/property'
-import NotFound from "@/components/NotFound.tsx";
-import {formatAddress} from "@/lib/formatters.ts";
+import NotFound from "@/components/NotFound";
+import {formatAddress} from "@/lib/formatters";
+import css from '@/styles/map.css?url';
 
 export const Route = createFileRoute('/(app)/property/$id')({
   staleTime: 900_000,
@@ -75,6 +76,9 @@ export const Route = createFileRoute('/(app)/property/$id')({
         { name: 'twitter:title', content: title },
         { name: 'twitter:description', content: description },
         ...(mainImage ? [{ name: 'twitter:image', content: mainImage.url }] : []),
+      ],
+      links: [
+        { rel: 'stylesheet', href: css }
       ],
       scripts: [{
         type: 'application/ld+json',
