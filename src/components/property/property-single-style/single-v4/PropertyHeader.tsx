@@ -1,5 +1,6 @@
 import type { PropertyData } from '@/types/property-display'
 import {formatArea, formatFloor, formatPrice} from '@/lib/formatters'
+import {ClientOnly} from "@tanstack/react-router";
 
 type Props = {
   property: PropertyData
@@ -7,7 +8,7 @@ type Props = {
 
 const PropertyHeader = ({ property }: Props) => {
   return (
-    <>
+    <ClientOnly>
       <div className="col-lg-8">
         <div className="single-property-content mb30-md">
           <h3 className="sp-lg-title">{property.title}</h3>
@@ -43,7 +44,7 @@ const PropertyHeader = ({ property }: Props) => {
           </div>
         </div>
       </div>
-    </>
+    </ClientOnly>
   );
 };
 

@@ -856,6 +856,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                                 ref={mapRef}
                                                 center={markerPosition ? [markerPosition.lng, markerPosition.lat] : [35, 39]}
                                                 zoom={markerPosition ? 14 : 5}
+                                                theme="light"
                                             >
                                                 {markerPosition && <MapMarker
                                                     longitude={markerPosition.lng}
@@ -872,7 +873,7 @@ export function PropertyForm({ mode, initialData, categories, features, onSubmit
                                                     <MarkerContent>
                                                         <div className="cursor-move">
                                                             <MapPin
-                                                                className="fill-black stroke-white dark:fill-white"
+                                                                className="fill-black/10 stroke-black"
                                                                 size={28}
                                                             />
                                                         </div>

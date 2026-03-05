@@ -19,7 +19,7 @@ export const Route = createFileRoute("/(app)/properties")({
     ]);
     return { searchResult, categories, locations, features };
   },
-  staleTime: 900_000,
+  staleTime: import.meta.env.PROD ? 900_000 : 0,
   component: ListingsPage,
   staticData: {
     description: 'Türkiye genelinde satılık ve kiralık gayrimenkul ilanları. Daire, villa, arsa ve işyeri ilanları.',

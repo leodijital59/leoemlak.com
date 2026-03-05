@@ -6,7 +6,7 @@ type Props = {
   description: string
 }
 
-const ProperytyDescriptions = ({ description }: Props) => {
+const PropertyDescriptions = ({ description }: Props) => {
 
   const editor = createSlateEditor({
     plugins: BaseEditorKit,
@@ -18,4 +18,4 @@ const ProperytyDescriptions = ({ description }: Props) => {
   );
 };
 
-export default ProperytyDescriptions;
+export default PropertyDescriptions;

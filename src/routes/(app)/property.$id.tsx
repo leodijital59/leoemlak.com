@@ -1,20 +1,20 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import {formatCapitilized} from '@/lib/format'
 import NearbySimilarProperty from '@/components/property/property-single-style/common/NearbySimilarProperty'
-import PropertyAddress from '@/components/property/property-single-style/common/PropertyAddress'
 import PropertyDetails from '@/components/property/property-single-style/common/PropertyDetails'
 import PropertyFeaturesAminites from '@/components/property/property-single-style/common/PropertyFeaturesAminites'
 import PropertyHeader from "@/components/property/property-single-style/single-v4/PropertyHeader";
 import PropertyVideo from '@/components/property/property-single-style/common/PropertyVideo'
-import ProperytyDescriptions from '@/components/property/property-single-style/common/ProperytyDescriptions'
-import PropertyGallery from '@/components/property/property-single-style/single-v8/PropertyGallery'
+import PropertyDescriptions from '@/components/property/property-single-style/common/PropertyDescriptions.tsx'
+import PropertyGallery from '@/components/property/property-single-style/single-v6/PropertyGallery'
 import { getPropertyById } from '@/lib/server/property'
 import NotFound from "@/components/NotFound";
 import {formatAddress} from "@/lib/formatters";
 import css from '@/styles/map.css?url';
 
 export const Route = createFileRoute('/(app)/property/$id')({
-  staleTime: 900_000,
+  staleTime: import.meta.env.PROD ? 900_000 : 0,
+  ssr: false,
   component: PropertyDetailPage,
   loader: async ({ params }) => {
     try {
@@ -97,31 +97,21 @@ function PropertyDetailPage() {
 
         <section className="pt60 pb60 bgc-f7">
           <div className="container">
-            <div className="row">
+            <div className="row mb-4">
               <PropertyHeader property={property} />
             </div>
-            <PropertyGallery images={images} />
-          </div>
-        </section>
 
-        <section className="pt30 pb0 bgc-white">
-          <div className="container">
             <div className="row wrap gx-5">
               <div className="col-lg-8 order-last order-lg-first">
                 <div className="row gy-4">
+                  <PropertyGallery images={images} location={property.latitude && property.longitude ? `${property.latitude},${property.longitude}` : encodeURIComponent(formatAddress(property.province, property.district, property.neighborhood))} />
+
                   {property.description && (
                     <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30 overflow-hidden position-relative">
                       <h4 className="title fz17">İlan Açıklaması</h4>
-                      <ProperytyDescriptions description={property.description} />
+                      <PropertyDescriptions description={property.description} />
                     </div>
                   )}
-
-                  <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30 overflow-hidden position-relative">
-                    <h4 className="title fz17">Konum</h4>
-                    <div className="row">
-                      <PropertyAddress property={property} />
-                    </div>
-                  </div>
 
                   <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30 overflow-hidden position-relative">
                     <h4 className="title fz17">Özellikler</h4>
