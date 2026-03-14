@@ -2,25 +2,30 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import Image from "@/components/common/Image";
 
 const Partner = () => {
-  const partnerImages = ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png"];
+  const partnerImages = [
+    "sahibinden-logo.jpg",
+    "emlakjet-logo.png",
+    "hepsiemlak-logo.png",
+    "airbnb-logo.png",
+  ];
 
   return (
     <>
       <Swiper
         spaceBetween={10} // Adjust the spacing between items as per your preference
-        slidesPerView={6} // Default number of slides per view
+        slidesPerView={4} // Default number of slides per view
         breakpoints={{
           0: {
             slidesPerView: 2,
           },
           768: {
-            slidesPerView: 3,
+            slidesPerView: 2,
           },
           992: {
-            slidesPerView: 4,
+            slidesPerView: 3,
           },
           1200: {
-            slidesPerView: 6,
+            slidesPerView: 4,
           },
         }}
         loop

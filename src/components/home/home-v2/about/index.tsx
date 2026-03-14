@@ -13,7 +13,7 @@ const About = () => {
               width={591}
               height={768}
               className="w-100 h-100 cover img-1"
-              src="/images/about/about-2.png"
+              src="/images/about/about-2.jpg"
               alt="about"
             />
           </div>
