@@ -6,7 +6,8 @@ import CallToActions from "@/components/common/CallToActions";
 export const Route = createFileRoute('/(app)/contact')({
     staticData: {
         title: 'İletişim',
-        description: 'Bizimle iletişime geçin. Sorularınız, ofis lokasyonlarımız ve iletişim bilgilerimiz için.',
+        description: 'Tekirdağ, Çorlu ve çevre ilçelerdeki emlak ihtiyaçlarınız için LeoEmlak ile iletişime geçin.',
+        keywords: ['Çorlu emlak iletişim', 'Tekirdağ emlak ofisi', 'LeoEmlak iletişim', 'Çorlu gayrimenkul danışmanlığı'],
     },
     head: () => ({
         scripts: [{
@@ -16,7 +17,7 @@ export const Route = createFileRoute('/(app)/contact')({
                 '@type': 'ContactPage',
                 name: `İletişim - ${import.meta.env.VITE_APP_NAME}`,
                 inLanguage: 'tr-TR',
-                description: 'Bizimle iletişime geçin. Sorularınız, ofis lokasyonlarımız ve iletişim bilgilerimiz için.',
+                description: 'Tekirdağ, Çorlu ve çevre ilçelerdeki emlak ihtiyaçlarınız için LeoEmlak ile iletişime geçin.',
             }),
         }],
     }),
@@ -32,9 +33,9 @@ function RouteComponent() {
                 <iframe
                     className="home8-map contact-page"
                     loading="lazy"
-                    src="https://maps.google.com/maps?q=London%20Eye%2C%20London%2C%20United%20Kingdom&t=m&z=14&output=embed&iwloc=near"
-                    title="London Eye, London, United Kingdom"
-                    aria-label="London Eye, London, United Kingdom"
+                    src="https://maps.google.com/maps?q=Corlu%2C%20Tekirdag%2C%20Turkey&t=m&z=12&output=embed&iwloc=near"
+                    title="Çorlu, Tekirdağ"
+                    aria-label="Çorlu, Tekirdağ"
                 />
             </section>
 
@@ -44,7 +45,7 @@ function RouteComponent() {
                         <div className="col-lg-5 position-relative">
                             <div className="home8-contact-form default-box-shadow1 bdrs12 bdr1 p30 mb30-md bgc-white">
                                 <h4 className="form-title mb25">
-                                    Have questions? Get in touch!
+                                    Sorularınız mı var? Bize yazın.
                                 </h4>
                                 <Form />
                             </div>
@@ -52,13 +53,14 @@ function RouteComponent() {
 
                         <div className="col-lg-5 offset-lg-2">
                             <h2 className="mb30 text-capitalize">
-                                We’d love to hear <br className="d-none d-lg-block" />
-                                from you.
+                                Tekirdağ ve Çorlu'da <br className="d-none d-lg-block" />
+                                size yardımcı olmaya hazırız.
                             </h2>
                             <p className="text">
-                                We are here to answer any question you may have. As a partner of
-                                corporates, realton has more than 9,000 offices of all sizes and
-                                all potential of session.
+                                Satılık ya da kiralık ilan arıyor, bölgesel fiyat bilgisi almak istiyor
+                                veya yatırım için doğru ilçeyi belirlemeye çalışıyorsanız bizimle
+                                iletişime geçebilirsiniz. Çorlu başta olmak üzere Tekirdağ ilçelerinde
+                                güncel pazar bilgileriyle destek sunuyoruz.
                             </p>
                         </div>
                     </div>
@@ -75,10 +77,9 @@ function RouteComponent() {
                                 data-aos-delay="300"
                             >
                                 <div className="main-title text-center">
-                                    <h2 className="title">Visit Our Office</h2>
+                                    <h2 className="title">Hizmet Verdiğimiz Bölgeler</h2>
                                     <p className="paragraph">
-                                        Realton has more than 9,000 offices of all sizes and all
-                                        potential of session.
+                                        Çorlu merkezli olarak Tekirdağ'ın farklı ilçelerinde emlak danışmanlığı sağlıyoruz.
                                     </p>
                                 </div>
                             </div>

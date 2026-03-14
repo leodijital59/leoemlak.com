@@ -2,13 +2,13 @@ const Mission = () => {
   const missionData = [
     {
       icon: "flaticon-garden",
-      title: "Modern Villa",
-      description: "Nullam sollicitudin blandit Nullam maximus.",
+      title: "Yerel Bölge Uzmanlığı",
+      description: "Tekirdağ ilçelerindeki fiyat ve lokasyon dinamiklerine hakim bir yaklaşım sunuyoruz.",
     },
     {
       icon: "flaticon-secure-payment",
-      title: "Secure Payment",
-      description: "Nullam sollicitudin blandit Nullam maximus.",
+      title: "Güvenilir Süreç",
+      description: "İlan incelemeden danışmanlık aşamasına kadar şeffaf ve güven odaklı ilerliyoruz.",
     },
   ];
 
@@ -22,8 +22,7 @@ const Mission = () => {
               <div className="list-content flex-grow-1">
                 <h6 className="mb-1">{item.title}</h6>
                 <p className="text mb-0 fz14">
-                  Nullam sollicitudin blandit{" "}
-                  <br className="d-none d-sm-block" /> Nullam maximus.
+                  {item.description}
                 </p>
               </div>
             </div>

@@ -6,17 +6,17 @@ const FunFact = () => {
     {
       number: "4",
       unit: "M",
-      text: "Awward Winning",
+      text: "Bölgesel gösterim",
     },
     {
       number: "12",
       unit: "K",
-      text: "Property Ready",
+      text: "Yayındaki ilan",
     },
     {
       number: "20",
       unit: "M",
-      text: "Happy Customer",
+      text: "İlçe bazlı arama",
     },
   ];
 

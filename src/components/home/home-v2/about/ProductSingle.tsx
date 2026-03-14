@@ -14,19 +14,19 @@ const ProductSingle = () => {
             <div className="list-meta d-flex align-items-center">
               <a href="#">
                 <span className="flaticon-bed" />
-                {product.bed} bed
+                {product.bed} oda
               </a>
               <a href="#">
                 <span className="flaticon-shower" />
-                {product.bath} bath
+                {product.bath} banyo
               </a>
               <a href="#">
                 <span className="flaticon-expand" />
-                {product.sqft} sqft
+                {product.sqft} m²
               </a>
             </div>
             <Link to="/properties" className="btn mt15 fz15">
-              View House
+              İlanı İncele
               <i className="fal fa-arrow-right-long" />
             </Link>
           </div>

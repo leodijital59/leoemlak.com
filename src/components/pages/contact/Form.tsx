@@ -6,12 +6,12 @@ const Form = () => {
         <div className="col-lg-12">
           <div className="mb20">
             <label className="heading-color ff-heading fw600 mb10">
-              First Name
+              Adınız
             </label>
             <input
               type="text"
               className="form-control"
-              placeholder="Your Name"
+              placeholder="Adınızı girin"
               required
             />
           </div>
@@ -21,12 +21,12 @@ const Form = () => {
         <div className="col-lg-12">
           <div className="mb20">
             <label className="heading-color ff-heading fw600 mb10">
-              Last Name
+              Soyadınız
             </label>
             <input
               type="text"
               className="form-control"
-              placeholder="Your Name"
+              placeholder="Soyadınızı girin"
               required
             />
           </div>
@@ -35,11 +35,11 @@ const Form = () => {
 
         <div className="col-md-12">
           <div className="mb20">
-            <label className="heading-color ff-heading fw600 mb10">Email</label>
+            <label className="heading-color ff-heading fw600 mb10">E-posta</label>
             <input
               type="email"
               className="form-control"
-              placeholder="Your Name"
+              placeholder="E-posta adresinizi girin"
               required
             />
           </div>
@@ -49,12 +49,12 @@ const Form = () => {
         <div className="col-md-12">
           <div className="mb10">
             <label className="heading-color ff-heading fw600 mb10">
-              Textarea
+              Mesajınız
             </label>
             <textarea
               cols={30}
               rows={4}
-              placeholder="There are many variations of passages."
+              placeholder="Talebinizi veya sormak istediğiniz konuyu yazın."
               defaultValue={""}
               required
             />
@@ -65,7 +65,7 @@ const Form = () => {
         <div className="col-md-12">
           <div className="d-grid">
             <button type="submit" className="ud-btn btn-thm">
-              Submit
+              Gönder
               <i className="fal fa-arrow-right-long" />
             </button>
           </div>

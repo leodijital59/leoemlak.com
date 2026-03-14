@@ -7,41 +7,46 @@ const ExploreCities = () => {
   const cities = [
     {
       id: 1,
-      name: "Los Angeles",
+      name: "Çorlu",
       image: "/images/listings/city-listing-1.jpg",
-      number: 12,
+      number: 128,
+      district: 'CORLU',
     },
     {
       id: 2,
-      name: "Miami",
+      name: "Süleymanpaşa",
       image: "/images/listings/city-listing-1.jpg",
-      number: 8,
+      number: 94,
+      district: 'SULEYMANPASA',
     },
     {
       id: 3,
-      name: "New York",
+      name: "Çerkezköy",
       image: "/images/listings/city-listing-1.jpg",
-      number: 15,
+      number: 86,
+      district: 'CERKEZKOY',
     },
     {
       id: 4,
-      name: "Chicago",
+      name: "Kapaklı",
       image: "/images/listings/city-listing-1.jpg",
-      number: 10,
+      number: 73,
+      district: 'KAPAKLI',
     },
     {
       id: 5,
-      name: "Los Angeles",
+      name: "Ergene",
       image: "/images/listings/city-listing-1.jpg",
-      number: 12,
+      number: 58,
+      district: 'ERGENE',
     },
     {
       id: 6,
-      name: "Miami",
+      name: "Marmaraereğlisi",
       image: "/images/listings/city-listing-1.jpg",
-      number: 8,
+      number: 41,
+      district: 'MARMARAEREGLISI',
     },
-    // Add more cities if needed
   ];
 
   return (
@@ -75,7 +80,7 @@ const ExploreCities = () => {
         {cities.map((city) => (
           <SwiperSlide key={city.id}>
             <div className="item">
-              <Link to="/">
+              <Link to="/properties" search={{ province: 'TEKIRDAG', district: city.district }}>
                 <div className="feature-style2 mb30">
                   <div className="feature-img">
                     <Image
@@ -88,7 +93,7 @@ const ExploreCities = () => {
                   </div>
                   <div className="feature-content pt20">
                     <h6 className="title mb-1">{city.name}</h6>
-                    <p className="text fz15">{city.number} Properties</p>
+                    <p className="text fz15">{city.number} ilan</p>
                   </div>
                 </div>
               </Link>

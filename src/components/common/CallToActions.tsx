@@ -30,9 +30,9 @@ const CallToActions = () => {
             <div className="row align-items-center">
               <div className="col-lg-7 col-xl-6 " data-aos="fade-right">
                 <div className="cta-style1">
-                  <h2 className="cta-title">Need help? Talk to our expert.</h2>
+                  <h2 className="cta-title">Destek mi gerekiyor? Bölge uzmanımızla görüşün.</h2>
                   <p className="cta-text mb-0">
-                    Talk to our experts or Browse through more properties.
+                    Tekirdağ ve Çorlu odaklı ilanlar için destek alın veya tüm portföyü inceleyin.
                   </p>
                 </div>
               </div>
@@ -41,15 +41,15 @@ const CallToActions = () => {
               <div className="col-lg-5 col-xl-6 " data-aos="fade-left">
                 <div className="cta-btns-style1 d-block d-sm-flex align-items-center justify-content-lg-end">
                   <Link
-                    to="/"
+                    to="/contact"
                     className="ud-btn btn-transparent mr30 mr0-xs"
                   >
-                    Contact Us
+                    Bize Ulaşın
                     <i className="fal fa-arrow-right-long" />
                   </Link>
-                  <Link to="/" className="ud-btn btn-dark">
-                    <span className="flaticon-call vam pe-2" />
-                    920 851 9087
+                  <Link to="/properties" className="ud-btn btn-dark">
+                    <span className="flaticon-home vam pe-2" />
+                    İlanları Gör
                   </Link>
                 </div>
               </div>

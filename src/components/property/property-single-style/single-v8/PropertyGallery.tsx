@@ -26,7 +26,7 @@ const PropertyGallery = ({ images }: Props) => {
     return (
       <div className="ps-v6-slider nav_none mt30">
         <div className="text-center p-5 bg-light bdrs12">
-          <p className="text-muted">No images available</p>
+          <p className="text-muted">Bu ilan için görsel bulunmuyor</p>
         </div>
       </div>
     );
@@ -72,7 +72,7 @@ const PropertyGallery = ({ images }: Props) => {
                 </Item>
 
                 <button className="all-tag popup-img border-0 pe-none">
-                  See All {images.length} Photos
+                  Tüm {images.length} Fotoğrafı Gör
                 </button>
               </SwiperSlide>
             ))}

@@ -15,7 +15,7 @@ const VideoBox = () => {
         >
           <i className="fas fa-circle-play mr15" />
         </button>
-        <h6 className="fz14 mb-0">Watch Video</h6>
+        <h6 className="fz14 mb-0">Videoyu İzle</h6>
       </div>
     </>
   );

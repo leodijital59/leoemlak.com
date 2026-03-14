@@ -3,15 +3,15 @@ const ContactInfo = () => {
   const contactInfo = [
     {
       id: 1,
-      title: "Total Free Customer Care",
+      title: "Tekirdağ ve Çorlu Danışma Hattı",
       phone: "+(0) 123 050 945 02",
-      phoneHref: "tel:+012305094502", // Updated phoneHref to use "tel" URI
+      phoneHref: "tel:+012305094502",
     },
     {
       id: 2,
-      title: "Need Live Support?",
-      email: "hi@homez.com",
-      emailHref: "mailto:hi@homez.com", // Updated emailHref to use "mailto" URI
+      title: "Web Sitesi",
+      email: "www.leoemlak.com",
+      emailHref: "https://leoemlak.com",
     },
   ];
 

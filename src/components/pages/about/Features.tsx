@@ -3,21 +3,21 @@ const Features = () => {
   const features = [
     {
       icon: "flaticon-security",
-      title: "Property Management",
+      title: "Doğru Portföy Eşleşmesi",
       description:
-        "Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.",
+        "Çorlu ve Tekirdağ genelindeki güncel ilanları ihtiyacınıza göre filtreleyip öne çıkarıyoruz.",
     },
     {
       icon: "flaticon-keywording",
-      title: "Mortgage Services",
+      title: "Yatırım Odaklı Analiz",
       description:
-        "Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.",
+        "Bölgesel talep, ulaşım ve gelişim akslarını dikkate alarak daha isabetli karar almanıza yardımcı oluyoruz.",
     },
     {
       icon: "flaticon-investment",
-      title: "Currency Services",
+      title: "Hızlı İletişim",
       description:
-        "Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.",
+        "İlçe bazlı ihtiyaçlarınız için size en uygun ilanlara ve bilgilere kısa sürede ulaşmanızı sağlıyoruz.",
     },
   ];
 

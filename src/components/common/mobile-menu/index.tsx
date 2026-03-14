@@ -50,11 +50,11 @@ const MobileMenu = () => {
             <div
               className="sidebar-close-icon"
               data-bs-dismiss="offcanvas"
-              aria-label="Close"
+              aria-label="Kapat"
             >
               <span className="far fa-times"></span>
             </div>
-            <h4 className="title">Welcome to Homez</h4>
+            <h4 className="title">LeoEmlak Menü</h4>
           </div>
           {/* End header */}
 

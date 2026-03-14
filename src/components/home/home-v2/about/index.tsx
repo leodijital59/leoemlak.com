@@ -36,10 +36,10 @@ const About = () => {
 
       <div className="col-md-6 col-xl-4 offset-xl-2">
         <div className="about-box-1">
-          <h2 className="title mb30">With Us Help You Find Your Dream Home</h2>
+          <h2 className="title mb30">Tekirdağ'da size uygun yaşam alanını birlikte bulalım</h2>
           <p className="text mb20 fz15">
-            As the complexity of buildings to increase, the field of
-            architecture.
+            Çorlu başta olmak üzere Tekirdağ ilçelerinde satılık ve kiralık gayrimenkul seçeneklerini
+            güvenilir, hızlı ve anlaşılır şekilde sunuyoruz.
           </p>
           <Funfact />
         </div>

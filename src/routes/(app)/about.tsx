@@ -9,7 +9,8 @@ import CallToActions from "@/components/common/CallToActions";
 export const Route = createFileRoute('/(app)/about')({
   staticData: {
     title: 'Hakkımızda',
-    description: 'LeoEmlak hakkında daha fazla bilgi edinin. Misyonumuz, vizyonumuz ve gayrimenkul sektöründeki yerimiz.',
+    description: 'LeoEmlak olarak Tekirdağ, Çorlu ve çevre ilçelerde güvenilir gayrimenkul danışmanlığı sunuyoruz.',
+    keywords: ['LeoEmlak hakkında', 'Tekirdağ emlak danışmanlığı', 'Çorlu emlak ofisi', 'Tekirdağ gayrimenkul'],
   },
   head: () => ({
     scripts: [{
@@ -19,7 +20,8 @@ export const Route = createFileRoute('/(app)/about')({
         '@type': 'Organization',
         name: import.meta.env.VITE_APP_NAME,
         inLanguage: 'tr-TR',
-        description: 'LeoEmlak hakkında daha fazla bilgi edinin. Misyonumuz, vizyonumuz ve gayrimenkul sektöründeki yerimiz.',
+        description: 'LeoEmlak olarak Tekirdağ, Çorlu ve çevre ilçelerde güvenilir gayrimenkul danışmanlığı sunuyoruz.',
+        areaServed: ['Tekirdağ', 'Çorlu', 'Çerkezköy', 'Süleymanpaşa', 'Kapaklı', 'Ergene'],
       }),
     }],
   }),
@@ -35,10 +37,10 @@ function RouteComponent() {
               <div className="row">
                 <div className="col-lg-12">
                   <div className="breadcumb-style1">
-                    <h2 className="title">About Us</h2>
+                    <h2 className="title">Hakkımızda</h2>
                     <div className="breadcumb-list">
-                      <Link to="/">Home</Link>
-                      <Link to="/about">About</Link>
+                      <Link to="/">Ana Sayfa</Link>
+                      <Link to="/about">Hakkımızda</Link>
                     </div>
                   </div>
                 </div>
@@ -53,22 +55,22 @@ function RouteComponent() {
               <div className="row" data-aos="fade-up" data-aos-delay="300">
                 <div className="col-lg-6">
                   <h2>
-                    We&apos;re on a Mission to Change{" "}
-                    <br className="d-none d-lg-block" /> View of Real Estate Field.
+                    Tekirdağ'da gayrimenkulü
+                    <br className="d-none d-lg-block" /> daha şeffaf ve güvenilir hale getiriyoruz.
                   </h2>
                 </div>
                 <div className="col-lg-6">
                   <p className="text mb25">
-                    It doesn’t matter how organized you are — a surplus of toys will
-                    always ensure your house is a mess waiting to happen.
-                    Fortunately, getting kids on board with the idea of ditching
-                    their stuff is a lot easier than it sounds.
+                    LeoEmlak, Tekirdağ genelinde konut ve ticari gayrimenkul arayan kullanıcıları
+                    doğru ilanlarla buluşturmak için kurulmuş yerel bir emlak platformudur. Özellikle
+                    Çorlu, Süleymanpaşa, Çerkezköy ve Kapaklı bölgelerinde ihtiyaçlara uygun sonuçlar
+                    sunmaya odaklanıyoruz.
                   </p>
                   <p className="text mb55">
-                    Maecenas quis viverra metus, et efficitur ligula. Nam congue
-                    augue et ex congue, sed luctus lectus congue. Integer convallis
-                    condimentum sem. Duis elementum tortor eget condimentum tempor.
-                    Praesent sollicitudin lectus ut pharetra pulvinar.
+                    Doğru fiyat analizi, bölgesel pazar bilgisi ve kullanıcı dostu ilan deneyimi ile
+                    hem yatırımcıların hem de yeni bir yaşam alanı arayan ailelerin karar sürecini
+                    hızlandırıyoruz. Hedefimiz, Tekirdağ ve ilçelerinde dijital emlak deneyimini daha
+                    erişilebilir ve güvenilir hale getirmek.
                   </p>
                   <div className="row">
                     <Mission />
@@ -90,7 +92,7 @@ function RouteComponent() {
                     <Image width={1206} height={515} priority="true"
                         className="w-100 h-100 cover"
                         src="/images/about/about-page-banner.jpg"
-                        alt="about banner"
+                        alt="LeoEmlak hakkında görsel"
                     />
                   </div>
                 </div>
@@ -125,15 +127,14 @@ function RouteComponent() {
                   >
                     <div className="mb30">
                       <h2 className="title text-capitalize">
-                        Let’s find the right <br className="d-none d-md-block" />{" "}
-                        selling option for you
+                        Tekirdağ'da size en uygun <br className="d-none d-md-block" /> emlak çözümünü birlikte bulalım
                       </h2>
                     </div>
                     <div className="why-chose-list style2">
                       <Features />
                     </div>
-                    <Link to="/" className="ud-btn btn-dark">
-                      Learn More
+                    <Link to="/properties" className="ud-btn btn-dark">
+                      İlanları İncele
                       <i className="fal fa-arrow-right-long" />
                     </Link>
                   </div>
@@ -149,7 +150,7 @@ function RouteComponent() {
               <ClientOnly>
                 <div className="col-lg-12" data-aos="fade-up">
                   <div className="main-title text-center">
-                    <h6>Trusted by the world’s best</h6>
+                    <h6>Tekirdağ bölgesinde güvenle tercih edilen ilan deneyimi</h6>
                   </div>
                 </div>
                 <div className="col-lg-12 text-center">

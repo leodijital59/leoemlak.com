@@ -4,26 +4,28 @@ const Office = () => {
   const offices = [
     {
       id: 1,
-      city: "Paris",
+      city: "Çorlu",
       icon: "/images/icon/paris.svg",
-      address: "1301 2nd Ave, Seattle, WA 98101",
-      phoneNumber: "(315) 905-2321",
+      address: "Çorlu merkez ve yakın çevre mahallelerde aktif portföy desteği",
+      phoneNumber: "+(0) 123 050 945 02",
+      mapLink: "/properties?province=TEKIRDAG&district=CORLU",
     },
     {
       id: 2,
-      city: "London",
+      city: "Süleymanpaşa",
       icon: "/images/icon/london.svg",
-      address: "1301 2nd Ave, Seattle, WA 98101",
-      phoneNumber: "(315) 905-2321",
+      address: "Merkez ve sahil hattında konut ile ticari ilan danışmanlığı",
+      phoneNumber: "+(0) 123 050 945 02",
+      mapLink: "/properties?province=TEKIRDAG&district=SULEYMANPASA",
     },
     {
       id: 3,
-      city: "New York",
+      city: "Çerkezköy",
       icon: "/images/icon/new-york.svg",
-      address: "1301 2nd Ave, Seattle, WA 98101",
-      phoneNumber: "(315) 905-2321",
+      address: "Yatırım ve yaşam odaklı gelişen bölgelerde ilan takibi",
+      phoneNumber: "+(0) 123 050 945 02",
+      mapLink: "/properties?province=TEKIRDAG&district=CERKEZKOY",
     },
-    // Add more office objects here...
   ];
 
   return (
@@ -38,8 +40,8 @@ const Office = () => {
               <h4 className="title">{office.city}</h4>
               <p className="text mb-1">{office.address}</p>
               <h6 className="mb10">{office.phoneNumber}</h6>
-              <a className="text-decoration-underline" href="#">
-                Open Google Map
+              <a className="text-decoration-underline" href={office.mapLink}>
+                Bölge ilanlarını aç
               </a>
             </div>
           </div>

@@ -4,10 +4,9 @@ import { Link } from "@tanstack/react-router";
 
 const Funfact = () => {
   const funFacts = [
-    { number: 400, text: "Stores around the world" },
-    { number: 200, text: "Stores around the world" },
-    { number: 1000, text: "Stores around the world" },
-    // Add more fun facts if needed
+    { number: 400, text: 'Tekirdağ genelinde aktif ilan' },
+    { number: 200, text: 'Çorlu odaklı güncel portföy' },
+    { number: 1000, text: 'Aylık ilan görüntüleme' },
   ];
 
   return (
@@ -24,8 +23,8 @@ const Funfact = () => {
           <p className="text mb-0">{fact.text}</p>
         </div>
       ))}
-      <Link to="/" className="ud-btn btn-thm">
-        See More
+      <Link to="/properties" className="ud-btn btn-thm">
+        Daha Fazla İncele
         <i className="fal fa-arrow-right-long" />
       </Link>
     </div>

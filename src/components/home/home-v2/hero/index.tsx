@@ -31,10 +31,10 @@ const Hero = ({ categories, locations, features }: HeroProps) => {
           onCategoryIdChange={setCategoryId}
         />
         <h2 className="hero-title" data-aos="fade-up" data-aos-delay="150">
-          Find Your Dream Home
+          Tekirdağ ve Çorlu'da aradığınız evi bulun
         </h2>
         <p className="hero-text fz15" data-aos="fade-up" data-aos-delay="250">
-          Let's find a home that's perfect for you
+          Satılık ve kiralık ilanları ilçeye, kategoriye ve ihtiyacınıza göre filtreleyin
         </p>
       </div>
 

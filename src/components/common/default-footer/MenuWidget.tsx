@@ -2,24 +2,24 @@
 const MenuWidget = () => {
   const menuSections = [
     {
-      title: "Popular Search",
+      title: "Popüler Aramalar",
       links: [
-        { label: "Apartment for Rent", href: "#" },
-        { label: "Apartment Low to Hide", href: "#" },
-        { label: "Offices for Buy", href: "#" },
-        { label: "Offices for Rent", href: "#" },
+        { label: "Çorlu Satılık Daire", href: "/properties?province=TEKIRDAG&district=CORLU&listingType=sold" },
+        { label: "Çorlu Kiralık Daire", href: "/properties?province=TEKIRDAG&district=CORLU&listingType=rented" },
+        { label: "Çerkezköy Emlak", href: "/properties?province=TEKIRDAG&district=CERKEZKOY" },
+        { label: "Süleymanpaşa İlanları", href: "/properties?province=TEKIRDAG&district=SULEYMANPASA" },
       ],
     },
     {
-      title: "Quick Links",
+      title: "Hızlı Erişim",
       links: [
-        { label: "Terms of Use", href: "#" },
-        { label: "Privacy Policy", href: "#" },
-        { label: "Pricing Plans", href: "#" },
-        { label: "Our Services", href: "#" },
-        { label: "Contact Support", href: "#" },
-        { label: "Careers", href: "#" },
-        { label: "FAQs", href: "#" },
+        { label: "Ana Sayfa", href: "/" },
+        { label: "Tüm İlanlar", href: "/properties" },
+        { label: "Hakkımızda", href: "/about" },
+        { label: "İletişim", href: "/contact" },
+        { label: "Kapaklı Emlak", href: "/properties?province=TEKIRDAG&district=KAPAKLI" },
+        { label: "Ergene İlanları", href: "/properties?province=TEKIRDAG&district=ERGENE" },
+        { label: "Marmaraereğlisi İlanları", href: "/properties?province=TEKIRDAG&district=MARMARAEREGLISI" },
       ],
     },
   ];

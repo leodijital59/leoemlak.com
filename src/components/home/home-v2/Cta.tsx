@@ -45,13 +45,13 @@ const Cta = () => {
               >
                 <div className="cta-style2">
                   <h2 className="cta-title">
-                    Start Listing or Buying a Property With Realton
+                    Tekirdağ'da doğru evi ya da yatırımı şimdi keşfedin
                   </h2>
                   <p className="cta-text">
-                    Talk to our experts or Browse through more properties.
+                    Uzman desteği alın veya Çorlu ve çevresindeki güncel ilanlara hemen göz atın.
                   </p>
-                  <Link to="/contact" className="ud-btn btn-dark mt10">
-                    Learn More
+                  <Link to="/properties" className="ud-btn btn-dark mt10">
+                    İlanları İncele
                     <i className="fal fa-arrow-right-long" />
                   </Link>
                 </div>

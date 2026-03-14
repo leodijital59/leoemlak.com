@@ -22,7 +22,9 @@ export const Route = createFileRoute("/(app)/properties")({
   staleTime: import.meta.env.PROD ? 900_000 : 0,
   component: ListingsPage,
   staticData: {
-    description: 'Türkiye genelinde satılık ve kiralık gayrimenkul ilanları. Daire, villa, arsa ve işyeri ilanları.',
+    title: 'Tekirdağ ve Çorlu Emlak İlanları',
+    description: 'Tekirdağ, Çorlu ve çevre ilçelerde satılık ve kiralık gayrimenkul ilanları. Daire, villa, arsa ve işyeri seçenekleri.',
+    keywords: ['Tekirdağ emlak ilanları', 'Çorlu satılık daire', 'Tekirdağ kiralık daire', 'Çerkezköy emlak', 'Kapaklı emlak'],
   },
   head: ({ match, loaderData }) => {
     const { listingType, categoryId, province, district, neighborhood } = match.search
@@ -35,10 +37,12 @@ export const Route = createFileRoute("/(app)/properties")({
       neighborhood ? formatCapitilized(neighborhood) : null
     ].filter(Boolean)
 
+    const titleParts = [...adresses, listingLabel, category?.name, adresses.length > 0 || category?.name ? 'İlanları' : 'Tekirdağ ve Çorlu Emlak İlanları'].filter(Boolean)
+
     return {
       meta: [
         {
-          title: `${[...adresses, listingLabel, category?.name, `İlanlar${category?.name || adresses.length > 0 ? 'ı' : ''}`].filter(Boolean).join(' ')} | ${appName}`,
+          title: `${titleParts.join(' ')} | ${appName}`,
         }
       ],
       links: [
@@ -61,7 +65,10 @@ function ListingsPage() {
           <div className="row">
             <div className="col-lg-12">
               <div className="breadcumb-style1">
-                <h2 className="title">İlanlar</h2>
+                <h2 className="title">Tekirdağ ve Çorlu Emlak İlanları</h2>
+                <p className="text mb10">
+                  Çorlu, Süleymanpaşa, Çerkezköy, Kapaklı ve Tekirdağ'ın diğer ilçelerindeki satılık ve kiralık ilanları filtreleyin.
+                </p>
                 <div className="breadcumb-list">
                   <a href="/">Ana Sayfa</a>
                   <a href="/properties">İlanlar</a>

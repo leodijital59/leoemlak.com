@@ -5,21 +5,21 @@ const Explore = () => {
   const iconboxData = [
     {
       icon: "/images/icon/property-buy-2.svg",
-      title: "Buy a property",
-      text: "Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.",
-      linkText: "Find a home",
+      title: "Gayrimenkul Satın Alın",
+      text: "Tekirdağ ve Çorlu'daki satılık daire, villa ve arsa ilanlarını karşılaştırın.",
+      linkText: "İlanlara Göz Atın",
     },
     {
       icon: "/images/icon/property-sell-2.svg",
-      title: "Sell a property",
-      text: "Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.",
-      linkText: "Place an ad",
+      title: "İlanınızı Yayınlayın",
+      text: "Bölgesel görünürlüğü yüksek bir vitrinle gayrimenkulünüzü doğru alıcıyla buluşturun.",
+      linkText: "İlan Verin",
     },
     {
       icon: "/images/icon/property-rent-2.svg",
-      title: "Rent a property",
-      text: "Nullam sollicitudin blandit eros eu pretium. Nullam maximus ultricies auctor.",
-      linkText: "Find a rental",
+      title: "Kiralık İlan Bulun",
+      text: "Çorlu ve çevresinde bütçenize uygun kiralık konut ve işyeri seçeneklerini inceleyin.",
+      linkText: "Kiralıkları Görün",
     },
   ];
 

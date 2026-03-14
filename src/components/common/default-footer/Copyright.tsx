@@ -7,16 +7,16 @@ const getCurrentYear = () => {
 const Footer = () => {
   const footerMenuItems = [
     {
-      label: "Privacy",
-      link: "#",
+      label: "Gizlilik",
+      link: "/about",
     },
     {
-      label: "Terms",
-      link: "#",
+      label: "İlanlar",
+      link: "/properties",
     },
     {
-      label: "Sitemap",
-      link: "#",
+      label: "İletişim",
+      link: "/contact",
     },
   ];
 
@@ -26,16 +26,7 @@ const Footer = () => {
         <div className="col-sm-6">
           <div className="text-center text-lg-start">
             <p className="copyright-text text-gray ff-heading">
-              © Homez {getCurrentYear()}{" "}
-              <a
-                href="https://themeforest.net/user/ib-themes"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white"
-              >
-                ib-themes
-              </a>{" "}
-              - All rights reserved
+              © LeoEmlak {getCurrentYear()} - Tüm hakları saklıdır.
             </p>
           </div>
         </div>

@@ -50,12 +50,12 @@ const NearbySimilarProperty = () => {
                     {listing.forRent && (
                       <div className="list-tag rounded-0 fz12">
                         <span className="flaticon-electricity" />
-                        FEATURED
+                        ÖNE ÇIKAN
                       </div>
                     )}
                   </div>
                   <div className="list-price">
-                    {listing.price} / <span>mo</span>
+                    {listing.price}
                   </div>
                 </div>
                 <div className="list-content">
@@ -67,18 +67,18 @@ const NearbySimilarProperty = () => {
                   <p className="list-text">{listing.location}</p>
                   <div className="list-meta d-flex align-items-center">
                     <a href="#">
-                      <span className="flaticon-bed" /> {listing.bed} bed
+                      <span className="flaticon-bed" /> {listing.bed} oda
                     </a>
                     <a href="#">
-                      <span className="flaticon-shower" /> {listing.bath} bath
+                      <span className="flaticon-shower" /> {listing.bath} banyo
                     </a>
                     <a href="#">
-                      <span className="flaticon-expand" /> {listing.sqft} sqft
+                      <span className="flaticon-expand" /> {listing.sqft} m²
                     </a>
                   </div>
                   <hr className="mt-2 mb-2" />
                   <div className="list-meta2 d-flex justify-content-between align-items-center">
-                    <span className="for-what">For Rent</span>
+                    <span className="for-what">{listing.forRent ? 'Kiralık' : 'Satılık'}</span>
                     <div className="icons d-flex align-items-center">
                       <a href="#">
                         <span className="flaticon-fullscreen" />

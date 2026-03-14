@@ -140,9 +140,9 @@ function PropertyDetailPage() {
             <div className="row mt30 align-items-center justify-content-between">
               <div className="col-auto">
                 <div className="main-title">
-                  <h2 className="title">Discover Our Featured Listings</h2>
+                  <h2 className="title">Benzer Bölge İlanları</h2>
                   <p className="paragraph">
-                    Aliquam lacinia diam quis lacus euismod
+                    Tekirdağ ve çevresinde ilginizi çekebilecek diğer ilanlara göz atın
                   </p>
                 </div>
               </div>
