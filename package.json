@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "dev:open": "vite dev --open",
-    "build": "vite build && tsc --noEmit",
+    "build": "NODE_OPTIONS='--max-old-space-size=6144' vite build && tsc --noEmit",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",

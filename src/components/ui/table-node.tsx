@@ -100,8 +100,8 @@ export const TableElement = withHOC(
             'isSelectionAreaVisible'
         );
         const hasControls = !readOnly && !isSelectionAreaVisible;
+        const isSelectingCell = usePluginOption(TablePlugin, 'isSelectingCell');
         const {
-            isSelectingCell,
             marginLeft,
             props: tableProps,
         } = useTableElement();
