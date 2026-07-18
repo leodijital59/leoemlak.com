@@ -8,7 +8,7 @@ const ExploreCities = () => {
     {
       id: 1,
       name: "Çorlu",
-      image: "/images/270x270.jpg",
+      image: "/images/270x270-1.jpg",
       number: 128,
       district: 'CORLU',
     },

@@ -3302,10 +3302,11 @@ li {
     position: absolute;
     top: 200px;
     width: 100%;
-}
+} 
 @media (max-width: 991.98px) {
     .home2-hero-banner {
         top: 100px;
+        height: 500px; 
     }
 }
 
@@ -9475,7 +9476,7 @@ input:focus-visible {
 }
 @media (max-width: 575.98px) {
     .mobile-filter-btn {
-        top: 35px;
+        top: 115px;
     }
 }
 .mobile-filter-btn.map-page {

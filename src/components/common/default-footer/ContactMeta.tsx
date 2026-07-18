@@ -3,8 +3,8 @@ const ContactMeta = () => {
   const contactInfoList = [
     {
       title: "Tekirdağ ve Çorlu Danışma Hattı",
-      phone: "+(0) 123 050 945 02",
-      phoneLink: "tel:+012305094502",
+      phone: "+90 552 995 00 59",
+      phoneLink: "tel:+905529950059",
     },
     {
       title: "Web Sitesi",

@@ -4,8 +4,8 @@ const ContactInfo = () => {
     {
       id: 1,
       title: "Tekirdağ ve Çorlu Danışma Hattı",
-      phone: "+(0) 123 050 945 02",
-      phoneHref: "tel:+012305094502",
+      phone: "+90 552 995 00 59",
+      phoneHref: "tel:+905529950059",
     },
     {
       id: 2,

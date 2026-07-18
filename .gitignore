@@ -127,3 +127,4 @@ Temporary Items
 .worktrees/
 .security-key
 logs/security/
+.env

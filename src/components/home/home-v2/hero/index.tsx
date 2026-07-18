@@ -1,6 +1,9 @@
+import { ClientOnly } from "@tanstack/react-router";
 import { useState } from "react";
-import {ClientOnly} from "@tanstack/react-router";
+
+
 import HeroContent from "./HeroContent";
+
 import AdvanceFilterModal from "@/components/common/advance-filter";
 
 interface HeroProps {
@@ -8,7 +11,11 @@ interface HeroProps {
   locations: {
     provinces: string[];
     districts: { province: string; district: string }[];
-    neighborhoods: { province: string; district: string; neighborhood: string }[];
+    neighborhoods: {
+      province: string;
+      district: string;
+      neighborhood: string;
+    }[];
   };
   features: { id: string; name: string }[];
 }
@@ -30,12 +37,18 @@ const Hero = ({ categories, locations, features }: HeroProps) => {
           categoryId={categoryId}
           onCategoryIdChange={setCategoryId}
         />
+
         <h2 className="hero-title" data-aos="fade-up" data-aos-delay="150">
           Tekirdağ ve Çorlu'da aradığınız evi bulun
         </h2>
+
         <p className="hero-text fz15" data-aos="fade-up" data-aos-delay="250">
-          Satılık ve kiralık ilanları ilçeye, kategoriye ve ihtiyacınıza göre filtreleyin
+          Satılık ve kiralık ilanları ilçeye, kategoriye ve ihtiyacınıza göre
+          filtreleyin
         </p>
+
+        {/* Geçici test alanı */}
+      
       </div>
 
       <div className="advance-feature-modal">
