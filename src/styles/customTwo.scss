@@ -48,3 +48,82 @@ body {
     background-color: var(--headings-color);
   }
 }
+
+.whatsapp-balloon {
+  position: fixed;
+  right: 45px;
+  bottom: 45px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #25d366;
+  color: #fff;
+  font-size: 30px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.45);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+
+  &:hover,
+  &:focus-visible {
+    color: #fff;
+    background-color: #1ebe57;
+    transform: scale(1.06);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.55);
+  }
+
+  i {
+    position: relative;
+    z-index: 1;
+    line-height: 1;
+  }
+}
+
+.whatsapp-balloon__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #25d366;
+  animation: whatsapp-balloon-pulse 2s ease-out infinite;
+  z-index: 0;
+}
+
+@keyframes whatsapp-balloon-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+}
+
+/* Keep scroll-to-top above the WhatsApp balloon */
+.scrollToHome,
+.scrollToHome.show {
+  bottom: 115px;
+}
+
+@media (max-width: 575.98px) {
+  .whatsapp-balloon {
+    right: 20px;
+    bottom: 20px;
+    width: 52px;
+    height: 52px;
+    font-size: 28px;
+  }
+
+  .scrollToHome,
+  .scrollToHome.show {
+    right: 20px;
+    bottom: 86px;
+  }
+}
