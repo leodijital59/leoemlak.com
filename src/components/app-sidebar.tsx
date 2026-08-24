@@ -23,7 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { authClient } from "@/auth";
+import { authClient, type SessionUser } from "@/auth";
 
 const navigation: {
   main: NavItem[]
@@ -68,6 +68,7 @@ const navigation: {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data } = authClient.useSession();
+  const user = data?.user as SessionUser | undefined;
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -86,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navigation.main} role={data?.user.role} />
+        <NavMain items={navigation.main} role={user?.role} />
         <NavSecondary items={navigation.secondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
