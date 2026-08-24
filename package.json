@@ -96,8 +96,12 @@
       "zod": "$zod",
       "@tanstack/router-generator>zod": "3.25.76",
       "@tanstack/start-plugin-core>zod": "3.25.76",
-      "@tanstack/router-plugin>zod": "3.25.76"
+      "@tanstack/router-plugin>zod": "3.25.76",
+      "@vercel/oidc": "3.5.0"
     }
+  },
+  "overrides": {
+    "@vercel/oidc": "3.5.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.18",

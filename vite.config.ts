@@ -6,24 +6,9 @@ import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 
-// Keep Vercel Blob's CJS OIDC/xdg chain out of Nitro's ESM _libs bundle.
-// Bundling it leaves bare require() (xdg-app-paths) which crashes Node ESM.
-const vercelBlobExternals = [
-  '@vercel/blob',
-  '@vercel/oidc',
-  '@vercel/cli-config',
-  '@vercel/cli-exec',
-  'xdg-app-paths',
-  'xdg-portable',
-  'undici',
-]
-
 export default defineConfig({
   server: {
     port: 3000,
-  },
-  ssr: {
-    external: vercelBlobExternals,
   },
   plugins: [
     devtools(),
