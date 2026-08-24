@@ -2,6 +2,7 @@ import {Outlet, createFileRoute, useLocation} from '@tanstack/react-router'
 import Header from "@/components/home/home-v2/Header.tsx";
 import MobileMenu from "@/components/common/mobile-menu";
 import Footer from "@/components/common/default-footer";
+import WhatsAppBalloon from "@/components/common/WhatsAppBalloon";
 import css from '@/styles/main.scss?url';
 import {cn} from "@/lib/utils";
 
@@ -32,6 +33,8 @@ function AppLayoutComponent() {
             })}>
                 <Footer/>
             </section>
+
+            <WhatsAppBalloon />
         </div>
     )
 }
