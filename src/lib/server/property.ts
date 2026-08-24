@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { del, put } from "@vercel/blob";
 import { and, asc, count, desc, eq, exists, gte, ilike, lte, sql } from "drizzle-orm";
 import { notFound } from "@tanstack/react-router";
 import type { SQL } from "drizzle-orm";
@@ -8,6 +7,12 @@ import db from "@/db";
 import { categoriesTable, propertiesTable, propertyFeaturesTable, propertyImagesTable, propertyPropertyFeaturesTable } from "@/schema";
 import { propertyFormSchema } from "@/lib/validations/property";
 import { propertySearchSchema } from "@/lib/validations/property-search";
+
+// Lazy-load @vercel/blob so read-only SSR loaders (home/properties) never pull
+// @vercel/oidc → xdg-app-paths, which Nitro bundles as ESM with bare require().
+async function blob() {
+    return import("@vercel/blob");
+}
 
 export const createProperty = createServerFn({ method: "POST" })
     .inputValidator((data: FormData) => data)
@@ -63,13 +68,14 @@ export const createProperty = createServerFn({ method: "POST" })
                     const uniqueFileName = `${crypto.randomUUID()}.${meta.extension}`;
 
                     // Vercel Blob'a yükle
-                    const blob = await put(`properties/${newProperty.id}/${uniqueFileName}`, file, {
+                    const { put } = await blob();
+                    const uploaded = await put(`properties/${newProperty.id}/${uniqueFileName}`, file, {
                         access: "public",
                     });
 
                     return {
                         propertyId: newProperty.id,
-                        url: blob.url,
+                        url: uploaded.url,
                         order: index,
                         isMainImage: meta.isMain,
                     };
@@ -140,6 +146,7 @@ export const deleteProperty = createServerFn({ method: "POST" })
 
         // Delete images from Vercel Blob
         if (images.length > 0) {
+            const { del } = await blob();
             await Promise.all(
                 images.map(async (img) => {
                     try {
@@ -234,6 +241,7 @@ export const updateProperty = createServerFn({ method: "POST" })
                 .map(img => img.url);
 
             // Delete from Vercel Blob
+            const { del } = await blob();
             await Promise.all(
                 urlsToDelete.map(async (url) => {
                     try {
@@ -269,13 +277,14 @@ export const updateProperty = createServerFn({ method: "POST" })
                     const uniqueFileName = `${crypto.randomUUID()}.${meta.extension}`;
 
                     // Vercel Blob'a yükle
-                    const blob = await put(`properties/${propertyId}/${uniqueFileName}`, file, {
+                    const { put } = await blob();
+                    const uploaded = await put(`properties/${propertyId}/${uniqueFileName}`, file, {
                         access: "public",
                     });
 
                     return {
                         propertyId,
-                        url: blob.url,
+                        url: uploaded.url,
                         order: startOrder + index,
                         isMainImage: meta.isMain,
                     };
@@ -341,6 +350,7 @@ export const deletePropertyImage = createServerFn({ method: "POST" })
 
             // Delete from Vercel Blob
             try {
+                const { del } = await blob();
                 await del(image.url);
             } catch (error) {
                 console.error(`Failed to delete blob: ${image.url}`, error);
