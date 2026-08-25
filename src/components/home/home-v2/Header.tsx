@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import MainMenu from "@/components/common/MainMenu";
-import Image from "@/components/common/Image";
+
+const LOGO_VERSION = "4";
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
@@ -35,21 +36,21 @@ const Header = () => {
                 <div className="d-flex align-items-center justify-content-between">
                   <div className="logos mr40">
                     <Link className="header-logo logo1" to="/">
-                      <Image
-                        width={160}
-                        height={110}
+                      <img
                         className="site-logo"
-                        src="/images/header-logo.svg"
+                        src={`/images/header-logo.svg?v=${LOGO_VERSION}`}
                         alt="Leo Emlak"
+                        width={280}
+                        height={160}
                       />
                     </Link>
                     <Link className="header-logo logo2" to="/">
-                      <Image
-                        width={160}
-                        height={110}
+                      <img
                         className="site-logo"
-                        src="/images/header-logo2.svg"
+                        src={`/images/header-logo2.svg?v=${LOGO_VERSION}`}
                         alt="Leo Emlak"
+                        width={280}
+                        height={160}
                       />
                     </Link>
                   </div>

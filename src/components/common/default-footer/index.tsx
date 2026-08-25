@@ -3,7 +3,6 @@ import ContactMeta from "./ContactMeta";
 import Social from "./Social";
 import MenuWidget from "./MenuWidget";
 import Copyright from "./Copyright";
-import Image from "@/components/common/Image";
 
 const Footer = () => {
   return (
@@ -13,12 +12,12 @@ const Footer = () => {
           <div className="col-lg-5">
             <div className="footer-widget mb-2 mb-lg-0">
               <Link className="footer-logo d-inline-block" to="/">
-                <Image
-                  width={180}
-                  height={124}
+                <img
                   className="mb30 footer-logo-img site-logo site-logo--footer"
-                  src="/images/header-logo2.svg"
+                  src="/images/header-logo2.svg?v=4"
                   alt="Leo Emlak"
+                  width={300}
+                  height={170}
                 />
               </Link>
               <p className="footer-lead text-white mb25">
