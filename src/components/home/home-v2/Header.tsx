@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import MainMenu from "@/components/common/MainMenu";
 
-const LOGO_VERSION = "4";
+const LOGO_VERSION = "5";
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
@@ -40,8 +40,8 @@ const Header = () => {
                         className="site-logo"
                         src={`/images/header-logo.svg?v=${LOGO_VERSION}`}
                         alt="Leo Emlak"
-                        width={280}
-                        height={160}
+                        width={200}
+                        height={96}
                       />
                     </Link>
                     <Link className="header-logo logo2" to="/">
@@ -49,8 +49,8 @@ const Header = () => {
                         className="site-logo"
                         src={`/images/header-logo2.svg?v=${LOGO_VERSION}`}
                         alt="Leo Emlak"
-                        width={280}
-                        height={160}
+                        width={200}
+                        height={96}
                       />
                     </Link>
                   </div>
