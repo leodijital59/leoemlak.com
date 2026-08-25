@@ -14,7 +14,7 @@ const Footer = () => {
               <Link className="footer-logo d-inline-block" to="/">
                 <img
                   className="mb30 footer-logo-img site-logo site-logo--footer"
-                  src="/images/header-logo2.svg?v=5"
+                  src="/images/header-logo2.svg?v=6"
                   alt="Leo Emlak"
                   width={220}
                   height={108}

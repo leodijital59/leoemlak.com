@@ -26,7 +26,7 @@ const MobileMenu = () => {
               <Link className="mobile_logo" to="/">
                 <img
                   className="site-logo site-logo--mobile"
-                  src="/images/header-logo2.svg?v=5"
+                  src="/images/header-logo2.svg?v=6"
                   alt="Leo Emlak"
                   width={160}
                   height={72}

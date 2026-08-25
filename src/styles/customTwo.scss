@@ -198,6 +198,11 @@ header.header-nav .header-logo img.site-logo,
   align-items: center;
 }
 
+/* Dark transparent homepage header: invert the dark logo mark to white */
+header.nav-homepage-style:not(.sticky) .header-logo.logo1 .site-logo {
+  filter: brightness(0) invert(1);
+}
+
 @media (max-width: 991.98px) {
   header.nav-homepage-style .header-logo img.site-logo,
   header.header-nav .header-logo img.site-logo,
