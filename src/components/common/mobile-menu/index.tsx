@@ -1,8 +1,40 @@
-import {Link} from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
+import { useEffect } from "react";
 import ProSidebarContent from "./ProSidebarContent";
 import Image from "@/components/common/Image";
 
+async function closeMobileMenu() {
+  if (typeof document === "undefined") return;
+
+  const el = document.getElementById("mobileMenu");
+  if (!el?.classList.contains("show")) return;
+
+  try {
+    const { default: Offcanvas } = await import(
+      "bootstrap/js/dist/offcanvas"
+    );
+    const instance = Offcanvas.getInstance(el) ?? Offcanvas.getOrCreateInstance(el);
+    instance.hide();
+    return;
+  } catch {
+    // Fall through to dismiss-button click
+  }
+
+  const closer = el.querySelector(
+    '[data-bs-dismiss="offcanvas"]',
+  ) as HTMLElement | null;
+  closer?.click();
+}
+
 const MobileMenu = () => {
+  const pathname = useLocation({
+    select: (location) => location.pathname,
+  });
+
+  useEffect(() => {
+    void closeMobileMenu();
+  }, [pathname]);
+
   return (
     <div className="mobilie_header_nav stylehome1">
       <div className="mobile-menu">
@@ -23,7 +55,13 @@ const MobileMenu = () => {
                   alt="mobile icon"
                 />
               </a>
-              <Link className="mobile_logo" to="/">
+              <Link
+                className="mobile_logo"
+                to="/"
+                onClick={() => {
+                  void closeMobileMenu();
+                }}
+              >
                 <img
                   className="site-logo site-logo--mobile"
                   src="/images/header-logo2.svg?v=9"
@@ -61,7 +99,11 @@ const MobileMenu = () => {
 
           <div className="hsidebar-content ">
             <div className="hiddenbar_navbar_content">
-              <ProSidebarContent />
+              <ProSidebarContent
+                onNavigate={() => {
+                  void closeMobileMenu();
+                }}
+              />
             </div>
           </div>
           {/* End hsidebar-content */}

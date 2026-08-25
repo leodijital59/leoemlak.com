@@ -4,72 +4,79 @@ import { Menu, MenuItem, Sidebar, SubMenu } from "react-pro-sidebar";
 import { isParentActive } from "@/lib/utils";
 import menu from "@/data/menu";
 
-const ProSidebarContent = () => {
+type ProSidebarContentProps = {
+  onNavigate?: () => void;
+};
+
+const ProSidebarContent = ({ onNavigate }: ProSidebarContentProps) => {
   const path = useLocation({
-      select: (location) => location.pathname
+    select: (location) => location.pathname,
   });
 
   return (
     <Sidebar width="100%" backgroundColor="#fff" className="my-custom-class">
       <Menu>
         {menu.map((item, index) =>
-        item.subMenu ? (
-          <SubMenu
-            key={index}
-            className={isParentActive(item.subMenu, path) ? "active" : ""}
-            label={item.label}
-          >
-            {item.subMenu.map((subItem, subIndex) =>
-              subItem.subMenu ? (
-                <SubMenu
-                  key={subIndex}
-                  label={subItem.label}
-                  className={
-                    isParentActive(subItem.subMenu, path) ? "active" : ""
-                  }
-                >
-                  {subItem.subMenu.map((nestedItem, nestedIndex) => (
-                    <MenuItem
-                      key={nestedIndex}
-                      component={
-                        <Link
-                          className={nestedItem.href == path ? "active" : ""}
-                          to={nestedItem.href}
-                        />
-                      }
-                    >
-                      {nestedItem.label}
-                    </MenuItem>
-                  ))}
-                </SubMenu>
-              ) : (
-                <MenuItem
-                  key={subIndex}
-                  component={
-                    <Link
-                      className={subItem.href == path ? "active" : ""}
-                      to={subItem.href}
-                    />
-                  }
-                >
-                  {subItem.label}
-                </MenuItem>
-              )
-            )}
-          </SubMenu>
-        ) : (
-            <MenuItem
-                key={index}
-                component={
-                    <Link
-                        className={item.href == path ? "active" : ""}
-                        to={item.href}
-                    />
-                }
+          item.subMenu ? (
+            <SubMenu
+              key={index}
+              className={isParentActive(item.subMenu, path) ? "active" : ""}
+              label={item.label}
             >
-                {item.label}
+              {item.subMenu.map((subItem, subIndex) =>
+                subItem.subMenu ? (
+                  <SubMenu
+                    key={subIndex}
+                    label={subItem.label}
+                    className={
+                      isParentActive(subItem.subMenu, path) ? "active" : ""
+                    }
+                  >
+                    {subItem.subMenu.map((nestedItem, nestedIndex) => (
+                      <MenuItem
+                        key={nestedIndex}
+                        component={
+                          <Link
+                            className={nestedItem.href == path ? "active" : ""}
+                            to={nestedItem.href}
+                            onClick={onNavigate}
+                          />
+                        }
+                      >
+                        {nestedItem.label}
+                      </MenuItem>
+                    ))}
+                  </SubMenu>
+                ) : (
+                  <MenuItem
+                    key={subIndex}
+                    component={
+                      <Link
+                        className={subItem.href == path ? "active" : ""}
+                        to={subItem.href}
+                        onClick={onNavigate}
+                      />
+                    }
+                  >
+                    {subItem.label}
+                  </MenuItem>
+                ),
+              )}
+            </SubMenu>
+          ) : (
+            <MenuItem
+              key={index}
+              component={
+                <Link
+                  className={item.href == path ? "active" : ""}
+                  to={item.href}
+                  onClick={onNavigate}
+                />
+              }
+            >
+              {item.label}
             </MenuItem>
-        )
+          ),
         )}
       </Menu>
     </Sidebar>
