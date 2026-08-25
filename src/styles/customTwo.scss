@@ -128,67 +128,66 @@ body {
   }
 }
 
-/* ===== Site logo sizing (original mark, modestly larger) ===== */
+/* ===== Site logo sizing (full mark with icon, compact) ===== */
 .site-logo {
   width: auto !important;
-  height: 96px !important;
-  max-width: 200px !important;
-  max-height: 96px !important;
+  height: 56px !important;
+  max-width: 130px !important;
+  max-height: 56px !important;
   object-fit: contain !important;
   display: block !important;
 }
 
 .site-logo--mobile {
-  height: 72px !important;
-  max-width: 160px !important;
-  max-height: 72px !important;
+  height: 48px !important;
+  max-width: 110px !important;
+  max-height: 48px !important;
 }
 
 .site-logo--footer {
-  height: 108px !important;
-  max-width: 220px !important;
-  max-height: 108px !important;
+  height: 64px !important;
+  max-width: 150px !important;
+  max-height: 64px !important;
 }
 
 header.nav-homepage-style,
 header.header-nav.main-menu {
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
 }
 
 header.nav-homepage-style .header-logo img.site-logo,
 header.header-nav .header-logo img.site-logo,
 .header-logo img.site-logo {
   width: auto !important;
-  height: 96px !important;
-  max-width: 200px !important;
-  max-height: 96px !important;
+  height: 56px !important;
+  max-width: 130px !important;
+  max-height: 56px !important;
   object-fit: contain !important;
 }
 
 .mobile_logo img.site-logo,
 .mobile_logo .site-logo {
   width: auto !important;
-  height: 72px !important;
-  max-width: min(160px, 48vw) !important;
-  max-height: 72px !important;
+  height: 48px !important;
+  max-width: min(110px, 42vw) !important;
+  max-height: 48px !important;
   object-fit: contain !important;
 }
 
-/* Theme fixes mobile header at 65px — give room for 72px logo */
 .mobilie_header_nav .mobile-menu .header.innerpage-style {
-  min-height: 84px !important;
+  min-height: 65px !important;
   height: auto !important;
   line-height: normal !important;
   overflow: visible !important;
 }
 
 .mobilie_header_nav .mobile_menu_bar {
-  min-height: 76px !important;
+  min-height: 56px !important;
   height: auto !important;
   line-height: normal !important;
-  padding-top: 6px !important;
-  padding-bottom: 6px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
   align-items: center !important;
 }
 
@@ -207,24 +206,24 @@ header.nav-homepage-style:not(.sticky) .header-logo.logo1 .site-logo {
   header.nav-homepage-style .header-logo img.site-logo,
   header.header-nav .header-logo img.site-logo,
   .header-logo img.site-logo {
-    height: 80px !important;
-    max-width: 170px !important;
-    max-height: 80px !important;
+    height: 50px !important;
+    max-width: 118px !important;
+    max-height: 50px !important;
   }
 }
 
 @media (max-width: 575.98px) {
   .site-logo--mobile,
   .mobile_logo img.site-logo {
-    height: 68px !important;
-    max-width: min(150px, 46vw) !important;
-    max-height: 68px !important;
+    height: 44px !important;
+    max-width: min(100px, 40vw) !important;
+    max-height: 44px !important;
   }
 
   .site-logo--footer {
-    height: 96px !important;
-    max-width: min(200px, 70vw) !important;
-    max-height: 96px !important;
+    height: 56px !important;
+    max-width: min(130px, 60vw) !important;
+    max-height: 56px !important;
   }
 }
 

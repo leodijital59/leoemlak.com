@@ -14,10 +14,10 @@ const Footer = () => {
               <Link className="footer-logo d-inline-block" to="/">
                 <img
                   className="mb30 footer-logo-img site-logo site-logo--footer"
-                  src="/images/header-logo2.svg?v=6"
+                  src="/images/header-logo2.svg?v=7"
                   alt="Leo Emlak"
-                  width={220}
-                  height={108}
+                  width={150}
+                  height={64}
                 />
               </Link>
               <p className="footer-lead text-white mb25">
