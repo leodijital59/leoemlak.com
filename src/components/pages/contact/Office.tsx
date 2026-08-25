@@ -1,24 +1,29 @@
+import { SITE_PHONE_DISPLAY } from "@/lib/seo";
+
 const Office = () => {
   const offices = [
     {
       id: 1,
       city: "Çorlu",
       address: "Çorlu merkez ve yakın çevre mahallelerde aktif portföy desteği",
-      phoneNumber: "+(0) 123 050 945 02",
+      phoneNumber: SITE_PHONE_DISPLAY,
+      phoneHref: "tel:+905529950059",
       mapLink: "/properties?province=TEKIRDAG&district=CORLU",
     },
     {
       id: 2,
       city: "Süleymanpaşa",
       address: "Merkez ve sahil hattında konut ile ticari ilan danışmanlığı",
-      phoneNumber: "+(0) 123 050 945 02",
+      phoneNumber: SITE_PHONE_DISPLAY,
+      phoneHref: "tel:+905529950059",
       mapLink: "/properties?province=TEKIRDAG&district=SULEYMANPASA",
     },
     {
       id: 3,
       city: "Çerkezköy",
       address: "Yatırım ve yaşam odaklı gelişen bölgelerde ilan takibi",
-      phoneNumber: "+(0) 123 050 945 02",
+      phoneNumber: SITE_PHONE_DISPLAY,
+      phoneHref: "tel:+905529950059",
       mapLink: "/properties?province=TEKIRDAG&district=CERKEZKOY",
     },
   ];
@@ -29,11 +34,13 @@ const Office = () => {
         <div className="col-sm-6 col-lg-4" key={office.id}>
           <div className="iconbox-style8 text-center">
             <div className="iconbox-content">
-              <h4 className="title">{office.city}</h4>
+              <h3 className="title">{office.city} Emlak</h3>
               <p className="text mb-1">{office.address}</p>
-              <h6 className="mb10">{office.phoneNumber}</h6>
+              <h6 className="mb10">
+                <a href={office.phoneHref}>{office.phoneNumber}</a>
+              </h6>
               <a className="text-decoration-underline" href={office.mapLink}>
-                Bölge ilanlarını aç
+                {office.city} ilanlarını aç
               </a>
             </div>
           </div>

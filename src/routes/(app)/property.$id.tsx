@@ -11,10 +11,10 @@ import { getPropertyById } from '@/lib/server/property'
 import NotFound from "@/components/NotFound";
 import {formatAddress} from "@/lib/formatters";
 import css from '@/styles/map.css?url';
+import { absoluteUrl, buildBreadcrumbJsonLd } from '@/lib/seo'
 
 export const Route = createFileRoute('/(app)/property/$id')({
   staleTime: import.meta.env.PROD ? 900_000 : 0,
-  ssr: false,
   component: PropertyDetailPage,
   loader: async ({ params }) => {
     try {
@@ -24,7 +24,7 @@ export const Route = createFileRoute('/(app)/property/$id')({
     }
   },
   notFoundComponent: NotFound,
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     if (!loaderData) return { meta: [] }
 
     const { property, images } = loaderData
@@ -32,27 +32,36 @@ export const Route = createFileRoute('/(app)/property/$id')({
 
     const listingLabel = property.listingType === 'sold' ? 'Satılık' : 'Kiralık'
     const locationParts = formatAddress(property.province, property.district, property.neighborhood)
+    const district = formatCapitilized(property.district)
+    const province = formatCapitilized(property.province)
 
-    const title = `${property.title} | ${formatCapitilized(property.province)} ${formatCapitilized(property.district)}`
-    const description = `${listingLabel} ${property.title} - ${locationParts}`
+    const title = `${property.title} | ${listingLabel} ${district} ${province}`
+    const description = `${listingLabel} ${property.title} — ${locationParts}. Leo Emlak ile Tekirdağ ve Çorlu gayrimenkul fırsatlarını inceleyin.`
     const appName = import.meta.env.VITE_APP_NAME as string
+    const canonical = absoluteUrl(`/property/${params.id}`)
 
     const jsonLd: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'RealEstateListing',
+      '@id': canonical,
+      url: canonical,
       name: property.title,
       description,
+      datePosted: property.createdAt,
       image: images.map((img) => img.url),
       offers: {
         '@type': 'Offer',
         price: property.price,
         priceCurrency: 'TRY',
+        availability: property.listingStatus === 'active'
+          ? 'https://schema.org/InStock'
+          : 'https://schema.org/SoldOut',
       },
       address: {
         '@type': 'PostalAddress',
         streetAddress: formatCapitilized(property.neighborhood),
-        addressLocality: formatCapitilized(property.district),
-        addressRegion: formatCapitilized(property.province),
+        addressLocality: district,
+        addressRegion: province,
         addressCountry: 'TR',
       },
     }
@@ -67,8 +76,9 @@ export const Route = createFileRoute('/(app)/property/$id')({
       meta: [
         { title: `${title} | ${appName}` },
         { name: 'description', content: description },
-        { name: 'robots', content: 'max-image-preview:large' },
-        { property: 'og:type', content: 'website' },
+        { name: 'robots', content: 'index, follow, max-image-preview:large' },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:url', content: canonical },
         { property: 'og:title', content: title },
         { property: 'og:description', content: description },
         ...(mainImage ? [{ property: 'og:image', content: mainImage.url }] : []),
@@ -78,12 +88,24 @@ export const Route = createFileRoute('/(app)/property/$id')({
         ...(mainImage ? [{ name: 'twitter:image', content: mainImage.url }] : []),
       ],
       links: [
-        { rel: 'stylesheet', href: css }
+        { rel: 'stylesheet', href: css },
+        { rel: 'canonical', href: canonical },
       ],
-      scripts: [{
-        type: 'application/ld+json',
-        children: JSON.stringify(jsonLd),
-      }],
+      scripts: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(jsonLd),
+        },
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify(buildBreadcrumbJsonLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'İlanlar', path: '/properties' },
+            { name: `${district} Emlak`, path: `/properties?province=TEKIRDAG&district=${property.district}` },
+            { name: property.title, path: `/property/${params.id}` },
+          ])),
+        },
+      ],
     }
   },
 })
@@ -108,19 +130,19 @@ function PropertyDetailPage() {
 
                   {property.description && (
                     <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30 overflow-hidden position-relative">
-                      <h4 className="title fz17">İlan Açıklaması</h4>
+                      <h2 className="title fz17">İlan Açıklaması</h2>
                       <PropertyDescriptions description={property.description} />
                     </div>
                   )}
 
                   <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30 overflow-hidden position-relative">
-                    <h4 className="title fz17">Özellikler</h4>
+                    <h2 className="title fz17">Özellikler</h2>
                     <PropertyFeaturesAminites features={features} />
                   </div>
 
                   {property.videoUrl && (
                     <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30">
-                      <h4 className="title fz17">Video</h4>
+                      <h2 className="title fz17">Video</h2>
                       <PropertyVideo videoUrl={property.videoUrl} />
                     </div>
                   )}
@@ -130,7 +152,7 @@ function PropertyDetailPage() {
               <div className="col-lg-4">
                 <div className="row gy-4">
                   <div className="ps-widget bgc-white bdrs12 default-box-shadow2 p30 overflow-hidden position-relative">
-                    <h4 className="title fz17">İlan Detayları</h4>
+                    <h2 className="title fz17">İlan Detayları</h2>
                     <PropertyDetails property={property} />
                   </div>
                 </div>

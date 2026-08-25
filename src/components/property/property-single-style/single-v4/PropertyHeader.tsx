@@ -11,8 +11,8 @@ const PropertyHeader = ({ property }: Props) => {
     <ClientOnly>
       <div className="col-lg-8">
         <div className="single-property-content mb30-md">
-          <h3 className="sp-lg-title">{property.title}</h3>
-          <h2 className="sp-lg-title">{formatPrice(property.price)}</h2>
+          <h1 className="sp-lg-title">{property.title}</h1>
+          <p className="sp-lg-title mb-0" style={{ fontSize: '1.75rem', fontWeight: 600 }}>{formatPrice(property.price)}</p>
           <div className="property-meta d-flex align-items-center gap-3">
             {(property.rooms !== null && property.bathrooms !== null) && (
               <span className="text fz15 bdrr1 pr15">

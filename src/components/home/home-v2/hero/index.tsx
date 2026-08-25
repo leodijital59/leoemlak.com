@@ -38,13 +38,13 @@ const Hero = ({ categories, locations, features }: HeroProps) => {
           onCategoryIdChange={setCategoryId}
         />
 
-        <h2 className="hero-title" data-aos="fade-up" data-aos-delay="150">
-          Tekirdağ ve Çorlu'da aradığınız evi bulun
-        </h2>
+        <h1 className="hero-title" data-aos="fade-up" data-aos-delay="150">
+          Tekirdağ Çorlu Emlak — Satılık ve Kiralık İlanlar
+        </h1>
 
         <p className="hero-text fz15" data-aos="fade-up" data-aos-delay="250">
-          Satılık ve kiralık ilanları ilçeye, kategoriye ve ihtiyacınıza göre
-          filtreleyin
+          Leo Emlak ile Tekirdağ ve Çorlu'da satılık daire, kiralık konut, villa,
+          arsa ve işyeri ilanlarını ilçeye göre filtreleyin
         </p>
 
         {/* Geçici test alanı */}

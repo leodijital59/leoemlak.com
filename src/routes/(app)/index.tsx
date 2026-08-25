@@ -6,69 +6,49 @@ import Cta from "@/components/home/home-v2/Cta";
 import ExploreCities from "@/components/home/home-v2/ExploreCities";
 import { getCategories, getCategoriesWithActiveCount } from "@/lib/server/category";
 import { getActivePropertyFeatures, getDistinctLocations } from "@/lib/server/property";
-
-const FEATURED_DISTRICTS = [
-    {
-        title: 'Çorlu',
-        description: 'Çorlu satılık daire, villa ve işyeri ilanlarını tek sayfada inceleyin.',
-        district: 'CORLU',
-    },
-    {
-        title: 'Süleymanpaşa',
-        description: 'Merkezde yaşam ve yatırım için Süleymanpaşa emlak fırsatlarını keşfedin.',
-        district: 'SULEYMANPASA',
-    },
-    {
-        title: 'Çerkezköy',
-        description: 'Sanayi ve yeni yaşam alanlarıyla Çerkezköy gayrimenkul seçeneklerine göz atın.',
-        district: 'CERKEZKOY',
-    },
-    {
-        title: 'Kapaklı',
-        description: 'Aile yaşamına uygun Kapaklı konut ilanları ve yatırım fırsatlarını görün.',
-        district: 'KAPAKLI',
-    },
-    {
-        title: 'Ergene',
-        description: 'Ergene bölgesindeki satılık ve kiralık ilanlara hızlıca ulaşın.',
-        district: 'ERGENE',
-    },
-    {
-        title: 'Marmaraereğlisi',
-        description: 'Sahil hattında yer alan Marmaraereğlisi yazlık ve konut ilanlarını inceleyin.',
-        district: 'MARMARAEREGLISI',
-    },
-]
+import { DISTRICT_LANDINGS, SITE_URL, buildBreadcrumbJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute('/(app)/')({
     staticData: {
-        title: 'Tekirdağ ve Çorlu Emlak İlanları',
-        description: 'Tekirdağ, Çorlu ve çevre ilçelerde satılık ve kiralık daire, villa, arsa ve işyeri ilanlarını LeoEmlak üzerinden keşfedin.',
-        keywords: ['Tekirdağ emlak', 'Çorlu emlak', 'Tekirdağ satılık daire', 'Çorlu kiralık daire', 'Tekirdağ gayrimenkul'],
+        title: 'Tekirdağ Çorlu Emlak | Satılık Kiralık Daire ve Konut',
+        description: 'Leo Emlak — Tekirdağ ve Çorlu emlak ofisi. Satılık daire, kiralık konut, villa, arsa ve işyeri ilanları. Çerkezköy, Süleymanpaşa, Kapaklı ve tüm Tekirdağ ilçelerinde güncel gayrimenkul fırsatları.',
+        keywords: [
+            'Tekirdağ emlak',
+            'Çorlu emlak',
+            'Tekirdağ satılık daire',
+            'Çorlu satılık daire',
+            'Çorlu kiralık daire',
+            'Tekirdağ gayrimenkul',
+            'Leo Emlak',
+            'Çerkezköy emlak',
+        ],
+        canonicalPath: '/',
     },
     head: () => ({
-        meta: [
-            {
-                name: 'keywords',
-                content: 'Tekirdağ emlak, Çorlu emlak, Tekirdağ satılık daire, Çorlu kiralık daire, Çerkezköy emlak, Süleymanpaşa emlak',
-            },
-        ],
         scripts: [
             {
                 type: 'application/ld+json',
                 children: JSON.stringify({
                     '@context': 'https://schema.org',
                     '@type': 'WebSite',
+                    '@id': `${SITE_URL}/#website`,
                     name: import.meta.env.VITE_APP_NAME,
-                    url: 'https://leoemlak.com',
+                    url: SITE_URL,
                     inLanguage: 'tr-TR',
-                    description: 'Tekirdağ, Çorlu ve çevre ilçelerde satılık ve kiralık daire, villa, arsa ve işyeri ilanlarını keşfedin.',
+                    description: 'Tekirdağ ve Çorlu emlak ilanları — satılık ve kiralık daire, villa, arsa ve işyeri.',
+                    publisher: { '@id': `${SITE_URL}/#organization` },
                     potentialAction: {
                         '@type': 'SearchAction',
-                        target: 'https://leoemlak.com/properties?q={search_term_string}',
+                        target: `${SITE_URL}/properties?q={search_term_string}`,
                         'query-input': 'required name=search_term_string',
                     },
                 }),
+            },
+            {
+                type: 'application/ld+json',
+                children: JSON.stringify(buildBreadcrumbJsonLd([
+                    { name: 'Ana Sayfa', path: '/' },
+                ])),
             },
         ],
     }),
@@ -167,26 +147,26 @@ function Home() {
                     <div className="row justify-content-center">
                         <div className="col-lg-8">
                             <div className="main-title text-center" data-aos="fade-up">
-                                <h2 className="title">Tekirdağ ve İlçelerinde Hızlı Arama</h2>
+                                <h2 className="title">Tekirdağ ve İlçelerinde Hızlı Emlak Arama</h2>
                                 <p className="paragraph">
-                                    Çorlu, Süleymanpaşa, Çerkezköy ve diğer Tekirdağ ilçelerindeki ilanlara doğrudan ulaşın.
+                                    Çorlu, Süleymanpaşa, Çerkezköy ve diğer Tekirdağ ilçelerindeki satılık ve kiralık ilanlara doğrudan ulaşın.
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     <div className="row g-4">
-                        {FEATURED_DISTRICTS.map((item, index) => (
-                            <div className="col-md-6 col-xl-4" key={item.district} data-aos="fade-up" data-aos-delay={100 + (index * 50)}>
+                        {DISTRICT_LANDINGS.map((item, index) => (
+                            <div className="col-md-6 col-xl-4" key={item.slug} data-aos="fade-up" data-aos-delay={100 + (index * 50)}>
                                 <div className="default-box-shadow1 bgc-white bdrs12 p30 h-100">
-                                    <h4 className="mb15">{item.title} Emlak</h4>
+                                    <h3 className="mb15">{item.title}</h3>
                                     <p className="text mb20">{item.description}</p>
                                     <Link
                                         to="/properties"
-                                        search={{ province: 'TEKIRDAG', district: item.district }}
+                                        search={{ province: 'TEKIRDAG', district: item.slug }}
                                         className="ud-btn btn-thm-border"
                                     >
-                                        İlanları Gör
+                                        {item.name} İlanlarını Gör
                                         <i className="fal fa-arrow-right-long" />
                                     </Link>
                                 </div>
