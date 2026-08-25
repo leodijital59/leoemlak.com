@@ -91,6 +91,11 @@ export const Route = createRootRoute({
         ...(description ? [{ name: 'twitter:description', content: description }] : []),
       ],
       links: [
+        { rel: 'icon', href: '/favicon.ico', sizes: 'any' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/images/favicon.svg' },
+        { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/images/favicon-96x96.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/images/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/images/site.webmanifest' },
         {
           rel: 'preconnect',
           href: 'https://fonts.googleapis.com',

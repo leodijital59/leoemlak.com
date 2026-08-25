@@ -128,6 +128,48 @@ body {
   }
 }
 
+/* ===== Site logo sizing ===== */
+.site-logo {
+  width: auto !important;
+  height: 72px !important;
+  max-width: 160px;
+  object-fit: contain;
+  display: block;
+}
+
+.site-logo--mobile {
+  height: 58px !important;
+  max-width: 140px;
+}
+
+.site-logo--footer {
+  height: 84px !important;
+  max-width: 180px;
+}
+
+header.nav-homepage-style .header-logo img.site-logo,
+header.header-nav .header-logo img.site-logo {
+  height: 72px !important;
+  width: auto !important;
+  max-width: 160px;
+  object-fit: contain;
+}
+
+.mobile_logo img.site-logo {
+  height: 58px !important;
+  width: auto !important;
+  max-width: 140px;
+  object-fit: contain;
+}
+
+@media (max-width: 991.98px) {
+  header.nav-homepage-style .header-logo img.site-logo,
+  header.header-nav .header-logo img.site-logo {
+    height: 60px !important;
+    max-width: 136px;
+  }
+}
+
 /* ===== Site footer (mobile-first cleanup) ===== */
 .site-footer {
   padding-bottom: 2rem;

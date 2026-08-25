@@ -36,18 +36,20 @@ const Header = () => {
                   <div className="logos mr40">
                     <Link className="header-logo logo1" to="/">
                       <Image
-                        width={138}
-                        height={44}
+                        width={160}
+                        height={110}
+                        className="site-logo"
                         src="/images/header-logo.svg"
-                        alt="Header Logo"
+                        alt="Leo Emlak"
                       />
                     </Link>
                     <Link className="header-logo logo2" to="/">
                       <Image
-                        width={138}
-                        height={44}
+                        width={160}
+                        height={110}
+                        className="site-logo"
                         src="/images/header-logo2.svg"
-                        alt="Header Logo"
+                        alt="Leo Emlak"
                       />
                     </Link>
                   </div>
