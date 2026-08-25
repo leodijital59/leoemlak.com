@@ -7,7 +7,7 @@ const getCurrentYear = () => {
 const Footer = () => {
   const footerMenuItems = [
     {
-      label: "Gizlilik",
+      label: "Hakkımızda",
       link: "/about",
     },
     {

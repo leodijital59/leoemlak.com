@@ -5,9 +5,10 @@ import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/contact')({
     staticData: {
-        title: 'İletişim',
-        description: 'Tekirdağ, Çorlu ve çevre ilçelerdeki emlak ihtiyaçlarınız için LeoEmlak ile iletişime geçin.',
-        keywords: ['Çorlu emlak iletişim', 'Tekirdağ emlak ofisi', 'LeoEmlak iletişim', 'Çorlu gayrimenkul danışmanlığı'],
+        title: 'İletişim | Tekirdağ Çorlu Emlak Ofisi',
+        description: 'Tekirdağ ve Çorlu emlak ihtiyaçlarınız için Leo Emlak ile iletişime geçin. Satılık ve kiralık daire danışmanlığı: +90 552 995 00 59.',
+        keywords: ['Çorlu emlak iletişim', 'Tekirdağ emlak ofisi', 'Leo Emlak iletişim', 'Çorlu gayrimenkul danışmanlığı', 'Leo Emlak telefon'],
+        canonicalPath: '/contact',
     },
     head: () => ({
         scripts: [{
@@ -16,8 +17,20 @@ export const Route = createFileRoute('/(app)/contact')({
                 '@context': 'https://schema.org',
                 '@type': 'ContactPage',
                 name: `İletişim - ${import.meta.env.VITE_APP_NAME}`,
+                url: 'https://leoemlak.com/contact',
                 inLanguage: 'tr-TR',
-                description: 'Tekirdağ, Çorlu ve çevre ilçelerdeki emlak ihtiyaçlarınız için LeoEmlak ile iletişime geçin.',
+                description: 'Tekirdağ, Çorlu ve çevre ilçelerdeki emlak ihtiyaçlarınız için Leo Emlak ile iletişime geçin.',
+                mainEntity: { '@id': 'https://leoemlak.com/#organization' },
+            }),
+        }, {
+            type: 'application/ld+json',
+            children: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://leoemlak.com/' },
+                    { '@type': 'ListItem', position: 2, name: 'İletişim', item: 'https://leoemlak.com/contact' },
+                ],
             }),
         }],
     }),
@@ -52,9 +65,11 @@ function RouteComponent() {
                         </div>
 
                         <div className="col-lg-5 offset-lg-2">
+                            <h1 className="mb30 text-capitalize" style={{ fontSize: 'inherit', fontWeight: 'inherit' }}>
+                                Tekirdağ ve Çorlu Emlak İletişim
+                            </h1>
                             <h2 className="mb30 text-capitalize">
-                                Tekirdağ ve Çorlu'da <br className="d-none d-lg-block" />
-                                size yardımcı olmaya hazırız.
+                                Size yardımcı olmaya hazırız.
                             </h2>
                             <p className="text">
                                 Satılık ya da kiralık ilan arıyor, bölgesel fiyat bilgisi almak istiyor

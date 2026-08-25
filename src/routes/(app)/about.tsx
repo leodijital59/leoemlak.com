@@ -8,20 +8,32 @@ import CallToActions from "@/components/common/CallToActions";
 
 export const Route = createFileRoute('/(app)/about')({
   staticData: {
-    title: 'Hakkımızda',
-    description: 'LeoEmlak olarak Tekirdağ, Çorlu ve çevre ilçelerde güvenilir gayrimenkul danışmanlığı sunuyoruz.',
-    keywords: ['LeoEmlak hakkında', 'Tekirdağ emlak danışmanlığı', 'Çorlu emlak ofisi', 'Tekirdağ gayrimenkul'],
+    title: 'Hakkımızda | Tekirdağ Çorlu Emlak Danışmanlığı',
+    description: 'Leo Emlak olarak Tekirdağ, Çorlu, Çerkezköy ve çevre ilçelerde güvenilir emlak ve gayrimenkul danışmanlığı sunuyoruz. Yerel pazar bilgisiyle satılık ve kiralık ilanlarda yanınızdayız.',
+    keywords: ['LeoEmlak hakkında', 'Tekirdağ emlak danışmanlığı', 'Çorlu emlak ofisi', 'Tekirdağ gayrimenkul', 'Leo Emlak'],
+    canonicalPath: '/about',
   },
   head: () => ({
     scripts: [{
       type: 'application/ld+json',
       children: JSON.stringify({
         '@context': 'https://schema.org',
-        '@type': 'Organization',
-        name: import.meta.env.VITE_APP_NAME,
+        '@type': 'AboutPage',
+        name: `Hakkımızda - ${import.meta.env.VITE_APP_NAME}`,
+        url: 'https://leoemlak.com/about',
         inLanguage: 'tr-TR',
-        description: 'LeoEmlak olarak Tekirdağ, Çorlu ve çevre ilçelerde güvenilir gayrimenkul danışmanlığı sunuyoruz.',
-        areaServed: ['Tekirdağ', 'Çorlu', 'Çerkezköy', 'Süleymanpaşa', 'Kapaklı', 'Ergene'],
+        description: 'Leo Emlak olarak Tekirdağ, Çorlu ve çevre ilçelerde güvenilir gayrimenkul danışmanlığı sunuyoruz.',
+        mainEntity: { '@id': 'https://leoemlak.com/#organization' },
+      }),
+    }, {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Ana Sayfa', item: 'https://leoemlak.com/' },
+          { '@type': 'ListItem', position: 2, name: 'Hakkımızda', item: 'https://leoemlak.com/about' },
+        ],
       }),
     }],
   }),
@@ -37,7 +49,7 @@ function RouteComponent() {
               <div className="row">
                 <div className="col-lg-12">
                   <div className="breadcumb-style1">
-                    <h2 className="title">Hakkımızda</h2>
+                    <h1 className="title">Hakkımızda — Leo Emlak Tekirdağ</h1>
                     <div className="breadcumb-list">
                       <Link to="/">Ana Sayfa</Link>
                       <Link to="/about">Hakkımızda</Link>
