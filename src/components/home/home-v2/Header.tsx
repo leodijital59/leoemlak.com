@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import MainMenu from "@/components/common/MainMenu";
 
-const LOGO_VERSION = "7";
+const LOGO_VERSION = "8";
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
