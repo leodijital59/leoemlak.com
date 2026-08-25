@@ -35,11 +35,11 @@ const ProSidebarContent = ({ onNavigate }: ProSidebarContentProps) => {
                     {subItem.subMenu.map((nestedItem, nestedIndex) => (
                       <MenuItem
                         key={nestedIndex}
+                        onClick={onNavigate}
                         component={
                           <Link
                             className={nestedItem.href == path ? "active" : ""}
                             to={nestedItem.href}
-                            onClick={onNavigate}
                           />
                         }
                       >
@@ -50,11 +50,11 @@ const ProSidebarContent = ({ onNavigate }: ProSidebarContentProps) => {
                 ) : (
                   <MenuItem
                     key={subIndex}
+                    onClick={onNavigate}
                     component={
                       <Link
                         className={subItem.href == path ? "active" : ""}
                         to={subItem.href}
-                        onClick={onNavigate}
                       />
                     }
                   >
@@ -66,11 +66,11 @@ const ProSidebarContent = ({ onNavigate }: ProSidebarContentProps) => {
           ) : (
             <MenuItem
               key={index}
+              onClick={onNavigate}
               component={
                 <Link
                   className={item.href == path ? "active" : ""}
                   to={item.href}
-                  onClick={onNavigate}
                 />
               }
             >
