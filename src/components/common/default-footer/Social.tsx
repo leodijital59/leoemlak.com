@@ -1,21 +1,22 @@
 
 const Social = () => {
   const socialLinks = [
-    { icon: "fab fa-facebook-f", href: "#" },
-    { icon: "fab fa-instagram", href: "#" },
-    { icon: "fab fa-whatsapp", href: "https://wa.me/905529950059" },
+    { icon: "fab fa-facebook-f", href: "#", label: "Facebook" },
+    { icon: "fab fa-instagram", href: "#", label: "Instagram" },
+    { icon: "fab fa-whatsapp", href: "https://wa.me/905529950059", label: "WhatsApp" },
   ];
 
   return (
-    <div className="social-style1">
-      {socialLinks.map((social, index) => (
+    <div className="social-style1 footer-social">
+      {socialLinks.map((social) => (
         <a
-          key={index}
+          key={social.label}
           href={social.href}
+          aria-label={social.label}
           target={social.href !== "#" ? "_blank" : undefined}
           rel={social.href !== "#" ? "noopener noreferrer" : undefined}
         >
-          <i className={social.icon + " list-inline-item"} />
+          <i className={social.icon} />
         </a>
       ))}
     </div>

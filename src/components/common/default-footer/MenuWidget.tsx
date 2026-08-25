@@ -1,46 +1,49 @@
-
 const MenuWidget = () => {
-  const menuSections = [
-    {
-      title: "Popüler Aramalar",
-      links: [
-        { label: "Çorlu Satılık Daire", href: "/properties?province=TEKIRDAG&district=CORLU&listingType=sold" },
-        { label: "Çorlu Kiralık Daire", href: "/properties?province=TEKIRDAG&district=CORLU&listingType=rented" },
-        { label: "Çerkezköy Emlak", href: "/properties?province=TEKIRDAG&district=CERKEZKOY" },
-        { label: "Süleymanpaşa İlanları", href: "/properties?province=TEKIRDAG&district=SULEYMANPASA" },
-      ],
-    },
-    {
-      title: "Hızlı Erişim",
-      links: [
-        { label: "Ana Sayfa", href: "/" },
-        { label: "Tüm İlanlar", href: "/properties" },
-        { label: "Hakkımızda", href: "/about" },
-        { label: "İletişim", href: "/contact" },
-        { label: "Kapaklı Emlak", href: "/properties?province=TEKIRDAG&district=KAPAKLI" },
-        { label: "Ergene İlanları", href: "/properties?province=TEKIRDAG&district=ERGENE" },
-        { label: "Marmaraereğlisi İlanları", href: "/properties?province=TEKIRDAG&district=MARMARAEREGLISI" },
-      ],
-    },
+  const pages = [
+    { label: "Ana Sayfa", href: "/" },
+    { label: "Tüm İlanlar", href: "/properties" },
+    { label: "Hakkımızda", href: "/about" },
+    { label: "İletişim", href: "/contact" },
+  ];
+
+  const popular = [
+    { label: "Çorlu Satılık", href: "/properties?province=TEKIRDAG&district=CORLU&listingType=sold" },
+    { label: "Çorlu Kiralık", href: "/properties?province=TEKIRDAG&district=CORLU&listingType=rented" },
+    { label: "Çerkezköy", href: "/properties?province=TEKIRDAG&district=CERKEZKOY" },
+    { label: "Süleymanpaşa", href: "/properties?province=TEKIRDAG&district=SULEYMANPASA" },
+    { label: "Kapaklı", href: "/properties?province=TEKIRDAG&district=KAPAKLI" },
+    { label: "Ergene", href: "/properties?province=TEKIRDAG&district=ERGENE" },
+    { label: "Marmaraereğlisi", href: "/properties?province=TEKIRDAG&district=MARMARAEREGLISI" },
   ];
 
   return (
-    <>
-      {menuSections.map((section, index) => (
-        <div className="col-auto" key={index}>
-          <div className="link-style1 mb-3">
-            <h6 className="text-white mb25">{section.title}</h6>
-            <ul className="ps-0">
-              {section.links.map((link, linkIndex) => (
-                <li key={linkIndex}>
-                  <a href={link.href}>{link.label}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
+    <div className="row g-4 footer-menus">
+      <div className="col-6 col-md-5">
+        <div className="link-style1 footer-link-block">
+          <h6 className="text-white mb20">Hızlı Erişim</h6>
+          <ul className="ps-0 mb-0">
+            {pages.map((link) => (
+              <li key={link.href}>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
         </div>
-      ))}
-    </>
+      </div>
+
+      <div className="col-6 col-md-7">
+        <div className="link-style1 footer-link-block">
+          <h6 className="text-white mb20">Popüler Bölgeler</h6>
+          <ul className="ps-0 mb-0 footer-region-list">
+            {popular.map((link) => (
+              <li key={link.href}>
+                <a href={link.href}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 };
 

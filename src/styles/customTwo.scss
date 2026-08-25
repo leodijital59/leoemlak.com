@@ -127,3 +127,120 @@ body {
     bottom: 86px;
   }
 }
+
+/* ===== Site footer (mobile-first cleanup) ===== */
+.site-footer {
+  padding-bottom: 2rem;
+}
+
+.footer-style1.at-home2 {
+  /* Room for WhatsApp + scroll-to-top so links are never covered */
+  padding-bottom: 6.5rem !important;
+}
+
+.footer-logo-img {
+  /* header-logo2 is dark; invert for dark footer background */
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+.footer-lead {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 28rem;
+}
+
+.footer-contact-meta {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 576px) {
+  .footer-contact-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 2rem;
+  }
+}
+
+.footer-contact-meta .contact-info .info-title {
+  margin-bottom: 0.25rem;
+}
+
+.footer-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.footer-social i {
+  margin: 0 !important;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.footer-link-block ul {
+  list-style: none;
+}
+
+.footer-link-block li + li {
+  margin-top: 0;
+}
+
+.footer-link-block a {
+  line-height: 1.35 !important;
+  padding: 0.45rem 0;
+  word-break: break-word;
+  text-decoration: none !important;
+}
+
+.footer-link-block a:hover,
+.footer-link-block a:focus-visible {
+  color: #fff !important;
+  text-decoration: underline !important;
+}
+
+.footer-region-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+@media (min-width: 768px) {
+  .footer-region-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
+  }
+
+  .footer-style1.at-home2 {
+    padding-bottom: 2.5rem !important;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .site-footer {
+    padding-top: 0.5rem;
+  }
+
+  .footer-menus > [class*="col-"] {
+    /* Keep two equal columns but with readable type */
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .footer-link-block h6 {
+    font-size: 0.95rem;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .footer-link-block a {
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+  }
+}
