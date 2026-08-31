@@ -33,7 +33,7 @@ const PropertyCard = ({ property, images, category }: PropertyCardProps) => {
               <Image
                 src={mainImage.url}
                 width={382}
-                height={510}
+                height={248}
                 alt={property.title}
                 className="w-100 h-100 cover"
               />

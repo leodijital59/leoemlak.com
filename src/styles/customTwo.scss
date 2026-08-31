@@ -351,8 +351,9 @@ header.nav-homepage-style:not(.sticky) .header-logo.logo1 .site-logo {
   height: 100%;
 }
 
+/* Default (ilanlar sayfası vb.): eski yatay oran */
 .listing-style1 .list-thumb {
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 382 / 248;
   width: 100%;
   background-color: #f3f3f3;
   overflow: hidden;
@@ -383,6 +384,11 @@ header.nav-homepage-style:not(.sticky) .header-logo.logo1 .site-logo {
 
 .listing-style1 .list-content {
   flex: 1 1 auto;
+}
+
+/* Benzer bölge slider: dikey (ilk kart gibi) oran */
+.property-city-slider .listing-style1 .list-thumb {
+  aspect-ratio: 3 / 4;
 }
 
 .property-city-slider .swiper,
