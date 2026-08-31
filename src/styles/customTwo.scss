@@ -343,3 +343,64 @@ header.nav-homepage-style:not(.sticky) .header-logo.logo1 .site-logo {
     padding: 0.4rem 0;
   }
 }
+
+/* Uniform listing card images — crop any aspect ratio into the same frame */
+.listing-style1 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.listing-style1 .list-thumb {
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  background-color: #f3f3f3;
+  overflow: hidden;
+  position: relative;
+}
+
+.listing-style1 .list-thumb > img,
+.listing-style1 .list-thumb > picture,
+.listing-style1 .list-thumb > picture img {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  object-position: center;
+  display: block;
+}
+
+.listing-style1 .list-thumb .list-thumb-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f3f3;
+}
+
+.listing-style1 .list-content {
+  flex: 1 1 auto;
+}
+
+.property-city-slider .swiper,
+.property-city-slider .swiper-wrapper {
+  align-items: stretch;
+}
+
+.property-city-slider .swiper-slide {
+  height: auto;
+  display: flex;
+}
+
+.property-city-slider .swiper-slide > .item {
+  width: 100%;
+  display: flex;
+}
+
+.property-city-slider .listing-style1 {
+  margin-bottom: 0;
+  width: 100%;
+}

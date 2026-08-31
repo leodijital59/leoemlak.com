@@ -41,7 +41,7 @@ const NearbySimilarProperty = () => {
                 <div className="list-thumb">
                   <Image
                     width={382}
-                    height={248}
+                    height={510}
                     className="w-100 h-100 cover"
                     src={listing.image}
                     alt="listings"

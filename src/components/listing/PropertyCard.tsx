@@ -33,15 +33,12 @@ const PropertyCard = ({ property, images, category }: PropertyCardProps) => {
               <Image
                 src={mainImage.url}
                 width={382}
-                height={248}
+                height={510}
                 alt={property.title}
-                className="w-100"
+                className="w-100 h-100 cover"
               />
             ) : (
-              <div
-                className="w-100 d-flex align-items-center justify-content-center bg-light"
-                style={{ height: 248 }}
-              >
+              <div className="list-thumb-placeholder">
                 <span className="text-muted">Görsel Yok</span>
               </div>
             )}
