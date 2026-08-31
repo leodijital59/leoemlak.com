@@ -636,3 +636,17 @@ export const getDistinctLocations = createServerFn({ method: "GET" })
             neighborhoods: neighborhoods.map((n) => ({ province: n.province, district: n.district, neighborhood: n.neighborhood })),
         };
     });
+
+/** Lightweight listing for sitemap.xml generation */
+export const getSitemapPropertyEntries = createServerFn({ method: "GET" })
+    .handler(async () => {
+        return db
+            .select({
+                id: propertiesTable.id,
+                updatedAt: propertiesTable.updatedAt,
+                listingStatus: propertiesTable.listingStatus,
+            })
+            .from(propertiesTable)
+            .where(eq(propertiesTable.listingStatus, "active"))
+            .orderBy(desc(propertiesTable.updatedAt));
+    });
